@@ -1,0 +1,40 @@
+//Items
+item.3dmaneuvergear:3DManeuverGear.name=3D Maneuver Gear
+item.3dmaneuvergear:3DManeuverHandle.name=3D Maneuver Gear Hand Grips
+item.3dmaneuvergear:itemComponent.swordBlade.name=Sword Blade
+item.3dmaneuvergear:itemComponent.gasCanister.name=Gas Canister
+item.3dmaneuvergear:itemComponent.bladeHolster.name=Blade Holster
+item.3dmaneuvergear:itemComponent.bladeHolsterAssembly.name=Blade Holster Assembly
+item.3dmaneuvergear:itemComponent.girdle.name=Girdle
+item.3dmaneuvergear:itemComponent.belt.name=Belt
+item.3dmaneuvergear:itemComponent.gasNozzle.name=Gas Nozzle
+item.3dmaneuvergear:itemComponent.cableSpool.name=Cable Coil
+item.3dmaneuvergear:itemComponent.grappleLauncher.name=Grapple Launcher
+item.3dmaneuvergear:itemFallBoots.name=Shock Absorbing Boots
+item.3dmaneuvergear:itemRecord.name=Music Disc
+
+//Sounds
+item.record.3dmaneuvergear:GurenNoYumiya.desc=Linked Horizon - Guren No Yumiya
+
+//Key bindings
+3DManeuverGear.Key.RetractLeft=Retract left cable
+3DManeuverGear.Key.RetractRight=Retract right cable
+
+//Tool tips
+3DManeuverGear.ToolTip.swordBladeLeft=Shift click to put this blade in the left holster
+3DManeuverGear.ToolTip.swordBladeRight=Click to put this blade in the right holster
+3DManeuverGear.ToolTip.belt=Goes into the belt slot
+3DManeuverGear.ToolTip.leftBlades=Left holster blade count
+3DManeuverGear.ToolTip.rightBlades=Right holster blade count
+3DManeuverGear.ToolTip.handle=Used to operate the 3D Maneuver Gear
+3DManeuverGear.ToolTip.moreInfo=Hold <shift> for instructions
+3DManeuverGear.ToolTip.handleLeftNormal=Use <LMB> to attack with left sword
+3DManeuverGear.ToolTip.handleRightNormal=Use <RMB> to attack with right sword
+3DManeuverGear.ToolTip.handleLeftSneak=Use <shift> + <LMB> to fire/retract left dart
+3DManeuverGear.ToolTip.handleRightSneak=Use <shift> + <RMB> to fire/retract right dart
+3DManeuverGear.ToolTip.handleLeftSprint=Use <ctrl> + <LMB> to apply a blade to the left handle
+3DManeuverGear.ToolTip.handleRightSprint=Use <ctrl> + <RMB> to apply a blade to the right handle
+3DManeuverGear.ToolTip.damageLeft=Left blade integrity
+3DManeuverGear.ToolTip.damageLeft=Right blade integrity
+3DManeuverGear.ToolTip.boots1=These boots are equipped with shock dampers,
+3DManeuverGear.ToolTip.boots2=making it less painful to hit the ground at higher velocities

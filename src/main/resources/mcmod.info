@@ -1,0 +1,22 @@
+[
+{
+"modid": "3DManeuverGear",
+"name": "3D Maneuver Gear",
+"description": "3D Maneuver Gear in Minecraft",
+"version": "${version}",
+"mcversion": "${mcversion}",
+"url": "http://minecraft.curseforge.com/projects/d-maneuver-gear",
+"updateUrl": "http://minecraft.curseforge.com/projects/d-maneuver-gear/files",
+"authorList": [
+"InfinityRaider"
+],
+"credits": "",
+"logoFile": "",
+"screenshots": [
+],
+"parent":"",
+"dependencies": [
+"Baubles"
+]
+}
+]
