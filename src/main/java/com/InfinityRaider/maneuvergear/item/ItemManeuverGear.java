@@ -153,7 +153,7 @@ public class ItemManeuverGear extends Item implements IBaubleRendered, IItemWith
         EntityPlayer player = (EntityPlayer) entity;
         boolean remote = player.worldObj.isRemote;
         if(remote && stack!=null && stack.getItem()!=null && stack.getItem()==this) {
-            if(DartHandler.instance.getLeftDart(player)!=null || DartHandler.instance.getRightDart(player)!=null) {
+            if(DartHandler.instance.isWearingGear(player) && (DartHandler.instance.getLeftDart(player)!=null || DartHandler.instance.getRightDart(player)!=null)) {
                 PhysicsEngine engine = DartHandler.instance.getPhysicsEngine(player);
                 engine.updateTick();
             }
