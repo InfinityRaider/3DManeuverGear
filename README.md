@@ -1,4 +1,4 @@
-# AgriCraft 
+# 3D Maneuver Gear
 
 3D Maneuver Gear in Minecraft
 
