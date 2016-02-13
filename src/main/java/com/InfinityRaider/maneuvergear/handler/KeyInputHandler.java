@@ -4,13 +4,13 @@ import com.InfinityRaider.maneuvergear.ManeuverGear;
 import com.InfinityRaider.maneuvergear.network.MessageBoostUsed;
 import com.InfinityRaider.maneuvergear.network.NetworkWrapperManeuverGear;
 import com.InfinityRaider.maneuvergear.proxy.ClientProxy;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.InputEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class KeyInputHandler {
@@ -30,10 +30,10 @@ public class KeyInputHandler {
     @SubscribeEvent
     @SuppressWarnings("unused")
     public void onKeyInput(InputEvent.KeyInputEvent event) {
-        boolean left = ClientProxy.retractLeft.getIsKeyPressed();
-        boolean right = ClientProxy.retractRight.getIsKeyPressed();
-        boolean space = Minecraft.getMinecraft().gameSettings.keyBindJump.getIsKeyPressed();
-        boolean sneak = Minecraft.getMinecraft().gameSettings.keyBindSneak.getIsKeyPressed();
+        boolean left = ClientProxy.retractLeft.isPressed();
+        boolean right = ClientProxy.retractRight.isPressed();
+        boolean space = Minecraft.getMinecraft().gameSettings.keyBindJump.isPressed();
+        boolean sneak = Minecraft.getMinecraft().gameSettings.keyBindSneak.isPressed();
 
         if(left != status_left) {
             toggleRetracting(ManeuverGear.proxy.getClientPlayer(), true, left);

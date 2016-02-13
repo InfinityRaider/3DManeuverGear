@@ -4,15 +4,15 @@ import com.InfinityRaider.maneuvergear.item.IDualWieldedWeapon;
 import com.InfinityRaider.maneuvergear.network.MessageAttackDualWielded;
 import com.InfinityRaider.maneuvergear.network.MessageMouseButtonPressed;
 import com.InfinityRaider.maneuvergear.network.NetworkWrapperManeuverGear;
-import cpw.mods.fml.common.eventhandler.Event;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.MouseEvent;
+import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class MouseClickHandler {
@@ -47,8 +47,8 @@ public class MouseClickHandler {
         }
         if(stack.getItem() instanceof IDualWieldedWeapon) {
             if(leftButtonPressed) {
-                boolean shift = Minecraft.getMinecraft().gameSettings.keyBindSneak.getIsKeyPressed();
-                boolean ctrl = Minecraft.getMinecraft().gameSettings.keyBindSprint.getIsKeyPressed();
+                boolean shift = Minecraft.getMinecraft().gameSettings.keyBindSneak.isPressed();
+                boolean ctrl = Minecraft.getMinecraft().gameSettings.keyBindSprint.isPressed();
                 IDualWieldedWeapon weapon = (IDualWieldedWeapon) stack.getItem();
                 attackEntity(weapon, player, stack, true, shift, ctrl);
                 weapon.onLeftItemUsed(stack, player, shift, ctrl);
@@ -76,8 +76,8 @@ public class MouseClickHandler {
         }
         if(stack.getItem() instanceof IDualWieldedWeapon) {
             if(rightButtonPressed) {
-                boolean shift = Minecraft.getMinecraft().gameSettings.keyBindSneak.getIsKeyPressed();
-                boolean ctrl = Minecraft.getMinecraft().gameSettings.keyBindSprint.getIsKeyPressed();
+                boolean shift = Minecraft.getMinecraft().gameSettings.keyBindSneak.isPressed();
+                boolean ctrl = Minecraft.getMinecraft().gameSettings.keyBindSprint.isPressed();
                 IDualWieldedWeapon weapon = (IDualWieldedWeapon) stack.getItem();
                 attackEntity(weapon, player, stack, false, shift, ctrl);
                 Minecraft.getMinecraft().thePlayer.swingItem();

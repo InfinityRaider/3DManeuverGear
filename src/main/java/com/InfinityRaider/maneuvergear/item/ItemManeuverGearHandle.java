@@ -6,10 +6,8 @@ import com.InfinityRaider.maneuvergear.init.Items;
 import com.InfinityRaider.maneuvergear.reference.Names;
 import com.InfinityRaider.maneuvergear.render.IItemModelRenderer;
 import com.InfinityRaider.maneuvergear.render.RenderItemHandle;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -19,10 +17,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.EnumHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
@@ -114,7 +113,7 @@ public class ItemManeuverGearHandle extends ItemSword implements IDualWieldedWea
     private void onSwordBladeBroken(EntityPlayer player) {
         if(player != null && !player.worldObj.isRemote) {
             Block.SoundType sound = Block.soundTypeAnvil;
-            player.worldObj.playSoundAtEntity(player,sound.func_150496_b(), (sound.getVolume() + 1.0F) / 4.0F, sound.getPitch() * 0.8F);
+            player.worldObj.playSoundAtEntity(player, sound.getPlaceSound(), (sound.getVolume() + 1.0F) / 4.0F, sound.getFrequency() * 0.8F);
         }
     }
 
@@ -125,11 +124,6 @@ public class ItemManeuverGearHandle extends ItemSword implements IDualWieldedWea
      */
     public boolean isValidManeuverGearHandleStack(ItemStack stack) {
         return stack != null && stack.getItem() != null && stack.getItem() instanceof ItemManeuverGearHandle;
-    }
-
-    @Override
-    public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-        return false;
     }
 
     @Override
@@ -243,14 +237,9 @@ public class ItemManeuverGearHandle extends ItemSword implements IDualWieldedWea
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public IIcon getIcon(ItemStack stack) {
+    public TextureAtlasSprite getIcon(ItemStack stack) {
         return null;
     }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister reg) {}
 
     @Override
     @SideOnly(Side.CLIENT)

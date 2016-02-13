@@ -1,9 +1,5 @@
 package com.InfinityRaider.maneuvergear.item;
 
-import com.InfinityRaider.maneuvergear.utility.LogHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -11,8 +7,9 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
@@ -21,28 +18,9 @@ import java.util.List;
 
 public class ItemFallBoots extends ItemArmor implements IItemWithRecipe {
     public ItemFallBoots() {
-        super(ArmorMaterial.CLOTH, 0, 3); //(material: cloth, index: cloth, type: boots)
+        super(ArmorMaterial.LEATHER, 0, 3); //(material: cloth, index: cloth, type: boots)
         this.setCreativeTab(CreativeTabs.tabCombat);
         this.setMaxStackSize(1);
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister reg) {
-        LogHelper.debug("registering icon for: " + this.getUnlocalizedName());
-        this.itemIcon = reg.registerIcon(this.getUnlocalizedName().substring(this.getUnlocalizedName().indexOf('.') + 1));
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public IIcon getIconFromDamage(int meta) {
-        return this.itemIcon;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public boolean requiresMultipleRenderPasses() {
-        return false;
     }
 
     @Override

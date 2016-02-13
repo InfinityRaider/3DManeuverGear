@@ -4,29 +4,27 @@ import com.InfinityRaider.maneuvergear.entity.EntityDart;
 import com.InfinityRaider.maneuvergear.handler.ConfigurationHandler;
 import com.InfinityRaider.maneuvergear.handler.KeyInputHandler;
 import com.InfinityRaider.maneuvergear.handler.MouseClickHandler;
-import com.InfinityRaider.maneuvergear.init.Items;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngine;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngineClientLocal;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngineDummy;
 import com.InfinityRaider.maneuvergear.reference.Names;
 import com.InfinityRaider.maneuvergear.reference.Reference;
 import com.InfinityRaider.maneuvergear.render.*;
-import com.InfinityRaider.maneuvergear.render.model.ModelBipedModified;
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import com.InfinityRaider.maneuvergear.render.model.ModelPlayerModified;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.EntityCloudFX;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
 @SuppressWarnings("unused")
@@ -74,8 +72,7 @@ public class ClientProxy extends CommonProxy {
         Vec3 lookVec = player.getLook(2);
         int nr = 10;
         for(int i=0;i<nr;i++) {
-            EntityCloudFX particle = new EntityCloudFX(world, x, y, z, -(lookVec.xCoord*i)/(0.0F+nr), -(lookVec.yCoord*i)/(0.0F+nr), -(lookVec.zCoord*i)/(0.0F+nr));
-            Minecraft.getMinecraft().effectRenderer.addEffect(particle);
+            Minecraft.getMinecraft().effectRenderer.spawnEffectParticle(EnumParticleTypes.CLOUD.getParticleID(), x, y, z, -(lookVec.xCoord * i) / (0.0F + nr), -(lookVec.yCoord * i) / (0.0F + nr), -(lookVec.zCoord * i) / (0.0F + nr));
         }
     }
 
@@ -117,14 +114,12 @@ public class ClientProxy extends CommonProxy {
     @SuppressWarnings("unchecked")
     public void registerRenderers() {
         //items
-        MinecraftForgeClient.registerItemRenderer(Items.itemManeuverGearHandle, RenderItemHandle.instance);
-        MinecraftForgeClient.registerItemRenderer(Items.itemManeuverGear, RenderManeuverGear.instance);
 
         //entities
-        RenderingRegistry.registerEntityRenderingHandler(EntityDart.class, new RenderEntityDart());
+        RenderingRegistry.registerEntityRenderingHandler(EntityDart.class, RenderEntityDart.RenderFactory.getInstance());
 
         //player rendering
-        ModelBipedModified.replaceOldModel();
+        ModelPlayerModified.replaceOldModel();
     }
 
     @Override

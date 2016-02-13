@@ -1,8 +1,8 @@
 package com.InfinityRaider.maneuvergear.utility;
 
 import com.InfinityRaider.maneuvergear.reference.Reference;
-import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.item.Item;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public abstract class RegisterHelper {
 

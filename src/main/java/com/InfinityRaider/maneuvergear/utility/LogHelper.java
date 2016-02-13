@@ -2,7 +2,7 @@ package com.InfinityRaider.maneuvergear.utility;
 
 import com.InfinityRaider.maneuvergear.handler.ConfigurationHandler;
 import com.InfinityRaider.maneuvergear.reference.Reference;
-import cpw.mods.fml.common.FMLLog;
+import net.minecraftforge.fml.common.FMLLog;
 import org.apache.logging.log4j.Level;
 
 @SuppressWarnings("unused")

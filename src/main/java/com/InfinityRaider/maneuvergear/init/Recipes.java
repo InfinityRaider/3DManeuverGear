@@ -2,8 +2,8 @@ package com.InfinityRaider.maneuvergear.init;
 
 import com.InfinityRaider.maneuvergear.item.IItemWithRecipe;
 import com.InfinityRaider.maneuvergear.utility.LogHelper;
-import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.lang.reflect.Field;
 

@@ -3,9 +3,9 @@ package com.InfinityRaider.maneuvergear.physics;
 import com.InfinityRaider.maneuvergear.entity.EntityDart;
 import com.InfinityRaider.maneuvergear.handler.ConfigurationHandler;
 import com.InfinityRaider.maneuvergear.utility.LogHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * This class is used to calculate the player's new velocity when using one or two grapples,
@@ -106,8 +106,8 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
     private Vector calculateVelocityForDoubleCondition(EntityDart left, EntityDart right, Vector p_old, Vector p_new, Vector v_old) {
         double l = left.getCableLength();
         double r = right.getCableLength();
-        Vector L = left.getPositionVector();
-        Vector R = right.getPositionVector();
+        Vector L = left.getPositionAsVector();
+        Vector R = right.getPositionAsVector();
         Vector Pn = calculatePositionForConflictingCableLengths(L, R, l, r);
         if(Pn != null) {
             return calculateVelocity(Pn, p_old);
@@ -267,10 +267,10 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
     @Override
     public void onDartAnchored(EntityDart dart) {
         if(dart.isLeft()) {
-            L = dart.getPositionVector();
+            L = dart.getPositionAsVector();
         }
         else {
-            R = dart.getPositionVector();
+            R = dart.getPositionAsVector();
         }
     }
 
@@ -324,12 +324,12 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
         }
         if(dart.isLeft()) {
             if(L == null) {
-                L = dart.isHooked()?dart.getPositionVector():null;
+                L = dart.isHooked()?dart.getPositionAsVector():null;
             }
             return L;
         } else {
             if(R == null) {
-                R = dart.isHooked()?dart.getPositionVector():null;
+                R = dart.isHooked()?dart.getPositionAsVector():null;
             }
             return R;
         }

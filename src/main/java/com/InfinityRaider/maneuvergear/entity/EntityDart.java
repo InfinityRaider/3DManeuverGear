@@ -5,15 +5,16 @@ import com.InfinityRaider.maneuvergear.handler.DartHandler;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngine;
 import com.InfinityRaider.maneuvergear.physics.Vector;
 import com.InfinityRaider.maneuvergear.reference.Names;
-import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
 public class EntityDart extends EntityThrowable implements IEntityAdditionalSpawnData {
     //number of blocks to fall per second due to gravity
@@ -89,7 +90,7 @@ public class EntityDart extends EntityThrowable implements IEntityAdditionalSpaw
 
     public double calculateDistanceToPlayer() {
         EntityPlayer player = this.getPlayer();
-        return this.getPositionVector().substract(new Vector(player.posX, player.posY, player.posZ)).norm();
+        return this.getPositionAsVector().substract(new Vector(player.posX, player.posY, player.posZ)).norm();
     }
 
     /** sets the length of the cable */
@@ -103,7 +104,7 @@ public class EntityDart extends EntityThrowable implements IEntityAdditionalSpaw
     }
 
     /** returns the coordinates of this entity in the form of a Vector */
-    public Vector getPositionVector() {
+    public Vector getPositionAsVector() {
         return new Vector(this.posX, this.posY, this.posZ);
     }
 
@@ -127,8 +128,8 @@ public class EntityDart extends EntityThrowable implements IEntityAdditionalSpaw
         if (this.throwableShake > 0) {
             --this.throwableShake;
         }
-        Vec3 vec3 = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
-        Vec3 vec31 = Vec3.createVectorHelper(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
+        Vec3 vec3 = new Vec3(this.posX, this.posY, this.posZ);
+        Vec3 vec31 = new Vec3(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
         MovingObjectPosition movingobjectposition = this.worldObj.rayTraceBlocks(vec3, vec31);
         if (movingobjectposition != null) {
             if(movingobjectposition.typeOfHit != MovingObjectPosition.MovingObjectType.BLOCK) {
@@ -166,7 +167,7 @@ public class EntityDart extends EntityThrowable implements IEntityAdditionalSpaw
         if (this.isInWater()) {
             for (int i = 0; i < 4; ++i) {
                 float f4 = 0.25F;
-                this.worldObj.spawnParticle("bubble", this.posX - this.motionX * (double)f4, this.posY - this.motionY * (double)f4, this.posZ - this.motionZ * (double)f4, this.motionX, this.motionY, this.motionZ);
+                this.worldObj.spawnParticle(EnumParticleTypes.WATER_BUBBLE, this.posX - this.motionX * (double)f4, this.posY - this.motionY * (double)f4, this.posZ - this.motionZ * (double)f4, this.motionX, this.motionY, this.motionZ);
             }
             f2 = 0.8F;
         }
@@ -198,7 +199,7 @@ public class EntityDart extends EntityThrowable implements IEntityAdditionalSpaw
         tag.setBoolean(Names.NBT.LEFT, left);
         tag.setBoolean(Names.NBT.HOOKED, hooked);
         tag.setDouble(Names.NBT.LENGTH, cableLength);
-        tag.setString(Names.NBT.PLAYER, player.getDisplayName());
+        tag.setInteger(Names.NBT.PLAYER, player.getEntityId());
     }
 
     @Override
@@ -215,8 +216,7 @@ public class EntityDart extends EntityThrowable implements IEntityAdditionalSpaw
         data.writeBoolean(this.left);
         data.writeBoolean(this.hooked);
         data.writeDouble(this.cableLength);
-        data.writeInt(player.getDisplayName().length());
-        data.writeBytes((player.getDisplayName().getBytes()));
+        data.writeInt(player.getEntityId());
     }
 
     @Override

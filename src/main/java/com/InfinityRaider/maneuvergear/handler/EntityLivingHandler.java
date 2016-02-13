@@ -1,7 +1,6 @@
 package com.InfinityRaider.maneuvergear.handler;
 
 import com.InfinityRaider.maneuvergear.init.Items;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.item.EntityItem;
@@ -10,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class EntityLivingHandler {
     private static final EntityLivingHandler INSTANCE = new EntityLivingHandler();

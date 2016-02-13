@@ -1,16 +1,15 @@
 package com.InfinityRaider.maneuvergear.render;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.IItemRenderer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Interface used for dual weapon rendering
  */
 @SideOnly(Side.CLIENT)
-public interface IItemModelRenderer extends IItemRenderer {
+public interface IItemModelRenderer {
     /**
      * Called when this item is rendered
      * @param entity entity

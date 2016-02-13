@@ -1,12 +1,12 @@
 package com.InfinityRaider.maneuvergear.item;
 
 import com.InfinityRaider.maneuvergear.render.IItemModelRenderer;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Interface implemented in Item classes which should be dual wielding weapons,
@@ -99,5 +99,5 @@ public interface IDualWieldedWeapon {
      * @return the IIcon for this item
      */
     @SideOnly(Side.CLIENT)
-    IIcon getIcon(ItemStack stack);
+    TextureAtlasSprite getIcon(ItemStack stack);
 }

@@ -1,10 +1,10 @@
 package com.InfinityRaider.maneuvergear.proxy;
 
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngine;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 public interface IProxy {
     void registerEventHandlers();

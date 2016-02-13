@@ -1,54 +1,21 @@
 package com.InfinityRaider.maneuvergear.render;
 
-import com.InfinityRaider.maneuvergear.init.Items;
 import com.InfinityRaider.maneuvergear.item.ItemManeuverGearHandle;
-import com.InfinityRaider.maneuvergear.item.ItemResource;
 import com.InfinityRaider.maneuvergear.render.model.ModelManeuverGearHandle;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
 public class RenderItemHandle implements IItemModelRenderer {
     private ModelManeuverGearHandle model = new ModelManeuverGearHandle();
     public static final RenderItemHandle instance = new RenderItemHandle();
-
-    @Override
-    public boolean handleRenderType(ItemStack item, ItemRenderType type) {
-        return true;
-    }
-
-    @Override
-    public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper) {
-        return true;
-    }
-
-    @Override
-    public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
-        if (type == ItemRenderType.ENTITY) {
-            renderEntity(item);
-            return;
-        }
-        if (type == ItemRenderType.EQUIPPED) {
-            renderEquipped(item, (Entity) data[1]);
-            return;
-        }
-        if (type == ItemRenderType.EQUIPPED_FIRST_PERSON) {
-            renderEquippedFirstPerson(item, (Entity) data[1]);
-            return;
-        }
-        if (type == ItemRenderType.INVENTORY) {
-            renderInventory(item);
-        }
-    }
 
     /**
      * Render item as entity in the
@@ -179,10 +146,6 @@ public class RenderItemHandle implements IItemModelRenderer {
             ItemManeuverGearHandle handle = (ItemManeuverGearHandle) stack.getItem();
             if(handle.hasSwordBlade(stack, left)) {
 
-                Tessellator tessellator = Tessellator.instance;
-                Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationItemsTexture);
-                IIcon icon = Items.itemResource.getIconFromDamage(ItemResource.EnumSubItems.SWORD_BLADE.ordinal());
-
                 GL11.glPushMatrix();
 
                 float scale = 20;
@@ -203,11 +166,10 @@ public class RenderItemHandle implements IItemModelRenderer {
                 float X = -0.7F;
                 float Y = -0.2F;
                 float Z = 0.0375F;
-                tessellator.addTranslation(X, Y, Z);
 
-                ItemRenderer.renderItemIn2D(tessellator, icon.getMinU(), icon.getMinV(), icon.getMaxU(), icon.getMaxV(), icon.getIconWidth(), icon.getIconHeight(), 1.0F / ((float) 16));
-
-                tessellator.addTranslation(-X, -Y, -Z);
+                GlStateManager.translate(X, Y, Z);
+                Minecraft.getMinecraft().getRenderItem().renderItem(stack, ItemCameraTransforms.TransformType.NONE);
+                GlStateManager.translate(-X, -Y, -Z);
 
                 GL11.glScalef(1F / 1.5F, 1F / 1.5F, 1F / 0.8F);
                 GL11.glRotatef(-az, 0, 0, 1);

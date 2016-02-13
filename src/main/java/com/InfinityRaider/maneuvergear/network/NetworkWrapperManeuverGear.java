@@ -1,9 +1,9 @@
 package com.InfinityRaider.maneuvergear.network;
 
 import com.InfinityRaider.maneuvergear.reference.Reference;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class NetworkWrapperManeuverGear {
     public static final int MSG_ID_REQUEST_BAUBLES = 0;

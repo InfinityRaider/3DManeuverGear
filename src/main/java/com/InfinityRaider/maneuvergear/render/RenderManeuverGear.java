@@ -4,62 +4,31 @@ import com.InfinityRaider.maneuvergear.init.Items;
 import com.InfinityRaider.maneuvergear.item.ItemManeuverGear;
 import com.InfinityRaider.maneuvergear.item.ItemResource;
 import com.InfinityRaider.maneuvergear.render.model.ModelManeuverGear;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
-import net.minecraftforge.client.IItemRenderer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class RenderManeuverGear implements IBaubleRenderer, IItemRenderer {
+public class RenderManeuverGear implements IBaubleRenderer {
     public static final RenderManeuverGear instance = new RenderManeuverGear();
+    private final ItemStack swordBlade;
 
     @SideOnly(Side.CLIENT)
     private ModelManeuverGear model;
 
     private RenderManeuverGear() {
         this.model = new ModelManeuverGear();
+        this.swordBlade = ItemResource.EnumSubItems.SWORD_BLADE.getStack();
     }
 
     @Override
     public void renderBauble(EntityLivingBase entity, ItemStack stack, float partialRenderTick) {
         renderModel(entity, stack);
-    }
-
-    @Override
-    public boolean handleRenderType(ItemStack item, ItemRenderType type) {
-        return true;
-    }
-
-    @Override
-    public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper) {
-        return true;
-    }
-
-    @Override
-    public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
-        if(type == ItemRenderType.ENTITY) {
-            renderEntity(item, (Entity) data[1]);
-            return;
-        }
-        if(type == ItemRenderType.EQUIPPED) {
-            renderEquipped(item, (Entity) data[1]);
-            return;
-        }
-        if(type == ItemRenderType.EQUIPPED_FIRST_PERSON) {
-            renderEquippedFirstPerson(item, (Entity) data[1]);
-            return;
-        }
-        if(type == ItemRenderType.INVENTORY) {
-            renderInventory(item);
-        }
     }
 
     /** Render item as entity in the
@@ -178,15 +147,12 @@ public class RenderManeuverGear implements IBaubleRenderer, IItemRenderer {
     private void renderBlades(ItemManeuverGear maneuverGear, ItemStack stack, boolean left) {
         int amount = maneuverGear.getBladeCount(stack, left);
         if(amount > 0) {
-            Tessellator tessellator = Tessellator.instance;
-            IIcon icon = Items.itemResource.getIconFromDamage(ItemResource.EnumSubItems.SWORD_BLADE.ordinal());
-            Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationItemsTexture);
             float delta = 0.055F;
 
             GL11.glPushMatrix();
 
             for(int i = 0; i < amount; i++) {
-                ItemRenderer.renderItemIn2D(tessellator, icon.getMinU(), icon.getMinV(), icon.getMaxU(), icon.getMaxV(), icon.getIconWidth(), icon.getIconHeight(), 0.4F / ((float) 16));
+                Minecraft.getMinecraft().getRenderItem().renderItem(swordBlade, ItemCameraTransforms.TransformType.NONE);
                 GL11.glTranslatef(0, 0, delta);
             }
             GL11.glTranslatef(0, 0, -amount * delta);

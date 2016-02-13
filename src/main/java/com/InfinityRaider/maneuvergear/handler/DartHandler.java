@@ -6,14 +6,15 @@ import com.InfinityRaider.maneuvergear.entity.EntityDart;
 import com.InfinityRaider.maneuvergear.item.ItemManeuverGear;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngine;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngineDummy;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.network.FMLNetworkEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -170,7 +171,7 @@ public class DartHandler {
 
     @SubscribeEvent
     @SuppressWarnings("unused")
-    public void onPlayerLoggedIn(cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent event) {
+    public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.player == null) {
             return;
         }
@@ -182,7 +183,7 @@ public class DartHandler {
 
     @SubscribeEvent
     @SuppressWarnings("unused")
-    public void onPlayerRespawn(cpw.mods.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent event) {
+    public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
         if (event.player == null) {
             return;
         }
@@ -193,7 +194,7 @@ public class DartHandler {
 
     @SubscribeEvent
     @SuppressWarnings("unused")
-    public void onPlayerDimensionChange(cpw.mods.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent event) {
+    public void onPlayerDimensionChange(PlayerEvent.PlayerChangedDimensionEvent event) {
         if (event.player == null) {
             return;
         }
@@ -205,7 +206,7 @@ public class DartHandler {
 
     @SubscribeEvent
     @SuppressWarnings("unused")
-    public void onPlayerLoggedOut(cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent event) {
+    public void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
         if(event.player == null) {
             return;
         }

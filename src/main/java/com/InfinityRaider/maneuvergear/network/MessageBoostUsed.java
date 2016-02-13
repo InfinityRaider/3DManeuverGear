@@ -1,12 +1,12 @@
 package com.InfinityRaider.maneuvergear.network;
 
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class MessageBoostUsed extends MessageBase {
     public MessageBoostUsed() {}
@@ -24,7 +24,7 @@ public class MessageBoostUsed extends MessageBase {
                 EntityPlayer player = ctx.getServerHandler().playerEntity;
                 if(player != null) {
                     IMessage msg = new MessageSpawnSteamParticles(player);
-                    NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(player.worldObj.provider.dimensionId, player.posX, player.posY, player.posZ, 64);
+                    NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(player.worldObj.provider.getDimensionId(), player.posX, player.posY, player.posZ, 64);
                     NetworkWrapperManeuverGear.wrapper.sendToAllAround(msg, point);
                 }
             }

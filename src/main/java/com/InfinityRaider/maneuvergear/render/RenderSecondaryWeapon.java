@@ -2,29 +2,25 @@ package com.InfinityRaider.maneuvergear.render;
 
 import com.InfinityRaider.maneuvergear.handler.SwingLeftHandHandler;
 import com.InfinityRaider.maneuvergear.item.IDualWieldedWeapon;
-import com.InfinityRaider.maneuvergear.render.model.ModelBipedModified;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import com.InfinityRaider.maneuvergear.render.model.ModelPlayerModified;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -40,7 +36,7 @@ public class RenderSecondaryWeapon {
     @SubscribeEvent
     @SuppressWarnings("unused")
     public void setPlayerLeftArmSwing(RenderPlayerEvent.Pre event) {
-        ModelBipedModified.setLeftArmSwingProgress(SwingLeftHandHandler.getInstance().getSwingProgress(event.entityPlayer, event.partialRenderTick));
+        ModelPlayerModified.setLeftArmSwingProgress(SwingLeftHandHandler.getInstance().getSwingProgress(event.entityPlayer, event.partialRenderTick));
     }
 
     @SubscribeEvent
@@ -79,8 +75,7 @@ public class RenderSecondaryWeapon {
         if(item.useModel(stack)) {
            item.getModel(stack).renderModel(player, stack, true);
         } else {
-            IIcon icon = item.getIcon(stack);
-            ItemRenderer.renderItemIn2D(Tessellator.instance, icon.getMinU(), icon.getMinV(), icon.getMaxU(), icon.getMaxV(), icon.getIconWidth(), icon.getIconHeight(), 1.0F/((float) 16));
+            Minecraft.getMinecraft().getRenderItem().renderItem(stack, ItemCameraTransforms.TransformType.NONE);
         }
 
         GL11.glScalef(1 / scale, 1 / scale, 1 / scale);
@@ -96,7 +91,7 @@ public class RenderSecondaryWeapon {
     @SubscribeEvent
     @SuppressWarnings("unused")
     public void renderLeftWeaponFirstPerson(RenderGameOverlayEvent event) {
-        EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+        EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
         if(player == null || prevEquippedItemSlot != equippedItemSlot) {
             return;
         }
@@ -116,7 +111,7 @@ public class RenderSecondaryWeapon {
         GL11.glPushMatrix();
 
         RenderHelper.enableStandardItemLighting();
-        int i = Minecraft.getMinecraft().theWorld.getLightBrightnessForSkyBlocks((int) player.posX, (int) player.posY, (int) player.posZ, 0);
+        int i = Minecraft.getMinecraft().theWorld.getLight(player.getPosition());
         int j = i % 65536;
         int k = i / 65536;
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) j / 1.0F, (float) k / 1.0F);
@@ -146,8 +141,7 @@ public class RenderSecondaryWeapon {
         if (item.useModel(stack)) {
             item.getModel(stack).renderModel(player, stack, true);
         } else {
-            IIcon icon = item.getIcon(stack);
-            ItemRenderer.renderItemIn2D(Tessellator.instance, icon.getMinU(), icon.getMinV(), icon.getMaxU(), icon.getMaxV(), icon.getIconWidth(), icon.getIconHeight(), 1.0F / ((float) 16));
+            Minecraft.getMinecraft().getRenderItem().renderItem(stack, ItemCameraTransforms.TransformType.NONE);
         }
         Minecraft.getMinecraft().renderEngine.bindTexture(Gui.icons);
 
@@ -175,11 +169,11 @@ public class RenderSecondaryWeapon {
     }
 
     private void applyTransformationsFromPlayerThirdPerson(EntityPlayer player, float partialTick, boolean inverse) {
-        Render render = RenderManager.instance.getEntityRenderObject(player);
+        Render render = Minecraft.getMinecraft().getRenderManager().getEntityRenderObject(player);
         if(!(render instanceof RenderPlayer)) {
             return;
         }
-        applyTransformationsFromModel(((RenderPlayer) render).modelBipedMain.bipedLeftArm, partialTick, inverse);
+        applyTransformationsFromModel(((RenderPlayer) render).getMainModel().bipedLeftArm, partialTick, inverse);
     }
 
     private void applyTransformationsFromModel(ModelRenderer model, float partialTick, boolean inverse) {
@@ -266,8 +260,8 @@ public class RenderSecondaryWeapon {
         if(!mc.gameSettings.viewBobbing) {
             return;
         }
-        if (mc.renderViewEntity instanceof EntityPlayer) {
-            EntityPlayer entityplayer = (EntityPlayer) mc.renderViewEntity;
+        if (mc.getRenderViewEntity() instanceof EntityPlayer) {
+            EntityPlayer entityplayer = (EntityPlayer) mc.getRenderViewEntity();
             float f1 = entityplayer.distanceWalkedModified - entityplayer.prevDistanceWalkedModified;
             float f2 = -(entityplayer.distanceWalkedModified + f1 * partialTick);
             float f3 = entityplayer.prevCameraYaw + (entityplayer.cameraYaw - entityplayer.prevCameraYaw) * partialTick;
@@ -291,8 +285,8 @@ public class RenderSecondaryWeapon {
         if(!mc.gameSettings.viewBobbing) {
             return;
         }
-        if (mc.renderViewEntity instanceof EntityPlayer) {
-            EntityPlayer entityplayer = (EntityPlayer) mc.renderViewEntity;
+        if (mc.getRenderViewEntity() instanceof EntityPlayer) {
+            EntityPlayer entityplayer = (EntityPlayer) mc.getRenderViewEntity();
             float f1 = entityplayer.distanceWalkedModified - entityplayer.prevDistanceWalkedModified;
             float f2 = -(entityplayer.distanceWalkedModified + f1 * partialTick);
             float f3 = entityplayer.prevCameraYaw + (entityplayer.cameraYaw - entityplayer.prevCameraYaw) * partialTick;
@@ -313,7 +307,7 @@ public class RenderSecondaryWeapon {
     }
 
     public void updateEquippedItem() {
-        EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+        EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
         if(player == null) {
             return;
         }

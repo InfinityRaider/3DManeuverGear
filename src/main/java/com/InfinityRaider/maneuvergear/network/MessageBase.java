@@ -1,14 +1,15 @@
 package com.InfinityRaider.maneuvergear.network;
 
 import com.InfinityRaider.maneuvergear.ManeuverGear;
-import cpw.mods.fml.common.network.ByteBufUtils;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public abstract  class MessageBase implements IMessage {
     protected EntityPlayer readPlayerFromByteBuf(ByteBuf buf) {
@@ -35,18 +36,18 @@ public abstract  class MessageBase implements IMessage {
             buf.writeInt(0);
         } else {
             buf.writeInt(e.getEntityId());
-            buf.writeInt(e.worldObj.provider.dimensionId);
+            buf.writeInt(e.worldObj.provider.getDimensionId());
         }
     }
 
     protected Item readItemFromByteBuf(ByteBuf buf) {
         int itemNameLength = buf.readInt();
         String itemName = new String(buf.readBytes(itemNameLength).array());
-        return  (Item) Item.itemRegistry.getObject(itemName);
+        return Item.itemRegistry.getObject(new ResourceLocation(itemName));
     }
 
     protected void writeItemToByteBuf(Item item, ByteBuf buf) {
-        String itemName = item==null?"null":Item.itemRegistry.getNameForObject(item);
+        String itemName = item==null?"null":Item.itemRegistry.getNameForObject(item).toString();
         buf.writeInt(itemName.length());
         buf.writeBytes(itemName.getBytes());
     }

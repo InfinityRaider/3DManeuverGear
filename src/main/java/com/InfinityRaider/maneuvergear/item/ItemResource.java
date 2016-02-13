@@ -2,10 +2,6 @@ package com.InfinityRaider.maneuvergear.item;
 
 import com.InfinityRaider.maneuvergear.handler.DartHandler;
 import com.InfinityRaider.maneuvergear.init.Items;
-import com.InfinityRaider.maneuvergear.utility.LogHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,17 +10,16 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ItemResource extends Item implements IItemWithRecipe {
-
-    public static IIcon[] icons;
 
     public ItemResource() {
         super();
@@ -70,27 +65,10 @@ public class ItemResource extends Item implements IItemWithRecipe {
 
     @Override
     @SideOnly(Side.CLIENT)
-    @SuppressWarnings("unchecked")
-    public void getSubItems(Item item, CreativeTabs tab, List list) {
+    public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
         for(int i=0;i<EnumSubItems.values().length;i++) {
             list.add(new ItemStack(item, 1, i));
         }
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister reg) {
-        LogHelper.debug("registering icons for: " + this.getUnlocalizedName());
-        icons  = new IIcon[EnumSubItems.values().length];
-        for(int i=0;i< icons.length;i++) {
-            icons[i] = reg.registerIcon(this.getUnlocalizedName().substring(this.getUnlocalizedName().indexOf('.') + 1)+"."+EnumSubItems.getNameForIndex(i));
-        }
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public IIcon getIconFromDamage(int meta) {
-        return icons[meta%icons.length];
     }
 
     @Override
