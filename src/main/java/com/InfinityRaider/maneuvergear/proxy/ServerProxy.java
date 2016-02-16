@@ -33,4 +33,9 @@ public class ServerProxy extends CommonProxy {
     public void registerEventHandlers() {
         super.registerEventHandlers();
     }
+
+    @Override
+    public void replacePlayerModel() {
+
+    }
 }

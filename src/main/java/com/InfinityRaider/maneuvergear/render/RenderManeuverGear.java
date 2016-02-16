@@ -1,6 +1,5 @@
 package com.InfinityRaider.maneuvergear.render;
 
-import com.InfinityRaider.maneuvergear.init.Items;
 import com.InfinityRaider.maneuvergear.item.ItemManeuverGear;
 import com.InfinityRaider.maneuvergear.item.ItemResource;
 import com.InfinityRaider.maneuvergear.render.model.ModelManeuverGear;

@@ -1,7 +1,9 @@
 package com.InfinityRaider.maneuvergear.item;
 
 import com.InfinityRaider.maneuvergear.handler.DartHandler;
-import com.InfinityRaider.maneuvergear.init.Items;
+import com.InfinityRaider.maneuvergear.init.ItemRegistry;
+import com.InfinityRaider.maneuvergear.reference.Reference;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,7 +21,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemResource extends Item implements IItemWithRecipe {
+public class ItemResource extends Item implements IItemWithRecipe, IItemWithModel {
 
     public ItemResource() {
         super();
@@ -120,6 +122,15 @@ public class ItemResource extends Item implements IItemWithRecipe {
         return list;
     }
 
+    @Override
+    public ModelResourceLocation[] getModelDefinitions() {
+        ModelResourceLocation[] variants = new ModelResourceLocation[EnumSubItems.values().length];
+        for(int i = 0; i < variants.length ; i++) {
+            variants[i] = EnumSubItems.values()[i].getModelResourceLocation();
+        }
+        return variants;
+    }
+
     public enum EnumSubItems {
         SWORD_BLADE("swordBlade"),
         GAS_CANISTER("gasCanister"),
@@ -138,7 +149,11 @@ public class ItemResource extends Item implements IItemWithRecipe {
         }
 
         public ItemStack getStack() {
-            return new ItemStack(Items.itemResource, 1, this.ordinal());
+            return new ItemStack(ItemRegistry.getInstance().itemResource, 1, this.ordinal());
+        }
+
+        public ModelResourceLocation getModelResourceLocation() {
+            return new ModelResourceLocation(Reference.MOD_ID.toLowerCase() + ":" + name, "inventory");
         }
 
         public static EnumSubItems getValue(int index) {

@@ -47,8 +47,8 @@ public class MouseClickHandler {
         }
         if(stack.getItem() instanceof IDualWieldedWeapon) {
             if(leftButtonPressed) {
-                boolean shift = Minecraft.getMinecraft().gameSettings.keyBindSneak.isPressed();
-                boolean ctrl = Minecraft.getMinecraft().gameSettings.keyBindSprint.isPressed();
+                boolean shift = Minecraft.getMinecraft().gameSettings.keyBindSneak.isKeyDown();
+                boolean ctrl = Minecraft.getMinecraft().gameSettings.keyBindSprint.isKeyDown();
                 IDualWieldedWeapon weapon = (IDualWieldedWeapon) stack.getItem();
                 attackEntity(weapon, player, stack, true, shift, ctrl);
                 weapon.onLeftItemUsed(stack, player, shift, ctrl);
@@ -76,8 +76,8 @@ public class MouseClickHandler {
         }
         if(stack.getItem() instanceof IDualWieldedWeapon) {
             if(rightButtonPressed) {
-                boolean shift = Minecraft.getMinecraft().gameSettings.keyBindSneak.isPressed();
-                boolean ctrl = Minecraft.getMinecraft().gameSettings.keyBindSprint.isPressed();
+                boolean shift = Minecraft.getMinecraft().gameSettings.keyBindSneak.isKeyDown();
+                boolean ctrl = Minecraft.getMinecraft().gameSettings.keyBindSprint.isKeyDown();
                 IDualWieldedWeapon weapon = (IDualWieldedWeapon) stack.getItem();
                 attackEntity(weapon, player, stack, false, shift, ctrl);
                 Minecraft.getMinecraft().thePlayer.swingItem();

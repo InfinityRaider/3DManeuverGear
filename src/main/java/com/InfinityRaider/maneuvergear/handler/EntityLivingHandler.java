@@ -1,6 +1,6 @@
 package com.InfinityRaider.maneuvergear.handler;
 
-import com.InfinityRaider.maneuvergear.init.Items;
+import com.InfinityRaider.maneuvergear.init.ItemRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.item.EntityItem;
@@ -31,7 +31,7 @@ public class EntityLivingHandler {
         }
         EntityPlayer player = (EntityPlayer) event.entity;
         ItemStack boots = player.inventory.armorInventory[0];
-        if(boots != null && boots.getItem() != null && boots.getItem() == Items.itemFallBoots) {
+        if(boots != null && boots.getItem() != null && boots.getItem() == ItemRegistry.getInstance().itemFallBoots) {
             event.ammount = (1.0F-ConfigurationHandler.bootFallDamageReduction)*event.ammount;
         }
 
@@ -40,7 +40,7 @@ public class EntityLivingHandler {
     @SubscribeEvent
     @SuppressWarnings("unused")
     public void onWitherDeath(LivingDropsEvent event) {
-        if(Items.itemRecord == null) {
+        if(ItemRegistry.getInstance().itemRecord == null) {
             return;
         }
         if(!(event.entity instanceof EntityWither)) {
@@ -50,8 +50,8 @@ public class EntityLivingHandler {
         if(event.recentlyHit && killer != null && killer instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) killer;
             ItemStack stack = player.getCurrentEquippedItem();
-            if(stack != null && stack.getItem() != null && stack.getItem() == Items.itemManeuverGearHandle) {
-                EntityItem drop = new EntityItem(event.entity.worldObj, event.entity.posX, event.entity.posY+0.5D, event.entity.posZ, new ItemStack(Items.itemRecord));
+            if(stack != null && stack.getItem() != null && stack.getItem() == ItemRegistry.getInstance().itemManeuverGearHandle) {
+                EntityItem drop = new EntityItem(event.entity.worldObj, event.entity.posX, event.entity.posY+0.5D, event.entity.posZ, new ItemStack(ItemRegistry.getInstance().itemRecord));
                 event.drops.add(drop);
             }
         }

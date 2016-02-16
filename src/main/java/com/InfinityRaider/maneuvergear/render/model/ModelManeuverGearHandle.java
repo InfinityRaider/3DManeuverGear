@@ -3,13 +3,22 @@ package com.InfinityRaider.maneuvergear.render.model;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.model.ISmartItemModel;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.List;
+
 @SideOnly(Side.CLIENT)
-public class ModelManeuverGearHandle extends ModelBase {
+public class ModelManeuverGearHandle extends ModelBase implements ISmartItemModel {
     private static final ResourceLocation texture = new ResourceLocation("3dmaneuvergear:textures/models/3DGearHandle.png");
 
     ModelRenderer Hilt;
@@ -67,5 +76,45 @@ public class ModelManeuverGearHandle extends ModelBase {
 
     public void setRotationAngles(Entity e, float f, float f1, float f2, float f3, float f4, float f5) {
         super.setRotationAngles(f, f1, f2, f3, f4, f5, e);
+    }
+
+    @Override
+    public IBakedModel handleItemState(ItemStack stack) {
+        return null;
+    }
+
+    @Override
+    public List<BakedQuad> getFaceQuads(EnumFacing p_177551_1_) {
+        return null;
+    }
+
+    @Override
+    public List<BakedQuad> getGeneralQuads() {
+        return null;
+    }
+
+    @Override
+    public boolean isAmbientOcclusion() {
+        return false;
+    }
+
+    @Override
+    public boolean isGui3d() {
+        return false;
+    }
+
+    @Override
+    public boolean isBuiltInRenderer() {
+        return false;
+    }
+
+    @Override
+    public TextureAtlasSprite getParticleTexture() {
+        return null;
+    }
+
+    @Override
+    public ItemCameraTransforms getItemCameraTransforms() {
+        return null;
     }
 }

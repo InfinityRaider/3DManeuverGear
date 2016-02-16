@@ -2,7 +2,7 @@ package com.InfinityRaider.maneuvergear.item;
 
 import com.InfinityRaider.maneuvergear.handler.ConfigurationHandler;
 import com.InfinityRaider.maneuvergear.handler.DartHandler;
-import com.InfinityRaider.maneuvergear.init.Items;
+import com.InfinityRaider.maneuvergear.init.ItemRegistry;
 import com.InfinityRaider.maneuvergear.reference.Names;
 import com.InfinityRaider.maneuvergear.render.IItemModelRenderer;
 import com.InfinityRaider.maneuvergear.render.RenderItemHandle;
@@ -262,7 +262,7 @@ public class ItemManeuverGearHandle extends ItemSword implements IDualWieldedWea
     @Override
     public List<IRecipe> getRecipes() {
         List<IRecipe> list = new ArrayList<IRecipe>();
-        list.add(new ShapedOreRecipe(Items.itemManeuverGearHandle, "ww ", "iib", "wwl",
+        list.add(new ShapedOreRecipe(ItemRegistry.getInstance().itemManeuverGearHandle, "ww ", "iib", "wwl",
                 'w', new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE),
                 'i', "ingotIron",
                 'b', new ItemStack(Blocks.iron_bars),

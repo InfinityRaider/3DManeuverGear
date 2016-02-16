@@ -1,6 +1,7 @@
 package com.InfinityRaider.maneuvergear.item;
 
 import baubles.api.BaubleType;
+import com.InfinityRaider.maneuvergear.entity.EntityDart;
 import com.InfinityRaider.maneuvergear.handler.DartHandler;
 import com.InfinityRaider.maneuvergear.network.MessageNotifyBaubleEquip;
 import com.InfinityRaider.maneuvergear.network.NetworkWrapperManeuverGear;
@@ -8,6 +9,7 @@ import com.InfinityRaider.maneuvergear.physics.PhysicsEngine;
 import com.InfinityRaider.maneuvergear.reference.Names;
 import com.InfinityRaider.maneuvergear.render.IBaubleRenderer;
 import com.InfinityRaider.maneuvergear.render.RenderManeuverGear;
+import com.InfinityRaider.maneuvergear.utility.LogHelper;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -152,6 +154,10 @@ public class ItemManeuverGear extends Item implements IBaubleRendered, IItemWith
         EntityPlayer player = (EntityPlayer) entity;
         boolean remote = player.worldObj.isRemote;
         if(remote && stack!=null && stack.getItem()!=null && stack.getItem()==this) {
+            EntityDart left = DartHandler.instance.getLeftDart(player);
+            EntityDart right = DartHandler.instance.getRightDart(player);
+            LogHelper.debug("left: "+left);
+            LogHelper.debug("right: "+right);
             if(DartHandler.instance.isWearingGear(player) && (DartHandler.instance.getLeftDart(player)!=null || DartHandler.instance.getRightDart(player)!=null)) {
                 PhysicsEngine engine = DartHandler.instance.getPhysicsEngine(player);
                 engine.updateTick();

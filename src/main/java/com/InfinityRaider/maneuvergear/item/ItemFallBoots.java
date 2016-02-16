@@ -1,5 +1,7 @@
 package com.InfinityRaider.maneuvergear.item;
 
+import com.InfinityRaider.maneuvergear.reference.Reference;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -16,7 +18,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemFallBoots extends ItemArmor implements IItemWithRecipe {
+public class ItemFallBoots extends ItemArmor implements IItemWithRecipe, IItemWithModel {
     public ItemFallBoots() {
         super(ArmorMaterial.LEATHER, 0, 3); //(material: cloth, index: cloth, type: boots)
         this.setCreativeTab(CreativeTabs.tabCombat);
@@ -42,5 +44,10 @@ public class ItemFallBoots extends ItemArmor implements IItemWithRecipe {
                 'b', new ItemStack(Items.leather_boots),
                 'w', new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE)));
         return list;
+    }
+
+    @Override
+    public ModelResourceLocation[] getModelDefinitions() {
+        return new ModelResourceLocation[] {new ModelResourceLocation(Reference.MOD_ID.toLowerCase() + ":fallBoots", "inventory")};
     }
 }

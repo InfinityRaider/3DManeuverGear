@@ -7,13 +7,20 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 public interface IProxy {
+    /** Registers the relevant event handlers for the current side */
     void registerEventHandlers();
 
+    /** Registers the renderers on the client, does nothing on the server */
     void registerRenderers();
 
+    /** Registers the key bindings on the client, does nothing on the server */
     void registerKeyBindings();
 
+    /** Initializes and reads the configuration file with the options relevant to the current side*/
     void initConfiguration(FMLPreInitializationEvent event);
+
+    /** Replaces the player model to have left arm animations on the client, does nothing on the server */
+    void replacePlayerModel();
 
     /** Returns the instance of the EntityPlayer on the client, null on the server */
     EntityPlayer getClientPlayer();

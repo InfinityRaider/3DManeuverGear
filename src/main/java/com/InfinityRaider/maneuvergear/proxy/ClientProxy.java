@@ -4,6 +4,8 @@ import com.InfinityRaider.maneuvergear.entity.EntityDart;
 import com.InfinityRaider.maneuvergear.handler.ConfigurationHandler;
 import com.InfinityRaider.maneuvergear.handler.KeyInputHandler;
 import com.InfinityRaider.maneuvergear.handler.MouseClickHandler;
+import com.InfinityRaider.maneuvergear.init.ItemRegistry;
+import com.InfinityRaider.maneuvergear.item.IItemWithModel;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngine;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngineClientLocal;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngineDummy;
@@ -12,11 +14,14 @@ import com.InfinityRaider.maneuvergear.reference.Reference;
 import com.InfinityRaider.maneuvergear.render.*;
 import com.InfinityRaider.maneuvergear.render.model.ModelPlayerModified;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -83,6 +88,11 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
+    public void replacePlayerModel() {
+        ModelPlayerModified.replaceOldModel();
+    }
+
+    @Override
     public World getWorldByDimensionId(int dimension) {
         Side effectiveSide = FMLCommonHandler.instance().getEffectiveSide();
         if(effectiveSide == Side.SERVER) {
@@ -114,12 +124,17 @@ public class ClientProxy extends CommonProxy {
     @SuppressWarnings("unchecked")
     public void registerRenderers() {
         //items
+        for(Item item : ItemRegistry.getInstance().getItems()) {
+            if(item instanceof IItemWithModel) {
+                ModelResourceLocation[] variants = ((IItemWithModel) item).getModelDefinitions();
+                for(int meta = 0; meta < variants.length; meta++) {
+                    ModelLoader.setCustomModelResourceLocation(item, meta, variants[meta]);
+                }
+            }
+        }
 
         //entities
         RenderingRegistry.registerEntityRenderingHandler(EntityDart.class, RenderEntityDart.RenderFactory.getInstance());
-
-        //player rendering
-        ModelPlayerModified.replaceOldModel();
     }
 
     @Override

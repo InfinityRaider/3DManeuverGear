@@ -30,10 +30,10 @@ public class KeyInputHandler {
     @SubscribeEvent
     @SuppressWarnings("unused")
     public void onKeyInput(InputEvent.KeyInputEvent event) {
-        boolean left = ClientProxy.retractLeft.isPressed();
-        boolean right = ClientProxy.retractRight.isPressed();
-        boolean space = Minecraft.getMinecraft().gameSettings.keyBindJump.isPressed();
-        boolean sneak = Minecraft.getMinecraft().gameSettings.keyBindSneak.isPressed();
+        boolean left = ClientProxy.retractLeft.isKeyDown();
+        boolean right = ClientProxy.retractRight.isKeyDown();
+        boolean space = Minecraft.getMinecraft().gameSettings.keyBindJump.isKeyDown();
+        boolean sneak = Minecraft.getMinecraft().gameSettings.keyBindSneak.isKeyDown();
 
         if(left != status_left) {
             toggleRetracting(ManeuverGear.proxy.getClientPlayer(), true, left);

@@ -2,8 +2,7 @@ package com.InfinityRaider.maneuvergear;
 
 import com.InfinityRaider.maneuvergear.handler.DartHandler;
 import com.InfinityRaider.maneuvergear.init.Entities;
-import com.InfinityRaider.maneuvergear.init.Items;
-import com.InfinityRaider.maneuvergear.init.Recipes;
+import com.InfinityRaider.maneuvergear.init.ItemRegistry;
 import com.InfinityRaider.maneuvergear.network.NetworkWrapperManeuverGear;
 import com.InfinityRaider.maneuvergear.proxy.IProxy;
 import com.InfinityRaider.maneuvergear.reference.Names;
@@ -31,7 +30,9 @@ public class ManeuverGear {
         proxy.registerEventHandlers();
         NetworkWrapperManeuverGear.init();
         proxy.initConfiguration(event);
-        Items.init();
+        ItemRegistry.getInstance().init();
+        Entities.init();
+        proxy.registerRenderers();
         LogHelper.debug("Pre-Initialization Complete");
     }
 
@@ -39,9 +40,7 @@ public class ManeuverGear {
     @SuppressWarnings("unused")
     public static void init(FMLInitializationEvent event) {
         LogHelper.debug("Starting Initialization");
-        Entities.init();
-        Recipes.init();
-        proxy.registerRenderers();
+        ItemRegistry.getInstance().initRecipes();
         proxy.registerKeyBindings();
         LogHelper.debug("Initialization Complete");
     }
@@ -50,6 +49,7 @@ public class ManeuverGear {
     @SuppressWarnings("unused")
     public static void postInit(FMLPostInitializationEvent event) {
         LogHelper.debug("Starting Post-Initialization");
+        proxy.replacePlayerModel();
         LogHelper.debug("Post-Initialization Complete");
     }
 

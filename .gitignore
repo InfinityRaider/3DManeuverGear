@@ -4,6 +4,7 @@ libs/
 .git/
 build/
 out/
+run/
 *.iml
 *.ipr
 *.iws
