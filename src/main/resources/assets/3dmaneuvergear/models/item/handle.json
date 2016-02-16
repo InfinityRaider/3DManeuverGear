@@ -1,0 +1,18 @@
+{
+  "parent": "builtin/generated",
+  "textures": {
+    "layer0": "3dmaneuvergear:items/itemHandle"
+  },
+  "display": {
+    "thirdperson": {
+      "rotation": [ 0, 0, 0 ],
+      "translation": [ 0, 0, 0 ],
+      "scale": [ 0, 0, 0 ]
+    },
+    "firstperson": {
+      "rotation": [ 0, 0, 0 ],
+      "translation": [ 0, 0, 0 ],
+      "scale": [ 0, 0, 0 ]
+    }
+  }
+}

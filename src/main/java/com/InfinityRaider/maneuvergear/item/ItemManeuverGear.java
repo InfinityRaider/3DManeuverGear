@@ -7,9 +7,10 @@ import com.InfinityRaider.maneuvergear.network.MessageNotifyBaubleEquip;
 import com.InfinityRaider.maneuvergear.network.NetworkWrapperManeuverGear;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngine;
 import com.InfinityRaider.maneuvergear.reference.Names;
+import com.InfinityRaider.maneuvergear.reference.Reference;
 import com.InfinityRaider.maneuvergear.render.IBaubleRenderer;
 import com.InfinityRaider.maneuvergear.render.RenderManeuverGear;
-import com.InfinityRaider.maneuvergear.utility.LogHelper;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,7 +26,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemManeuverGear extends Item implements IBaubleRendered, IItemWithRecipe {
+public class ItemManeuverGear extends Item implements IBaubleRendered, IItemWithRecipe, IItemWithModel {
     public static int MAX_HOLSTERED_BLADES = 4;
 
     public ItemManeuverGear() {
@@ -156,8 +157,8 @@ public class ItemManeuverGear extends Item implements IBaubleRendered, IItemWith
         if(remote && stack!=null && stack.getItem()!=null && stack.getItem()==this) {
             EntityDart left = DartHandler.instance.getLeftDart(player);
             EntityDart right = DartHandler.instance.getRightDart(player);
-            LogHelper.debug("left: "+left);
-            LogHelper.debug("right: "+right);
+            //LogHelper.debug("left: "+left);
+            //LogHelper.debug("right: "+right);
             if(DartHandler.instance.isWearingGear(player) && (DartHandler.instance.getLeftDart(player)!=null || DartHandler.instance.getRightDart(player)!=null)) {
                 PhysicsEngine engine = DartHandler.instance.getPhysicsEngine(player);
                 engine.updateTick();
@@ -231,5 +232,10 @@ public class ItemManeuverGear extends Item implements IBaubleRendered, IItemWith
                 'h', ItemResource.EnumSubItems.BLADE_HOLSTER_ASSEMBLY.getStack(),
                 'b', ItemResource.EnumSubItems.BELT.getStack()));
         return list;
+    }
+
+    @Override
+    public ModelResourceLocation[] getModelDefinitions() {
+        return new ModelResourceLocation[] {new ModelResourceLocation(Reference.MOD_ID.toLowerCase() + ":maneuverGear", "inventory")};
     }
 }

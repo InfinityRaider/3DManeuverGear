@@ -1,7 +1,6 @@
 package com.InfinityRaider.maneuvergear;
 
 import com.InfinityRaider.maneuvergear.handler.DartHandler;
-import com.InfinityRaider.maneuvergear.init.Entities;
 import com.InfinityRaider.maneuvergear.init.ItemRegistry;
 import com.InfinityRaider.maneuvergear.network.NetworkWrapperManeuverGear;
 import com.InfinityRaider.maneuvergear.proxy.IProxy;
@@ -31,7 +30,7 @@ public class ManeuverGear {
         NetworkWrapperManeuverGear.init();
         proxy.initConfiguration(event);
         ItemRegistry.getInstance().init();
-        Entities.init();
+        proxy.initEntities();
         proxy.registerRenderers();
         LogHelper.debug("Pre-Initialization Complete");
     }

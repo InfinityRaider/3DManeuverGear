@@ -27,7 +27,18 @@ public class RenderManeuverGear implements IBaubleRenderer {
 
     @Override
     public void renderBauble(EntityLivingBase entity, ItemStack stack, float partialRenderTick) {
+        float yaw = entity.prevRenderYawOffset + (entity.renderYawOffset - entity.prevRenderYawOffset)*partialRenderTick;
+        float dy = -1.375F;
+
+        GL11.glRotatef(180, 1, 0, 0);
+        GL11.glRotatef(yaw, 0, 1, 0);
+        GL11.glTranslatef(0, dy, 0);
+
         renderModel(entity, stack);
+
+        GL11.glTranslatef(0, -dy, 0);
+        GL11.glRotatef(-yaw, 0, 1, 0);
+        GL11.glRotatef(-180, 1, 0, 0);
     }
 
     /** Render item as entity in the
@@ -108,18 +119,20 @@ public class RenderManeuverGear implements IBaubleRenderer {
             ItemManeuverGear maneuverGear = (ItemManeuverGear) stack.getItem();
 
             float f = 0.75F;
-            float dx = 0.4F;
-            float dy = 0.6F;
-            float dz = 0.2F;
+            float dx = 0.39F;
+            float dy = 1.2F;
+            float dz = -0.1F;
             float a_x = 15F;
             float a_y = 90F;
+            float pinch = 0.5F;
 
-            float delta = -0.9375F;
+            float delta = -0.9375F/pinch;
 
             GL11.glPushMatrix();
 
             GL11.glScalef(f, f, f);
             GL11.glTranslatef(dx, dy, dz);
+            GL11.glScalef(pinch, 1, 1);
             GL11.glRotatef(a_x, 1, 0, 0);
             GL11.glRotatef(a_y, 0, 1, 0);
 
@@ -133,6 +146,7 @@ public class RenderManeuverGear implements IBaubleRenderer {
 
             GL11.glRotatef(-a_y, 0, 1, 0);
             GL11.glRotatef(-a_x, 1, 0, 0);
+            GL11.glScalef(1.0F / pinch, 1, 1);
             GL11.glTranslatef(-dx, -dy, -dz);
             GL11.glScalef(1.0F / f, 1.0F / f, 1.0F / f);
 
@@ -146,12 +160,14 @@ public class RenderManeuverGear implements IBaubleRenderer {
     private void renderBlades(ItemManeuverGear maneuverGear, ItemStack stack, boolean left) {
         int amount = maneuverGear.getBladeCount(stack, left);
         if(amount > 0) {
-            float delta = 0.055F;
+            float delta = 0.11F;
 
             GL11.glPushMatrix();
 
             for(int i = 0; i < amount; i++) {
+                GL11.glPushMatrix();
                 Minecraft.getMinecraft().getRenderItem().renderItem(swordBlade, ItemCameraTransforms.TransformType.NONE);
+                GL11.glPopMatrix();
                 GL11.glTranslatef(0, 0, delta);
             }
             GL11.glTranslatef(0, 0, -amount * delta);

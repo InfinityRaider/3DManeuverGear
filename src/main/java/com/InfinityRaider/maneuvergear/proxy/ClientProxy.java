@@ -1,11 +1,13 @@
 package com.InfinityRaider.maneuvergear.proxy;
 
-import com.InfinityRaider.maneuvergear.entity.EntityDart;
 import com.InfinityRaider.maneuvergear.handler.ConfigurationHandler;
 import com.InfinityRaider.maneuvergear.handler.KeyInputHandler;
+import com.InfinityRaider.maneuvergear.handler.ModelBakeHandler;
 import com.InfinityRaider.maneuvergear.handler.MouseClickHandler;
+import com.InfinityRaider.maneuvergear.init.EntityRegistry;
 import com.InfinityRaider.maneuvergear.init.ItemRegistry;
 import com.InfinityRaider.maneuvergear.item.IItemWithModel;
+import com.InfinityRaider.maneuvergear.item.ISpecialRenderedItem;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngine;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngineClientLocal;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngineDummy;
@@ -21,11 +23,11 @@ import net.minecraft.item.Item;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -88,6 +90,11 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
+    public void initEntities() {
+        EntityRegistry.getInstance().clientInit();
+    }
+
+    @Override
     public void replacePlayerModel() {
         ModelPlayerModified.replaceOldModel();
     }
@@ -112,12 +119,14 @@ public class ClientProxy extends CommonProxy {
         MinecraftForge.EVENT_BUS.register(KeyInputHandler.getInstance());
         FMLCommonHandler.instance().bus().register(KeyInputHandler.getInstance());
 
-        RenderSecondaryWeapon renderSecondaryWeapon = new RenderSecondaryWeapon();
-        MinecraftForge.EVENT_BUS.register(renderSecondaryWeapon);
-        FMLCommonHandler.instance().bus().register(renderSecondaryWeapon);
+        MinecraftForge.EVENT_BUS.register(RenderSecondaryWeapon.getInstance());
+        FMLCommonHandler.instance().bus().register(RenderSecondaryWeapon.getInstance());
 
         MinecraftForge.EVENT_BUS.register(RenderBauble.getInstance());
         FMLCommonHandler.instance().bus().register(RenderBauble.getInstance());
+
+        MinecraftForge.EVENT_BUS.register(ModelBakeHandler.getInstance());
+        FMLCommonHandler.instance().bus().register(ModelBakeHandler.getInstance());
     }
 
     @Override
@@ -125,16 +134,23 @@ public class ClientProxy extends CommonProxy {
     public void registerRenderers() {
         //items
         for(Item item : ItemRegistry.getInstance().getItems()) {
-            if(item instanceof IItemWithModel) {
+            if(item instanceof ISpecialRenderedItem) {
+                ItemSpecialRenderer renderer = ((ISpecialRenderedItem) item).getSpecialRenderer();
+                ClientRegistry.bindTileEntitySpecialRenderer(renderer.getTileClass(), renderer);
+                ModelResourceLocation[] variants = ((IItemWithModel) item).getModelDefinitions();
+                for(int meta = 0; meta < variants.length; meta++) {
+                    ModelLoader.setCustomModelResourceLocation(item, meta, variants[meta]);
+                    ModelBakeHandler.getInstance().registerModelToSwap(variants[meta], renderer);
+                    ForgeHooksClient.registerTESRItemStack(item, meta, renderer.getTileClass());
+                }
+            }
+            else if(item instanceof IItemWithModel) {
                 ModelResourceLocation[] variants = ((IItemWithModel) item).getModelDefinitions();
                 for(int meta = 0; meta < variants.length; meta++) {
                     ModelLoader.setCustomModelResourceLocation(item, meta, variants[meta]);
                 }
             }
         }
-
-        //entities
-        RenderingRegistry.registerEntityRenderingHandler(EntityDart.class, RenderEntityDart.RenderFactory.getInstance());
     }
 
     @Override

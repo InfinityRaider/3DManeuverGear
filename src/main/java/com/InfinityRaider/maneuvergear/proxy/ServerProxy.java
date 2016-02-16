@@ -1,5 +1,6 @@
 package com.InfinityRaider.maneuvergear.proxy;
 
+import com.InfinityRaider.maneuvergear.init.EntityRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -32,6 +33,11 @@ public class ServerProxy extends CommonProxy {
     @Override
     public void registerEventHandlers() {
         super.registerEventHandlers();
+    }
+
+    @Override
+    public void initEntities() {
+        EntityRegistry.getInstance().serverInit();
     }
 
     @Override

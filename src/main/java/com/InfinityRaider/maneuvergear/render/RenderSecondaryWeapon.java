@@ -28,10 +28,18 @@ import org.lwjgl.opengl.GL11;
  */
 @SideOnly(Side.CLIENT)
 public class RenderSecondaryWeapon {
+    private static final RenderSecondaryWeapon INSTANCE = new RenderSecondaryWeapon();
+
+    public static RenderSecondaryWeapon getInstance() {
+        return INSTANCE;
+    }
+
     private float equippedProgress = 1;
     private float prevEquippedProgress = 1;
     private int equippedItemSlot = -1;
     private int prevEquippedItemSlot = -2;
+
+    private RenderSecondaryWeapon() {}
 
     @SubscribeEvent
     @SuppressWarnings("unused")
@@ -41,7 +49,7 @@ public class RenderSecondaryWeapon {
 
     @SubscribeEvent
     @SuppressWarnings("unused")
-    public void renderLeftWeaponThirdPerson(RenderPlayerEvent.Specials.Post event) {
+    public void renderLeftWeaponThirdPerson(RenderPlayerEvent.Post event) {
         if(event.entityPlayer.isInvisibleToPlayer(Minecraft.getMinecraft().thePlayer)) {
             return;
         }
@@ -51,6 +59,8 @@ public class RenderSecondaryWeapon {
         if (stack == null || stack.getItem() == null || !(stack.getItem() instanceof IDualWieldedWeapon)) {
             return;
         }
+
+        applyEntityTransforms(player, event.partialRenderTick, false);
 
         IDualWieldedWeapon item = (IDualWieldedWeapon) stack.getItem();
         float[] values = item.getTransformationComponents(player, stack, event.partialRenderTick, false);
@@ -85,7 +95,38 @@ public class RenderSecondaryWeapon {
 
         applyTransformationsFromPlayerThirdPerson(player, 0, true);
 
+        applyEntityTransforms(player, event.partialRenderTick, true);
+
         GL11.glPopMatrix();
+    }
+
+    private void applyEntityTransforms(EntityPlayer player, float partialRenderTick, boolean inverse) {
+        EntityPlayer local = Minecraft.getMinecraft().thePlayer;
+        double X1 = local.prevPosX + (local.posX - local.prevPosX)*partialRenderTick;
+        double X2 = player.prevPosX + (player.posX - player.prevPosX)*partialRenderTick;
+        double Y1 = local.prevPosY + (local.posY - local.prevPosY)*partialRenderTick;
+        double Y2 = player.prevPosY + (player.posY - player.prevPosY)*partialRenderTick;
+        double Z1 = local.prevPosZ + (local.posZ - local.prevPosZ)*partialRenderTick;
+        double Z2 = player.prevPosZ + (player.posZ - player.prevPosZ)*partialRenderTick;
+        float yaw = player.prevRenderYawOffset + (player.renderYawOffset - player.prevRenderYawOffset)*partialRenderTick;
+        float dy = -1.45F;
+        float dx = -0.02F;
+        double X = X2 - X1;
+        double Y = Y2 - Y1;
+        double Z = Z2 - Z1;
+        if(inverse) {
+            GL11.glTranslatef(-dx, -dy, 0);
+            GL11.glRotatef(-yaw, 0, 1, 0);
+            GL11.glRotatef(-180, 1, 0, 0);
+            GL11.glTranslated(-X, -Y, -Z);
+            GL11.glPopMatrix();
+        } else {
+            GL11.glPushMatrix();
+            GL11.glTranslated(X, Y, Z);
+            GL11.glRotatef(180, 1, 0, 0);
+            GL11.glRotatef(yaw, 0, 1, 0);
+            GL11.glTranslatef(dx, dy, 0);
+        }
     }
 
     @SubscribeEvent

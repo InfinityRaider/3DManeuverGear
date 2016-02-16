@@ -12,14 +12,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
-import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
 public class RenderEntityDart extends Render<EntityDart> {
-    protected RenderEntityDart(RenderManager renderManager) {
+    public RenderEntityDart(RenderManager renderManager) {
         super(renderManager);
     }
 
@@ -184,20 +183,5 @@ public class RenderEntityDart extends Render<EntityDart> {
     @Override
     protected ResourceLocation getEntityTexture(EntityDart entity) {
         return new ResourceLocation("3dmaneuvergear:textures/entities/entityDart.png");
-    }
-
-    public static class RenderFactory implements IRenderFactory<EntityDart> {
-        private static final RenderFactory INSTANCE = new RenderFactory();
-
-        public static RenderFactory getInstance() {
-            return INSTANCE;
-        }
-
-        private RenderFactory() {}
-
-        @Override
-        public Render<? super EntityDart> createRenderFor(RenderManager manager) {
-            return new RenderEntityDart(manager);
-        }
     }
 }

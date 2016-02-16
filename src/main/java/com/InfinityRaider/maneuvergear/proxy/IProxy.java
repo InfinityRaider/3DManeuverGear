@@ -19,6 +19,9 @@ public interface IProxy {
     /** Initializes and reads the configuration file with the options relevant to the current side*/
     void initConfiguration(FMLPreInitializationEvent event);
 
+    /** Initializes the EntityRegistry */
+    void initEntities();
+
     /** Replaces the player model to have left arm animations on the client, does nothing on the server */
     void replacePlayerModel();
 

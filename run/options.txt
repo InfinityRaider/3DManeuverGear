@@ -93,7 +93,7 @@ key_key.hotbar.9:10
 key_Baubles Inventory:48
 key_3DManeuverGear.Key.RetractLeft:17
 key_3DManeuverGear.Key.RetractRight:45
-soundCategory_master:1.0
+soundCategory_master:0.0
 soundCategory_music:1.0
 soundCategory_record:1.0
 soundCategory_weather:1.0

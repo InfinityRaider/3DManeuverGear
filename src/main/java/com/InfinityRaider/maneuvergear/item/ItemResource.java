@@ -21,7 +21,8 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemResource extends Item implements IItemWithRecipe, IItemWithModel {
+public class
+        ItemResource extends Item implements IItemWithRecipe, IItemWithModel {
 
     public ItemResource() {
         super();

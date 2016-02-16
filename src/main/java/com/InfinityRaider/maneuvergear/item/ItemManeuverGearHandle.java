@@ -4,10 +4,13 @@ import com.InfinityRaider.maneuvergear.handler.ConfigurationHandler;
 import com.InfinityRaider.maneuvergear.handler.DartHandler;
 import com.InfinityRaider.maneuvergear.init.ItemRegistry;
 import com.InfinityRaider.maneuvergear.reference.Names;
+import com.InfinityRaider.maneuvergear.reference.Reference;
 import com.InfinityRaider.maneuvergear.render.IItemModelRenderer;
+import com.InfinityRaider.maneuvergear.render.ItemSpecialRenderer;
 import com.InfinityRaider.maneuvergear.render.RenderItemHandle;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -28,7 +31,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemManeuverGearHandle extends ItemSword implements IDualWieldedWeapon, IItemWithRecipe {
+public class ItemManeuverGearHandle extends ItemSword implements IDualWieldedWeapon, IItemWithRecipe, ISpecialRenderedItem {
     public final int MAX_ITEM_DAMAGE;
     public static final ToolMaterial material_SuperHardenedSteel = EnumHelper.addToolMaterial("superHardenedSteel", 3, ConfigurationHandler.durability, 10F, ConfigurationHandler.damage, 0);
 
@@ -233,7 +236,7 @@ public class ItemManeuverGearHandle extends ItemSword implements IDualWieldedWea
     @Override
     @SideOnly(Side.CLIENT)
     public IItemModelRenderer getModel(ItemStack stack) {
-        return RenderItemHandle.instance;
+        return RenderItemHandle.getInstance();
     }
 
     @Override
@@ -268,5 +271,16 @@ public class ItemManeuverGearHandle extends ItemSword implements IDualWieldedWea
                 'b', new ItemStack(Blocks.iron_bars),
                 'l', new ItemStack(Blocks.lever)));
         return list;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public ItemSpecialRenderer getSpecialRenderer() {
+        return RenderItemHandle.getInstance();
+    }
+
+    @Override
+    public ModelResourceLocation[] getModelDefinitions() {
+        return new ModelResourceLocation[] {new ModelResourceLocation(Reference.MOD_ID.toLowerCase() + ":handle", "inventory")};
     }
 }

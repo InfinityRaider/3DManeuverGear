@@ -5,7 +5,10 @@ import com.InfinityRaider.maneuvergear.handler.DartHandler;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngine;
 import com.InfinityRaider.maneuvergear.physics.Vector;
 import com.InfinityRaider.maneuvergear.reference.Names;
+import com.InfinityRaider.maneuvergear.render.RenderEntityDart;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,7 +17,10 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntityDart extends EntityThrowable implements IEntityAdditionalSpawnData {
     //number of blocks to fall per second due to gravity
@@ -229,6 +235,23 @@ public class EntityDart extends EntityThrowable implements IEntityAdditionalSpaw
         this.player = worldObj.getPlayerEntityByName(name);
         if(this.player != null) {
             DartHandler.instance.getPhysicsEngine(this.getPlayer()).setDart(this, left);
+        }
+    }
+
+
+    public static class RenderFactory implements IRenderFactory<EntityDart> {
+        private static final RenderFactory INSTANCE = new RenderFactory();
+
+        public static RenderFactory getInstance() {
+            return INSTANCE;
+        }
+
+        private RenderFactory() {}
+
+        @Override
+        @SideOnly(Side.CLIENT)
+        public Render<? super EntityDart> createRenderFor(RenderManager manager) {
+            return new RenderEntityDart(manager);
         }
     }
 }

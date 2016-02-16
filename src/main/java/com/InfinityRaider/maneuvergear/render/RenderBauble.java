@@ -90,7 +90,7 @@ public class RenderBauble {
 
     @SubscribeEvent
     @SuppressWarnings("unused")
-    public void renderBauble(RenderPlayerEvent.Specials.Post event) {
+    public void renderBauble(RenderPlayerEvent.Post event) {
         if(event.entityPlayer.isInvisibleToPlayer(Minecraft.getMinecraft().thePlayer)) {
             return;
         }
