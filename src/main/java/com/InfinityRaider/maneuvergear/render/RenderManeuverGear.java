@@ -28,7 +28,7 @@ public class RenderManeuverGear implements IBaubleRenderer {
     @Override
     public void renderBauble(EntityLivingBase entity, ItemStack stack, float partialRenderTick) {
         float yaw = entity.prevRenderYawOffset + (entity.renderYawOffset - entity.prevRenderYawOffset)*partialRenderTick;
-        float dy = -1.375F;
+        float dy = -1.475F;
 
         GL11.glRotatef(180, 1, 0, 0);
         GL11.glRotatef(yaw, 0, 1, 0);
@@ -41,78 +41,10 @@ public class RenderManeuverGear implements IBaubleRenderer {
         GL11.glRotatef(-180, 1, 0, 0);
     }
 
-    /** Render item as entity in the
-     * @param stack: the itemstack
-     * @param entity: the entity in the world
-     */
-    protected void renderEntity(ItemStack stack, Entity entity) {
-        GL11.glTranslatef(0, 2, 0);
-        GL11.glRotatef(180, 1, 0, 0);
-        GL11.glScalef(1.5F, 1.5F, 1.5F);
-        renderModel(entity, stack);
-        GL11.glScalef(1F / 1.5F, 1F / 1.5F, 1F / 1.5F);
-        GL11.glRotatef(-180, 1, 0, 0);
-        GL11.glTranslatef(0, -2, 0);
-    }
-
-    /** Render item held by an entity
-     * @param stack: the itemstack
-     * @param entity: the entity holding the stack
-     */
-    protected void renderEquipped(ItemStack stack, Entity entity) {
-        GL11.glTranslatef(0, 2, 0);
-        GL11.glRotatef(180, 1, 0, 0);
-        GL11.glRotatef(135, 0, 1, 0);
-        GL11.glTranslatef(0, 0.5F, 1);
-        GL11.glScalef(2F, 2F, 2F);
-        renderModel(entity, stack);
-        GL11.glScalef(1F / 2F, 1F / 2F, 1F / 2F);
-        GL11.glTranslatef(0, -0.5F, -1);
-        GL11.glRotatef(-135, 0, 1, 0);
-        GL11.glRotatef(-180, 1, 0, 0);
-        GL11.glTranslatef(0, -2, 0);
-    }
-
-    /** Render item held by an entity
-     * @param stack: the itemstack
-     * @param entity: the entity holding the stack
-     */
-    protected void renderEquippedFirstPerson(ItemStack stack, Entity entity) {
-        if(entity==null) {
-            return;
-        }
-        GL11.glTranslatef(0, 2, 0);
-        GL11.glRotatef(180, 1, 0, 0);
-        GL11.glRotatef(-135, 0, 1, 0);
-        GL11.glTranslatef(-0.5F, 0, 0);
-        GL11.glScalef(2F, 2F, 2F);
-        renderModel(entity, stack);
-        GL11.glScalef(1F / 2F, 1F / 2F, 1F / 2F);
-        GL11.glTranslatef(0.5F, 0, 0);
-        GL11.glRotatef(135, 0, 1, 0);
-        GL11.glRotatef(-180, 1, 0, 0);
-        GL11.glTranslatef(0, -2, 0);
-    }
-
-    /** Render item held by an entity
-     * @param stack: the itemstack
-     */
-    protected void renderInventory(ItemStack stack) {
-        GL11.glTranslatef(0, 1, 0);
-        GL11.glRotatef(180, 1, 0, 0);
-        GL11.glRotatef(-45, 0, 1, 0);
-        GL11.glScalef(1.5F, 1.5F, 1.5F);
-        renderModel(null, stack);
-        GL11.glScalef(1F / 1.5F, 1F / 1.5F, 1F / 1.5F);
-        GL11.glRotatef(45, 0, 1, 0);
-        GL11.glRotatef(-180, 1, 0, 0);
-        GL11.glTranslatef(0, -1, 0);
-    }
-
     private void renderModel(Entity entity, ItemStack stack) {
         boolean sneak = entity != null && entity.isSneaking();
         if(sneak) {
-            GL11.glTranslatef(0, 0, 0.25F);
+            GL11.glTranslatef(0, 0.1F, 0.25F);
         }
         model.render(entity, 0, 0, 0, 0, 0, 1);
         if(stack != null && stack.getItem() != null && stack.getItem() instanceof ItemManeuverGear) {
@@ -153,7 +85,7 @@ public class RenderManeuverGear implements IBaubleRenderer {
             GL11.glPopMatrix();
         }
         if(sneak) {
-            GL11.glTranslatef(0, 0, -0.25F);
+            GL11.glTranslatef(0, -0.1F, -0.25F);
         }
     }
 

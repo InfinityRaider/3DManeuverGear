@@ -223,7 +223,7 @@ public class ItemManeuverGearHandle extends ItemSword implements IDualWieldedWea
         if(firstPerson) {
             return new float[] {0.0075F*0.4F, 0.02F, -0.03F, -0.02F, 5, 90};
         } else {
-            return new float[]{0.075F * 0.4F, 0.5F, 0.4F, -0.1F, 0, 0};
+            return new float[]{0.0725F * 0.4F, 0.5F, 0.4F, -0.1F, 0, 0};
         }
     }
 

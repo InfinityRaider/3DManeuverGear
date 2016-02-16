@@ -3,7 +3,6 @@ package com.InfinityRaider.maneuvergear.utility;
 import com.InfinityRaider.maneuvergear.physics.Vector;
 import net.minecraft.util.Vec3;
 
-import javax.vecmath.Matrix4d;
 import javax.vecmath.Matrix4f;
 
 public class TransformationMatrix {

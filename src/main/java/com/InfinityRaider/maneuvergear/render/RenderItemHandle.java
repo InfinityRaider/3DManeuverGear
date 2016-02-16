@@ -18,53 +18,23 @@ import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
 public class RenderItemHandle extends ItemSpecialRenderer<RenderItemHandle.TileEntityDummy> implements IItemModelRenderer {
-    private static final RenderItemHandle INSTANCE = new RenderItemHandle(true);
-    private static final RenderItemHandle NO_BLADE = new RenderItemHandle(false);
+    private static final RenderItemHandle INSTANCE = new RenderItemHandle();
 
     public static RenderItemHandle getInstance() {
         return INSTANCE;
     }
 
     private final ModelManeuverGearHandle model;
-    private final boolean renderBlade;
 
-    private RenderItemHandle(boolean renderBlade) {
+    private RenderItemHandle() {
+        super();
         this.model = new ModelManeuverGearHandle();
-        this.renderBlade = renderBlade;
     }
 
     @Override
-    public void renderItem(float partialTicks) {
+    public void renderItem(ItemStack stack, float partialTicks) {
         EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-        ItemStack stack = player.getCurrentEquippedItem();
-        if(stack == null || stack.getItem() == null || !(stack.getItem() instanceof ItemManeuverGearHandle)) {
-            return;
-        }
-        /*
-        float scale = 0.075F;
-        float dx = 0F;
-        float dy = 0F;
-        float dz = -0F;
-        float angleX = 90F;
-        float angleY = 0F;
-        float angleZ = 45F;
-
-        GL11.glTranslatef(dx, dy, dz);
-        GL11.glRotatef(angleX, 1, 0, 0);
-        GL11.glRotatef(angleY, 0, 1, 0);
-        GL11.glRotatef(angleZ, 0, 0, 1);
-        GL11.glScalef(scale, scale, scale);
-        */
-
         renderModel(player, stack, false);
-
-        /*
-        GL11.glScalef(1.0F / scale, 1.0F / scale, 1.0F / scale);
-        GL11.glRotatef(-angleZ, 0, 0, 1);
-        GL11.glRotatef(-angleY, 0, 1, 0);
-        GL11.glRotatef(-angleX, 1, 0, 0);
-        GL11.glTranslatef(-dx, -dy, -dz);
-        */
     }
 
     @Override
@@ -79,157 +49,41 @@ public class RenderItemHandle extends ItemSpecialRenderer<RenderItemHandle.TileE
     }
 
     private TransformationMatrix transformationMatrixFirstPerson() {
-        return transformationMatrixDefault();
+        return new TransformationMatrix(0.25, -0.275, 0.35)
+                .multiplyRightWith(new TransformationMatrix(90, 1, 0, 0))
+                .multiplyRightWith(new TransformationMatrix(225, 0, 0, 1))
+                .multiplyRightWith(new TransformationMatrix(180, 0, 1, 0))
+                .scale(0.075, 0.075, 0.075);
     }
 
     private TransformationMatrix transformationMatrixThirdPerson() {
-        return transformationMatrixDefault();
+        return new TransformationMatrix(0.08, -0.1, -0.07)
+                .multiplyRightWith(new TransformationMatrix(180, 0, 1, 0))
+                .scale(0.03, 0.03, 0.03);
     }
 
     private TransformationMatrix transformationMatrixGui() {
-        return transformationMatrixDefault();
+        return new TransformationMatrix(0, -0.1, 0)
+                .multiplyRightWith(new TransformationMatrix(90, -1, 0, 1))
+                .multiplyRightWith(new TransformationMatrix(-0, 1, 0, 0))
+                .multiplyRightWith(new TransformationMatrix(90, 0, 1, 0))
+                .scale(0.035, 0.035, 0.035);
     }
 
     private TransformationMatrix transformationMatrixGround() {
-        return transformationMatrixDefault();
+        return new TransformationMatrix(-0.2, 0, 0.05)
+                .multiplyRightWith(new TransformationMatrix(90, 1, 0, 0))
+                .multiplyRightWith(new TransformationMatrix(225, 0, 0, 1))
+                .multiplyRightWith(new TransformationMatrix(180, 0, 1, 0))
+                .scale(0.03, 0.03, 0.03);
     }
 
     private TransformationMatrix transformationMatrixDefault() {
-        return new TransformationMatrix(90, 1, 0, 0).multiplyRightWith(new TransformationMatrix(45, 0, 0, 1)).scale(0.075, 0.075, 0.075);
-    }
-
-    @Override
-    public ItemSpecialRenderer<TileEntityDummy> getRendererForStack(ItemStack stack) {
-        if (stack == null || stack.getItem() == null || !(stack.getItem() instanceof ItemManeuverGearHandle)) {
-            return this;
-        }
-        ItemManeuverGearHandle handle = ((ItemManeuverGearHandle) stack.getItem());
-        if (handle.hasSwordBlade(stack, false)) {
-            return this;
-        } else {
-            return NO_BLADE;
-        }
-    }
-
-    /**
-     * Render item as entity in the
-     *
-     * @param stack:  the itemstack
-     */
-    protected void renderEntity(ItemStack stack) {
-        float scale = 0.05F;
-        float dx = 0.4F;
-        float dy = -1.7F;
-        float dz = 0.9F;
-        float angleX = 180;
-        float angleY = 135;
-        float angleZ = -20;
-
-        GL11.glRotatef(angleZ, -1.0F, 0, 1);
-        GL11.glRotatef(angleX, 1, 0, 0);
-        GL11.glRotatef(angleY, 0, 1, 0);
-        GL11.glTranslatef(dx, dy, dz);
-        GL11.glScalef(scale, scale, scale);
-
-        renderModel(Minecraft.getMinecraft().thePlayer, stack, false);
-
-        GL11.glScalef(1.0F / scale, 1.0F / scale, 1.0F / scale);
-        GL11.glTranslatef(-dx, -dy, -dz);
-        GL11.glRotatef(-angleY, 0, 1, 0);
-        GL11.glRotatef(-angleX, 1, 0, 0);
-        GL11.glRotatef(-angleZ, -1.0F, 0, 1);
-    }
-
-    /**
-     * Render item held by an entity
-     *
-     * @param stack:  the itemstack
-     * @param entity: the entity holding the stack
-     */
-    protected void renderEquipped(ItemStack stack, Entity entity) {
-        float scale = 0.075F;
-        float dx = 0.4F;
-        float dy = -1.7F;
-        float dz = 0.9F;
-        float angleX = 180;
-        float angleY = 135;
-        float angleZ = -20;
-
-        GL11.glRotatef(angleZ, -1.0F, 0, 1);
-        GL11.glRotatef(angleX, 1, 0, 0);
-        GL11.glRotatef(angleY, 0, 1, 0);
-        GL11.glTranslatef(dx, dy, dz);
-        GL11.glScalef(scale, scale, scale);
-
-        renderModel(entity, stack, false);
-
-        GL11.glScalef(1.0F / scale, 1.0F / scale, 1.0F / scale);
-        GL11.glTranslatef(-dx, -dy, -dz);
-        GL11.glRotatef(-angleY, 0, 1, 0);
-        GL11.glRotatef(-angleX, 1, 0, 0);
-        GL11.glRotatef(-angleZ, -1.0F, 0, 1);
-    }
-
-    /**
-     * Render item held by an entity
-     *
-     * @param stack:  the itemstack
-     * @param entity: the entity holding the stack
-     */
-    protected void renderEquippedFirstPerson(ItemStack stack, Entity entity) {
-        if (entity == null) {
-            return;
-        }
-        if (entity instanceof EntityPlayer) {
-            float scale = 0.075F;
-            float dx = 1F;
-            float dy = 0F;
-            float dz = 1F;
-            float angleX = 95F;
-            float angleY = 0F;
-            float angleZ = -130F;
-
-            GL11.glTranslatef(dx, dy, dz);
-            GL11.glRotatef(angleX, 1, 0, 0);
-            GL11.glRotatef(angleY, 0, 1, 0);
-            GL11.glRotatef(angleZ, 0, 0, 1);
-            GL11.glScalef(scale, scale, scale);
-
-            renderModel(entity, stack, false);
-
-            GL11.glScalef(1.0F / scale, 1.0F / scale, 1.0F / scale);
-            GL11.glRotatef(-angleZ, 0, 0, 1);
-            GL11.glRotatef(-angleY, 0, 1, 0);
-            GL11.glRotatef(-angleX, 1, 0, 0);
-            GL11.glTranslatef(-dx, -dy, -dz);
-        }
-    }
-
-    /** Render item held by an entity
-     * @param stack: the itemstack
-     */
-    protected void renderInventory(ItemStack stack) {
-        float scale = 0.045F;
-        float dx = 0.7F;
-        float dy = -1.0F;
-        float dz = 0.8F;
-        float angleX = 135;
-        float angleY = 100;
-        float angleZ = -50;
-
-        GL11.glRotatef(angleZ, -1.0F, 0, 1);
-        GL11.glRotatef(angleX, 1, 0, 0);
-        GL11.glRotatef(angleY, 0, 1, 0);
-        GL11.glTranslatef(dx, dy, dz);
-        GL11.glScalef(scale, scale, scale);
-
-        renderModel(Minecraft.getMinecraft().thePlayer, stack, false);
-
-        GL11.glScalef(1.0F / scale, 1.0F / scale, 1.0F / scale);
-        GL11.glTranslatef(-dx, -dy, -dz);
-        GL11.glRotatef(-angleY, 0, 1, 0);
-        GL11.glRotatef(-angleX, 1, 0, 0);
-        GL11.glRotatef(-angleZ, -1.0F, 0, 1);
+        return new TransformationMatrix(0.25, -0.275, 0.35)
+                .multiplyRightWith(new TransformationMatrix(90, 1, 0, 0))
+                .multiplyRightWith(new TransformationMatrix(225, 0, 0, 1))
+                .multiplyRightWith(new TransformationMatrix(180, 0, 1, 0))
+                .scale(0.075, 0.075, 0.075);
     }
 
     @Override
@@ -273,13 +127,9 @@ public class RenderItemHandle extends ItemSpecialRenderer<RenderItemHandle.TileE
         }
     }
 
-    private boolean renderBlade() {
-        return renderBlade;
-    }
-
     private boolean renderBlade(ItemStack stack, boolean left) {
         if(stack == null || stack.getItem() == null || !(stack.getItem() instanceof ItemManeuverGearHandle)) {
-            return renderBlade();
+            return false;
         }
         return ((ItemManeuverGearHandle) stack.getItem()).hasSwordBlade(stack, left);
     }

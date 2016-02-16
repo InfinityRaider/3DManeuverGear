@@ -20,18 +20,26 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javax.vecmath.Matrix4f;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class ItemSpecialRenderer<T extends TileEntity> extends TileEntitySpecialRenderer<T> implements IPerspectiveAwareModel, ISmartItemModel {
     private static final List<BakedQuad> EMPTY_LIST = new ArrayList<BakedQuad>();
 
+    private Map<Long, ItemStack> stacksBeingRendered;
+
+    protected ItemSpecialRenderer() {
+        this.stacksBeingRendered = new HashMap<Long, ItemStack>();
+    }
+
     public abstract Class<? extends T> getTileClass();
 
     public final void renderTileEntityAt(T te, double x, double y, double z, float partialTicks, int destroyStage) {
-        renderItem(partialTicks);
+        renderItem(stacksBeingRendered.get(Thread.currentThread().getId()), partialTicks);
     }
 
-    public abstract void renderItem(float partialTicks);
+    public abstract void renderItem(ItemStack stack, float partialTicks);
 
     @Override
     public final Pair<? extends IFlexibleBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType) {
@@ -42,10 +50,9 @@ public abstract class ItemSpecialRenderer<T extends TileEntity> extends TileEnti
 
     @Override
     public IBakedModel handleItemState(ItemStack stack) {
-        return getRendererForStack(stack);
+        stacksBeingRendered.put(Thread.currentThread().getId(), stack);
+        return this;
     }
-
-    public abstract ItemSpecialRenderer<T> getRendererForStack(ItemStack stack);
 
     @Override
     public List<BakedQuad> getFaceQuads(EnumFacing facing) {

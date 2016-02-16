@@ -109,7 +109,7 @@ public class RenderSecondaryWeapon {
         double Z1 = local.prevPosZ + (local.posZ - local.prevPosZ)*partialRenderTick;
         double Z2 = player.prevPosZ + (player.posZ - player.prevPosZ)*partialRenderTick;
         float yaw = player.prevRenderYawOffset + (player.renderYawOffset - player.prevRenderYawOffset)*partialRenderTick;
-        float dy = -1.45F;
+        float dy = -1.5F;
         float dx = -0.02F;
         double X = X2 - X1;
         double Y = Y2 - Y1;
