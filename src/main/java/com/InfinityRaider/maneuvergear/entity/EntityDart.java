@@ -9,6 +9,7 @@ import com.InfinityRaider.maneuvergear.render.RenderEntityDart;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.nbt.NBTTagCompound;
@@ -35,6 +36,8 @@ public class EntityDart extends EntityThrowable implements IEntityAdditionalSpaw
     private double cableLength;
     private EntityPlayer player;
 
+    /** Default constructer, this has to be here because the entity is contructed client side with this */
+    @SuppressWarnings("unused")
     public EntityDart(World world) {
         super(world);
         if(this.player!=null) {
@@ -230,10 +233,12 @@ public class EntityDart extends EntityThrowable implements IEntityAdditionalSpaw
         this.left = data.readBoolean();
         this.hooked = data.readBoolean();
         this.cableLength = data.readDouble();
-        int playerNameLength = data.readInt();
-        String name = new String(data.readBytes(playerNameLength).array());
-        this.player = worldObj.getPlayerEntityByName(name);
-        if(this.player != null) {
+        Entity entity = worldObj.getEntityByID(data.readInt());
+        if (entity instanceof EntityPlayer) {
+            //Should always be the case
+            this.player = (EntityPlayer) entity;
+        }
+        if (this.player != null) {
             DartHandler.instance.getPhysicsEngine(this.getPlayer()).setDart(this, left);
         }
     }

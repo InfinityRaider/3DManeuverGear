@@ -160,7 +160,7 @@ public class RenderEntityDart extends Render<EntityDart> {
         byte n = 16;
         for (int i = 0; i <= n; ++i) {
             float t = (float) i / (float) n;
-            worldrenderer.pos(x + X * ((double) t), y + Y * ((double) t) - A * MathHelper.sin((float) Math.PI * i / n), z + Z * ((double) t));
+            worldrenderer.pos(x + X * ((double) t), y + Y * ((double) t) - A * MathHelper.sin((float) Math.PI * i / n), z + Z * ((double) t)).color(0, 0, 0, 255).endVertex();
             //y + d12 * (double)(f12 * f12 + f12) * 0.5D + 0.25D
         }
         tessellator.draw();
