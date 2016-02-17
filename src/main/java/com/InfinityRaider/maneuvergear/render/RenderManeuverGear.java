@@ -4,7 +4,8 @@ import com.InfinityRaider.maneuvergear.item.ItemManeuverGear;
 import com.InfinityRaider.maneuvergear.item.ItemResource;
 import com.InfinityRaider.maneuvergear.render.model.ModelManeuverGear;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
@@ -15,14 +16,12 @@ import org.lwjgl.opengl.GL11;
 @SideOnly(Side.CLIENT)
 public class RenderManeuverGear implements IBaubleRenderer {
     public static final RenderManeuverGear instance = new RenderManeuverGear();
-    private final ItemStack swordBlade;
 
     @SideOnly(Side.CLIENT)
     private ModelManeuverGear model;
 
     private RenderManeuverGear() {
         this.model = new ModelManeuverGear();
-        this.swordBlade = ItemResource.EnumSubItems.SWORD_BLADE.getStack();
     }
 
     @Override
@@ -50,15 +49,15 @@ public class RenderManeuverGear implements IBaubleRenderer {
         if(stack != null && stack.getItem() != null && stack.getItem() instanceof ItemManeuverGear) {
             ItemManeuverGear maneuverGear = (ItemManeuverGear) stack.getItem();
 
-            float f = 0.75F;
-            float dx = 0.39F;
-            float dy = 1.2F;
+            float f = 1F;
+            float dx = 0.29F;
+            float dy = 0.9F;
             float dz = -0.1F;
             float a_x = 15F;
             float a_y = 90F;
-            float pinch = 0.5F;
+            float pinch = 0.6F;
 
-            float delta = -0.9375F/pinch;
+            float delta = -0.7F/pinch;
 
             GL11.glPushMatrix();
 
@@ -92,13 +91,18 @@ public class RenderManeuverGear implements IBaubleRenderer {
     private void renderBlades(ItemManeuverGear maneuverGear, ItemStack stack, boolean left) {
         int amount = maneuverGear.getBladeCount(stack, left);
         if(amount > 0) {
-            float delta = 0.11F;
+            Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
+            float delta = 0.0675F;
 
             GL11.glPushMatrix();
 
             for(int i = 0; i < amount; i++) {
                 GL11.glPushMatrix();
-                Minecraft.getMinecraft().getRenderItem().renderItem(swordBlade, ItemCameraTransforms.TransformType.NONE);
+
+                ItemStack swordBlade = ItemResource.EnumSubItems.SWORD_BLADE.getStack();
+                IBakedModel model = Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getItemModel(swordBlade);
+                Minecraft.getMinecraft().getRenderItem().renderItem(swordBlade, model);
+
                 GL11.glPopMatrix();
                 GL11.glTranslatef(0, 0, delta);
             }

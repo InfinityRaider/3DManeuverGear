@@ -7,6 +7,8 @@ import com.InfinityRaider.maneuvergear.utility.TransformationMatrix;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -95,8 +97,8 @@ public class RenderItemHandle extends ItemSpecialRenderer<RenderItemHandle.TileE
 
             float scale = 20;
             float dx = -0.26F;
-            float dy = 0.65F;
-            float dz = -0.2F;
+            float dy = 0.75F;
+            float dz = 0.45F;
             float ax = 0;
             float ay = 90;
             float az = 225;
@@ -106,17 +108,21 @@ public class RenderItemHandle extends ItemSpecialRenderer<RenderItemHandle.TileE
             GL11.glRotatef(ay, 0, 1, 0);
             GL11.glRotatef(ax, 1, 0, 0);
             GL11.glRotatef(az, 0, 0, 1);
-            GL11.glScalef(1.5F, 1.5F, 0.8F);
+            GL11.glScalef(3.5F, 3.5F, 1F);
 
             float X = -0.2F;
             float Y = 0.3F;
             float Z = 0.0125F;
 
             GlStateManager.translate(X, Y, Z);
-            Minecraft.getMinecraft().getRenderItem().renderItem(ItemResource.EnumSubItems.SWORD_BLADE.getStack(), ItemCameraTransforms.TransformType.NONE);
+
+            Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
+            ItemStack swordBlade = ItemResource.EnumSubItems.SWORD_BLADE.getStack();
+            IBakedModel model = Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getItemModel(swordBlade);
+            Minecraft.getMinecraft().getRenderItem().renderItem(swordBlade, model);
             GlStateManager.translate(-X, -Y, -Z);
 
-            GL11.glScalef(1F / 1.5F, 1F / 1.5F, 1F / 0.8F);
+            GL11.glScalef(1F / 3.5F, 1F / 3.5F, 1F / 1F);
             GL11.glRotatef(-az, 0, 0, 1);
             GL11.glRotatef(-ax, 1, 0, 0);
             GL11.glRotatef(-ay, 0, 1, 0);

@@ -51,8 +51,6 @@ public class EntityRegistry {
         private int updateFrequency;
         private boolean velocityUpdates;
         private final int id;
-
-        @SideOnly(Side.CLIENT)
         private IRenderFactory<T> renderFactory;
 
         public EntityRegistryEntry(Class<? extends T> entityClass, String name) {

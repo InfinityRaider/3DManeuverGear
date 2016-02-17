@@ -104,11 +104,33 @@ public class RenderBauble {
             }
             IBaubleRendered bauble = (IBaubleRendered) stack.getItem();
 
-            GL11.glPushMatrix();
+            applyEntityTransforms(event.entityPlayer, event.partialRenderTick, false);
 
+            GL11.glPushMatrix();
             bauble.getRenderer(stack).renderBauble(event.entityPlayer, stack, event.partialRenderTick);
 
             GL11.glPopMatrix();
+            applyEntityTransforms(event.entityPlayer, event.partialRenderTick, true);
+        }
+    }
+
+    private void applyEntityTransforms(EntityPlayer player, float partialRenderTick, boolean inverse) {
+        EntityPlayer local = Minecraft.getMinecraft().thePlayer;
+        double X1 = local.prevPosX + (local.posX - local.prevPosX)*partialRenderTick;
+        double X2 = player.prevPosX + (player.posX - player.prevPosX)*partialRenderTick;
+        double Y1 = local.prevPosY + (local.posY - local.prevPosY)*partialRenderTick;
+        double Y2 = player.prevPosY + (player.posY - player.prevPosY)*partialRenderTick;
+        double Z1 = local.prevPosZ + (local.posZ - local.prevPosZ)*partialRenderTick;
+        double Z2 = player.prevPosZ + (player.posZ - player.prevPosZ)*partialRenderTick;
+        double X = X2 - X1;
+        double Y = Y2 - Y1;
+        double Z = Z2 - Z1;
+        if(inverse) {
+            GL11.glTranslated(-X, -Y, -Z);
+            GL11.glPopMatrix();
+        } else {
+            GL11.glPushMatrix();
+            GL11.glTranslated(X, Y, Z);
         }
     }
 }
