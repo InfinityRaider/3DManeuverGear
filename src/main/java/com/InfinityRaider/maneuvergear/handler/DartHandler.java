@@ -44,6 +44,7 @@ public class DartHandler {
             if(entry.getValue()!=null && entry.getValue().getDart(false)!=null) {
                 entry.getValue().getDart(false).setDead();
             }
+            physicsEnginesClient.remove(entry.getKey());
         }
         for(Map.Entry<UUID, PhysicsEngine> entry: physicsEnginesServer.entrySet()) {
             if(entry.getValue()!=null && entry.getValue().getDart(true)!=null) {
@@ -52,6 +53,7 @@ public class DartHandler {
             if(entry.getValue()!=null && entry.getValue().getDart(false)!=null) {
                 entry.getValue().getDart(false).setDead();
             }
+            physicsEnginesServer.remove(entry.getKey());
         }
     }
 
@@ -61,7 +63,7 @@ public class DartHandler {
         }
         HashMap<UUID, PhysicsEngine> physicsEngines = player.worldObj.isRemote ? physicsEnginesClient : physicsEnginesServer;
         if (!physicsEngines.containsKey(player.getUniqueID())) {
-            physicsEngines.put(player.getUniqueID(), ManeuverGear.proxy.createPhysicsEngine(player));
+            return DUMMY;
         }
         return physicsEngines.get(player.getUniqueID());
     }

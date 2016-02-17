@@ -149,6 +149,9 @@ public class ItemManeuverGearHandle extends ItemSword implements IDualWieldedWea
         }
         if (!player.worldObj.isRemote) {
             if (shift) {
+                if(!DartHandler.instance.isWearingGear(player)) {
+                    return;
+                }
                 if (DartHandler.instance.hasLeftDart(player)) {
                     DartHandler.instance.retractDart(player, true);
                 } else {
@@ -172,6 +175,9 @@ public class ItemManeuverGearHandle extends ItemSword implements IDualWieldedWea
         }
         if (!player.worldObj.isRemote) {
             if (shift) {
+                if(!DartHandler.instance.isWearingGear(player)) {
+                    return;
+                }
                 if (DartHandler.instance.hasRightDart(player)) {
                     DartHandler.instance.retractDart(player, false);
                 } else {

@@ -4,8 +4,8 @@ import com.InfinityRaider.maneuvergear.handler.ConfigurationHandler;
 import com.InfinityRaider.maneuvergear.utility.LogHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelPlayer;
+import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.RendererLivingEntity;
@@ -15,10 +15,12 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.lang.reflect.Field;
+import java.util.Map;
 
 @SideOnly(Side.CLIENT)
 public class ModelPlayerModified extends ModelPlayer {
     private static final ModelPlayerModified mainModel =  new ModelPlayerModified(0.0F, false);
+    private static final ModelPlayerModified slim =  new ModelPlayerModified(0.0F, true);
 
     private float leftArmSwingProgress = 0;
 
@@ -28,6 +30,7 @@ public class ModelPlayerModified extends ModelPlayer {
 
     public static void setLeftArmSwingProgress(float f) {
         mainModel.leftArmSwingProgress = f;
+        slim.leftArmSwingProgress = f;
     }
 
     @Override
@@ -159,13 +162,13 @@ public class ModelPlayerModified extends ModelPlayer {
         if(!ConfigurationHandler.overridePlayerRenderer) {
             return;
         }
-        RenderPlayer renderer = getOldRenderer();
+        RenderPlayer renderer = getOldRenderer("default");
         if(renderer == null) {
             LogHelper.debug("Failed overriding left arm swing behaviour");
             return;
         }
-        ModelBiped oldModel = renderer.getMainModel();
-        ModelBiped newModel = null;
+        ModelPlayer oldModel = renderer.getMainModel();
+        ModelPlayer newModel = null;
         for(Field field : RendererLivingEntity.class.getDeclaredFields()) {
             if(field.getType() == ModelBase.class) {
                 try {
@@ -182,32 +185,49 @@ public class ModelPlayerModified extends ModelPlayer {
             }
         }
         if(newModel != null) {
-            for(Field field : renderer.getClass().getFields()) {
-                if(field.getType() == ModelBase.class) {
-                    field.setAccessible(true);
-                    try {
-                        field.set(renderer, newModel);
-                    } catch (IllegalAccessException e) {
-                        LogHelper.printStackTrace(e);
-                    }
-                    break;
-                }
-            }
+            //replace relevant fields in RenderPlayer
+            replaceEntriesInRenderPlayer(renderer, newModel);
+            replaceEntriesInRenderPlayer(ModelPlayerModified.getOldRenderer("slim"), slim);
         }
     }
 
-    private static RenderPlayer getOldRenderer() {
-        RenderManager renderManager = Minecraft.getMinecraft().getRenderManager();
-        for(Field field : renderManager.getClass().getDeclaredFields()) {
-            if(field.getType() == RenderPlayer.class) {
+    @SuppressWarnings("unchecked")
+    private static RenderPlayer getOldRenderer(String keyword) {
+        RenderManager manager = Minecraft.getMinecraft().getRenderManager();
+        Map < Class <? extends Entity > , Render<? extends Entity >> entityRenderMap = manager.entityRenderMap;
+        for(Field field : manager.getClass().getDeclaredFields()) {
+            if(field.getType() == Map.class) {
                 field.setAccessible(true);
                 try {
-                    return (RenderPlayer) field.get(renderManager);
+                    Object obj = field.get(manager);
+                    if(obj == entityRenderMap) {
+                        continue;
+                    }
+                    Map<String, RenderPlayer> skinMap = (Map<String, RenderPlayer>) obj;
+                    return skinMap.get(keyword);
                 } catch (IllegalAccessException e) {
                     LogHelper.printStackTrace(e);
                 }
             }
         }
         return null;
+    }
+
+    private static void replaceEntriesInRenderPlayer(RenderPlayer renderer, ModelPlayer newModel) {
+        if(renderer == null) {
+            return;
+        }
+        //replace relevant fields in RenderPlayer
+        for(Field field : RendererLivingEntity.class.getDeclaredFields()) {
+            if(field.getType() == ModelBase.class) {
+                field.setAccessible(true);
+                try {
+                    field.set(renderer, newModel);
+                } catch (IllegalAccessException e) {
+                    LogHelper.printStackTrace(e);
+                }
+                break;
+            }
+        }
     }
 }

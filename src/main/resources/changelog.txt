@@ -1,7 +1,10 @@
 Changelog
 ---------
+0.3
+-Ported to Minecraft 1.8.9
+
 0.2
-FIXED: Still being able to use boost after unequipping the Maneuver Gear
+-FIXED: Still being able to use boost after unequipping the Maneuver Gear
 
 0.1
 -Initial build
