@@ -18,7 +18,7 @@ public class ModelBakeHandler {
     private final HashMap<ModelResourceLocation, ItemSpecialRenderer> modelsToSwap;
 
     private ModelBakeHandler() {
-        this.modelsToSwap = new HashMap<ModelResourceLocation, ItemSpecialRenderer>();
+        this.modelsToSwap = new HashMap<>();
     }
 
     public void registerModelToSwap(ModelResourceLocation location, ItemSpecialRenderer renderer) {

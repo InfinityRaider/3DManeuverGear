@@ -15,13 +15,8 @@ public final class Names {
     }
 
     public static class NBT {
-        public static final String X = "3DMG_X";
-        public static final String Y = "3DMG_Y";
-        public static final String Z = "3DMG_Z";
         public static final String LEFT = "3DMG_LEFT";
         public static final String RIGHT = "3DMG_RIGHT";
-        public static final String POSITION = "3DMG_POS";
-        public static final String VELOCITY = "3DMG_V";
         public static final String HOOKED = "3DMG_HOOKED";
         public static final String LENGTH = "3DMG_LENGTH";
         public static final String PLAYER = "3DMG_PLAYER";

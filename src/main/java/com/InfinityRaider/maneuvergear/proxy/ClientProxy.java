@@ -114,23 +114,18 @@ public class ClientProxy extends CommonProxy {
         super.registerEventHandlers();
 
         MinecraftForge.EVENT_BUS.register(MouseClickHandler.getInstance());
-        FMLCommonHandler.instance().bus().register(MouseClickHandler.getInstance());
 
         MinecraftForge.EVENT_BUS.register(KeyInputHandler.getInstance());
-        FMLCommonHandler.instance().bus().register(KeyInputHandler.getInstance());
 
         MinecraftForge.EVENT_BUS.register(RenderSecondaryWeapon.getInstance());
-        FMLCommonHandler.instance().bus().register(RenderSecondaryWeapon.getInstance());
 
         MinecraftForge.EVENT_BUS.register(RenderBauble.getInstance());
-        FMLCommonHandler.instance().bus().register(RenderBauble.getInstance());
 
         MinecraftForge.EVENT_BUS.register(ModelBakeHandler.getInstance());
-        FMLCommonHandler.instance().bus().register(ModelBakeHandler.getInstance());
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "deprecation"})
     public void registerRenderers() {
         //items
         for(Item item : ItemRegistry.getInstance().getItems()) {

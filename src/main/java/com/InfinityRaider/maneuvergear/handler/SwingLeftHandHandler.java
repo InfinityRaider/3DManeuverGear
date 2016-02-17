@@ -17,7 +17,7 @@ public class SwingLeftHandHandler {
     private HashMap<UUID, SwingProgress> swingProgresses;
 
     private SwingLeftHandHandler() {
-        this.swingProgresses = new HashMap<UUID, SwingProgress>();
+        this.swingProgresses = new HashMap<>();
     }
 
     public static SwingLeftHandHandler getInstance() {

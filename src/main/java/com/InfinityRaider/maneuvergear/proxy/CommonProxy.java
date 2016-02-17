@@ -10,7 +10,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 @SuppressWarnings("unused")
@@ -38,13 +37,10 @@ public abstract class CommonProxy implements IProxy {
     @Override
     public void registerEventHandlers() {
         MinecraftForge.EVENT_BUS.register(DartHandler.instance);
-        FMLCommonHandler.instance().bus().register(DartHandler.instance);
 
         MinecraftForge.EVENT_BUS.register(SwingLeftHandHandler.getInstance());
-        FMLCommonHandler.instance().bus().register(SwingLeftHandHandler.getInstance());
 
         MinecraftForge.EVENT_BUS.register(EntityLivingHandler.getInstance());
-        FMLCommonHandler.instance().bus().register(EntityLivingHandler.getInstance());
     }
 
     @Override

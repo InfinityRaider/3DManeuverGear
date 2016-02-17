@@ -27,8 +27,7 @@ public class ItemFallBoots extends ItemArmor implements IItemWithRecipe, IItemWi
 
     @Override
     @SideOnly(Side.CLIENT)
-    @SuppressWarnings("unchecked")
-    public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean flag) {
+    public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
         if(stack != null && stack.getItem() != null) {
             list.add(StatCollector.translateToLocal("3DManeuverGear.ToolTip.boots1"));
             list.add(StatCollector.translateToLocal("3DManeuverGear.ToolTip.boots2"));
@@ -37,7 +36,7 @@ public class ItemFallBoots extends ItemArmor implements IItemWithRecipe, IItemWi
 
     @Override
     public List<IRecipe> getRecipes() {
-        List<IRecipe> list = new ArrayList<IRecipe>();
+        List<IRecipe> list = new ArrayList<>();
         list.add(new ShapedOreRecipe(new ItemStack(this), "lll", "pbp", "www",
                 'l', new ItemStack(Items.leather),
                 'p', new ItemStack(Blocks.sticky_piston),

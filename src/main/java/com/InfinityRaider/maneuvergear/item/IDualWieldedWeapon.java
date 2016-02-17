@@ -1,7 +1,6 @@
 package com.InfinityRaider.maneuvergear.item;
 
 import com.InfinityRaider.maneuvergear.render.IItemModelRenderer;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -92,12 +91,4 @@ public interface IDualWieldedWeapon {
      */
     @SideOnly(Side.CLIENT)
     IItemModelRenderer getModel(ItemStack stack);
-
-    /**
-     * Method used to get the model to render this stack, is only called if useModel(ItemStack stack) returns false
-     * @param stack the ItemStack holding the Item being rendered
-     * @return the IIcon for this item
-     */
-    @SideOnly(Side.CLIENT)
-    TextureAtlasSprite getIcon(ItemStack stack);
 }

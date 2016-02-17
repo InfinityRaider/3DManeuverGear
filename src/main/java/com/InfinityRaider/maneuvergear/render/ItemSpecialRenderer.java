@@ -25,12 +25,12 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class ItemSpecialRenderer<T extends TileEntity> extends TileEntitySpecialRenderer<T> implements IPerspectiveAwareModel, ISmartItemModel {
-    private static final List<BakedQuad> EMPTY_LIST = new ArrayList<BakedQuad>();
+    private static final List<BakedQuad> EMPTY_LIST = new ArrayList<>();
 
     private Map<Long, ItemStack> stacksBeingRendered;
 
     protected ItemSpecialRenderer() {
-        this.stacksBeingRendered = new HashMap<Long, ItemStack>();
+        this.stacksBeingRendered = new HashMap<>();
     }
 
     public abstract Class<? extends T> getTileClass();

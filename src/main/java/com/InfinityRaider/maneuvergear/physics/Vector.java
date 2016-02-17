@@ -1,7 +1,5 @@
 package com.InfinityRaider.maneuvergear.physics;
 
-import com.InfinityRaider.maneuvergear.reference.Names;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Vec3;
 
 public class Vector {
@@ -21,23 +19,6 @@ public class Vector {
         this.x = vec.xCoord;
         this.y = vec.yCoord;
         this.z = vec.zCoord;
-    }
-
-    public Vector(NBTTagCompound tag) throws UnknownPositionException {
-        if(!tag.hasKey(Names.NBT.X)) {throw new UnknownPositionException();}
-        if(!tag.hasKey(Names.NBT.Y)) {throw new UnknownPositionException();}
-        if(!tag.hasKey(Names.NBT.Z)) {throw new UnknownPositionException();}
-        this.x = tag.getDouble(Names.NBT.X);
-        this.y = tag.getDouble(Names.NBT.Y);
-        this.z = tag.getDouble(Names.NBT.Z);
-    }
-
-    public NBTTagCompound writeToNBT() {
-        NBTTagCompound tag = new NBTTagCompound();
-        tag.setDouble(Names.NBT.X, x);
-        tag.setDouble(Names.NBT.Y, y);
-        tag.setDouble(Names.NBT.Z, z);
-        return tag;
     }
 
     public void setX( double x) {this.x = x;}
@@ -129,12 +110,6 @@ public class Vector {
     /** Copies this vector into a new Object */
     public Vector copy() {
         return new Vector(this.x, this.y, this.z);
-    }
-
-    public static class UnknownPositionException extends Exception {
-        public UnknownPositionException() {
-            super("Position not found on NBT");
-        }
     }
 
     @Override

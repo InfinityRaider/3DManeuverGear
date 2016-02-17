@@ -1,7 +1,6 @@
 package com.InfinityRaider.maneuvergear.item;
 
 import baubles.api.BaubleType;
-import com.InfinityRaider.maneuvergear.entity.EntityDart;
 import com.InfinityRaider.maneuvergear.handler.DartHandler;
 import com.InfinityRaider.maneuvergear.network.MessageNotifyBaubleEquip;
 import com.InfinityRaider.maneuvergear.network.NetworkWrapperManeuverGear;
@@ -155,10 +154,6 @@ public class ItemManeuverGear extends Item implements IBaubleRendered, IItemWith
         EntityPlayer player = (EntityPlayer) entity;
         boolean remote = player.worldObj.isRemote;
         if(remote && stack!=null && stack.getItem()!=null && stack.getItem()==this) {
-            EntityDart left = DartHandler.instance.getLeftDart(player);
-            EntityDart right = DartHandler.instance.getRightDart(player);
-            //LogHelper.debug("left: "+left);
-            //LogHelper.debug("right: "+right);
             if(DartHandler.instance.isWearingGear(player) && (DartHandler.instance.getLeftDart(player)!=null || DartHandler.instance.getRightDart(player)!=null)) {
                 PhysicsEngine engine = DartHandler.instance.getPhysicsEngine(player);
                 engine.updateTick();
@@ -212,8 +207,7 @@ public class ItemManeuverGear extends Item implements IBaubleRendered, IItemWith
 
     @Override
     @SideOnly(Side.CLIENT)
-    @SuppressWarnings("unchecked")
-    public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean flag) {
+    public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
         if(stack != null && stack.getItem() != null) {
             list.add(StatCollector.translateToLocal("3DManeuverGear.ToolTip.belt"));
             list.add(StatCollector.translateToLocal("3DManeuverGear.ToolTip.leftBlades")+": "+this.getBladeCount(stack, true)+"/"+MAX_HOLSTERED_BLADES);
@@ -223,7 +217,7 @@ public class ItemManeuverGear extends Item implements IBaubleRendered, IItemWith
 
     @Override
     public List<IRecipe> getRecipes() {
-        List<IRecipe> list = new ArrayList<IRecipe>();
+        List<IRecipe> list = new ArrayList<>();
         list.add(new ShapedOreRecipe(this, "cnc", "lgl", "hbh",
                 'c', ItemResource.EnumSubItems.CABLE_COIL.getStack(),
                 'n', ItemResource.EnumSubItems.GAS_NOZZLE.getStack(),

@@ -32,8 +32,8 @@ public class DartHandler {
     private static HashMap<UUID, PhysicsEngine> physicsEnginesServer;
 
     private DartHandler() {
-        physicsEnginesClient = new HashMap<UUID, PhysicsEngine>();
-        physicsEnginesServer = new HashMap<UUID, PhysicsEngine>();
+        physicsEnginesClient = new HashMap<>();
+        physicsEnginesServer = new HashMap<>();
     }
 
     public void reset() {

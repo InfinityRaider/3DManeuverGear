@@ -9,7 +9,6 @@ import com.InfinityRaider.maneuvergear.render.IItemModelRenderer;
 import com.InfinityRaider.maneuvergear.render.ItemSpecialRenderer;
 import com.InfinityRaider.maneuvergear.render.RenderItemHandle;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -246,14 +245,8 @@ public class ItemManeuverGearHandle extends ItemSword implements IDualWieldedWea
     }
 
     @Override
-    public TextureAtlasSprite getIcon(ItemStack stack) {
-        return null;
-    }
-
-    @Override
     @SideOnly(Side.CLIENT)
-    @SuppressWarnings("unchecked")
-    public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean flag) {
+    public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
         if(stack != null && stack.getItem() != null) {
             list.add(StatCollector.translateToLocal("3DManeuverGear.ToolTip.handle"));
             list.add(StatCollector.translateToLocal("3DManeuverGear.ToolTip.damageLeft") + ": " + this.getBladeDamage(stack, true) + "/" + this.MAX_ITEM_DAMAGE);
@@ -270,7 +263,7 @@ public class ItemManeuverGearHandle extends ItemSword implements IDualWieldedWea
 
     @Override
     public List<IRecipe> getRecipes() {
-        List<IRecipe> list = new ArrayList<IRecipe>();
+        List<IRecipe> list = new ArrayList<>();
         list.add(new ShapedOreRecipe(ItemRegistry.getInstance().itemManeuverGearHandle, "ww ", "iib", "wwl",
                 'w', new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE),
                 'i', "ingotIron",

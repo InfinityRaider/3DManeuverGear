@@ -76,8 +76,7 @@ public class
 
     @Override
     @SideOnly(Side.CLIENT)
-    @SuppressWarnings("unchecked")
-    public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean flag) {
+    public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
         if(stack != null && stack.getItem() != null && stack.getItemDamage() == EnumSubItems.SWORD_BLADE.ordinal()) {
             list.add(StatCollector.translateToLocal("3DManeuverGear.ToolTip.swordBladeRight"));
             list.add(StatCollector.translateToLocal("3DManeuverGear.ToolTip.swordBladeLeft"));
@@ -86,7 +85,7 @@ public class
 
     @Override
     public List<IRecipe> getRecipes() {
-        List<IRecipe> list = new ArrayList<IRecipe>();
+        List<IRecipe> list = new ArrayList<>();
         list.add(new ShapedOreRecipe(EnumSubItems.SWORD_BLADE.getStack(), "i", "i", "b",
                 'i', "ingotIron",
                 'b', new ItemStack(Blocks.iron_bars)));

@@ -25,7 +25,7 @@ public class RenderBauble {
     private HashMap<EntityPlayer, HashMap<BaubleType, ItemStack>> baublesToRender;
 
     private RenderBauble() {
-        baublesToRender = new HashMap<EntityPlayer, HashMap<BaubleType, ItemStack>>();
+        baublesToRender = new HashMap<>();
     }
 
     public static RenderBauble getInstance() {
@@ -33,7 +33,7 @@ public class RenderBauble {
     }
 
     public void syncBaubles(EntityPlayer player, ItemStack[] baubles) {
-       HashMap<BaubleType, ItemStack> baubleMap = new HashMap<BaubleType, ItemStack>();
+       HashMap<BaubleType, ItemStack> baubleMap = new HashMap<>();
         for(ItemStack stack:baubles) {
             if((stack!=null) && (stack.getItem()!=null) && (stack.getItem() instanceof IBaubleRendered)) {
                 baubleMap.put(((IBaubleRendered) stack.getItem()).getBaubleType(stack), stack);
@@ -47,7 +47,7 @@ public class RenderBauble {
             return;
         }
         if(!baublesToRender.containsKey(player)) {
-            baublesToRender.put(player, new HashMap<BaubleType, ItemStack>());
+            baublesToRender.put(player, new HashMap<>());
         }
         HashMap<BaubleType, ItemStack> baubles = baublesToRender.get(player);
         baubles.put(((IBaubleRendered) bauble.getItem()).getBaubleType(bauble), bauble);
@@ -58,7 +58,7 @@ public class RenderBauble {
             return;
         }
         if(!baublesToRender.containsKey(player)) {
-            baublesToRender.put(player, new HashMap<BaubleType, ItemStack>());
+            baublesToRender.put(player, new HashMap<>());
             return;
         }
         baublesToRender.get(player).remove(((IBaubleRendered) bauble.getItem()).getBaubleType(bauble));

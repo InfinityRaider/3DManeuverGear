@@ -22,16 +22,14 @@ public class EntityRegistry {
     public final EntityRegistryEntry<EntityDart> entityDartEntry;
 
     private EntityRegistry() {
-        entityDartEntry = new EntityRegistryEntry<EntityDart>(EntityDart.class, Names.Objects.DART)
+        entityDartEntry = new EntityRegistryEntry<>(EntityDart.class, Names.Objects.DART)
                 .setTrackingDistance(EntityDart.CABLE_LENGTH * 2)
                 .setRenderFactory(EntityDart.RenderFactory.getInstance());
     }
 
     @SideOnly(Side.SERVER)
     public void serverInit() {
-        for(EntityRegistryEntry entry : EntityRegistryEntry.entries) {
-            entry.register();
-        }
+        EntityRegistryEntry.entries.forEach(EntityRegistry.EntityRegistryEntry::register);
     }
 
     @SideOnly(Side.CLIENT)
@@ -43,7 +41,7 @@ public class EntityRegistry {
     }
 
     public static class EntityRegistryEntry<T extends Entity> {
-        private static final List<EntityRegistryEntry> entries = new ArrayList<EntityRegistryEntry>();
+        private static final List<EntityRegistryEntry> entries = new ArrayList<>();
 
         private Class<? extends T> entityClass;
         private String name;

@@ -5,7 +5,6 @@ import com.InfinityRaider.maneuvergear.item.*;
 import com.InfinityRaider.maneuvergear.reference.Names;
 import com.InfinityRaider.maneuvergear.utility.RegisterHelper;
 import net.minecraft.item.Item;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.util.ArrayList;
@@ -28,7 +27,7 @@ public class ItemRegistry {
     private boolean init;
 
     private ItemRegistry() {
-        this.items = new ArrayList<Item>();
+        this.items = new ArrayList<>();
         this.init = false;
     }
 
@@ -70,13 +69,8 @@ public class ItemRegistry {
 
     public void initRecipes() {
         if(init) {
-            for(Item item : getItems()) {
-                if(item instanceof IItemWithRecipe) {
-                    for (IRecipe recipe : ((IItemWithRecipe) item).getRecipes()) {
-                        GameRegistry.addRecipe(recipe);
-                    }
-                }
-            }
+            getItems().stream().filter(item -> item instanceof IItemWithRecipe).forEach(
+                    item -> ((IItemWithRecipe) item).getRecipes().forEach(GameRegistry::addRecipe));
         }
     }
 }

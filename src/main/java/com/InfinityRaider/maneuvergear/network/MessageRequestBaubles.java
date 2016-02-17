@@ -35,7 +35,7 @@ public class MessageRequestBaubles extends MessageBase {
         @Override
         public MessageSyncBaubles onMessage(MessageRequestBaubles message, MessageContext ctx) {
             IInventory baubleInv = BaublesApi.getBaubles(message.subject);
-            ArrayList<ItemStack> baubles = new ArrayList<ItemStack>();
+            ArrayList<ItemStack> baubles = new ArrayList<>();
             if(baubleInv != null) {
                 for(int i=0;i<baubleInv.getSizeInventory();i++) {
                     ItemStack bauble = baubleInv.getStackInSlot(i);
