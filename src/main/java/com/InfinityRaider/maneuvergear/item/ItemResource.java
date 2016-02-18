@@ -27,6 +27,7 @@ public class
     public ItemResource() {
         super();
         this.setCreativeTab(CreativeTabs.tabMisc);
+        this.setHasSubtypes(true);
         this.setMaxStackSize(1);
     }
 

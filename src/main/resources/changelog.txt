@@ -1,5 +1,9 @@
 Changelog
 ---------
+0.4
+-FIXED: Recipes showing up multiple times in JEI
+-FIXED: Cables not rendering correctly in first person
+
 0.3
 -Ported to Minecraft 1.8.9
 

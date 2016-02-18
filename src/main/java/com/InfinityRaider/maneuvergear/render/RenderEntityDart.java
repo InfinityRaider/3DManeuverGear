@@ -23,16 +23,16 @@ public class RenderEntityDart extends Render<EntityDart> {
     }
 
     @Override
-    public void doRender(EntityDart dart, double x, double y, double z, float float1, float float2) {
-        renderEntity(dart, x, y, z, float2);
+    public void doRender(EntityDart dart, double x, double y, double z, float float1, float partialTicks) {
+        renderEntity(dart, x, y, z, partialTicks);
         EntityPlayer player = dart.getPlayer();
         if (player == null) {
             return;
         }
         if (this.renderManager.options.thirdPersonView > 0 || player != Minecraft.getMinecraft().thePlayer) {
-            this.renderWireThirdPerson(dart, player, x, y, z, float2);
+            this.renderWireThirdPerson(dart, player, x, y, z, partialTicks);
         } else {
-            renderWireFirstPerson(dart, player, x, y, z, float2);
+            renderWireFirstPerson(dart, player, x, y, z, partialTicks);
         }
     }
 
@@ -99,52 +99,55 @@ public class RenderEntityDart extends Render<EntityDart> {
         GlStateManager.popMatrix();
     }
 
-    private void renderWireFirstPerson(EntityDart dart, EntityPlayer player, double x, double y, double z, float f) {
+    private void renderWireFirstPerson(EntityDart dart, EntityPlayer player, double x, double y, double z, float partialTick) {
         boolean left = dart.isLeft();
         Tessellator tessellator = Tessellator.getInstance();
         //this vector defines the location of the points on the screen in first person
-        double c1 = left ? 0.8D : -0.8D;   //default: -0.5D
-        double c2 = -0.8D;  //default: 0.03D
-        double c3 = 0.6D;   //default: 0.08D
+        double c1 = (left ? 0.8D : -0.8D);
+        double c2 = -0.8D;
+        double c3 = -0.6D;
         Vec3 vec3 = new Vec3(c1, c2, c3);
-        vec3.rotatePitch(-(player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * f) * (float) Math.PI / 180.0F);
-        vec3.rotateYaw(-(player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * f) * (float) Math.PI / 180.0F);
+        vec3 = vec3.rotatePitch(-(player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * partialTick) * (float) Math.PI / 180.0F);
+        vec3 = vec3.rotateYaw(-(player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * partialTick) * (float) Math.PI / 180.0F);
         //find the player's position, interpolating based on his movement
-        double x_P = player.prevPosX + (player.posX - player.prevPosX) * (double) f + vec3.xCoord;
-        double y_P = player.prevPosY + (player.posY - player.prevPosY) * (double) f + vec3.yCoord;
-        double z_P = player.prevPosZ + (player.posZ - player.prevPosZ) * (double) f + vec3.zCoord;
+        double x_P = player.prevPosX + (player.posX - player.prevPosX) * (double) partialTick + vec3.xCoord;
+        double y_P = player.prevPosY + (player.posY - player.prevPosY) * (double) partialTick + vec3.yCoord;
+        double z_P = player.prevPosZ + (player.posZ - player.prevPosZ) * (double) partialTick + vec3.zCoord;
+        double eyeHeight = (double)player.getEyeHeight();
         //interpolate the entity's position based on its movement
-        f = dart.isHooked() ? 1 : f;
-        double x_D = dart.prevPosX + (dart.posX - dart.prevPosX) * (double) f;
-        double y_D = dart.prevPosY + (dart.posY - dart.prevPosY) * (double) f + 0.25D;
-        double z_D = dart.prevPosZ + (dart.posZ - dart.prevPosZ) * (double) f;
+        partialTick = dart.isHooked() ? 1 : partialTick;
+        double x_D = dart.prevPosX + (dart.posX - dart.prevPosX) * (double) partialTick;
+        double y_D = dart.prevPosY + (dart.posY - dart.prevPosY) * (double) partialTick + 0.25D;
+        double z_D = dart.prevPosZ + (dart.posZ - dart.prevPosZ) * (double) partialTick;
+        //transform the coordinates of the cable's end attached to the player to the reference system of the dart
         double x_DP = (double) ((float) (x_P - x_D));
-        double y_DP = (double) ((float) (y_P - y_D));
+        double y_DP = (double) ((float) (y_P - y_D)) + eyeHeight;
         double z_DP = (double) ((float) (z_P - z_D));
         //actually draw the lines
         renderWire(tessellator, x, y, z, x_DP, y_DP, z_DP, getAmplitude(dart));
     }
 
-    private void renderWireThirdPerson(EntityDart dart, EntityPlayer player, double x, double y, double z, float f) {
+    private void renderWireThirdPerson(EntityDart dart, EntityPlayer player, double x, double y, double z, float partialTicks) {
         boolean left = dart.isLeft();
-        f = 1;
+        partialTicks = 1;
         Tessellator tessellator = Tessellator.getInstance();
         //find the player's position, interpolating based on his movement
         double eyeHeight = (double) player.getEyeHeight();
-        float playerYaw = (player.prevRenderYawOffset + (player.renderYawOffset - player.prevRenderYawOffset) * f) * (float) Math.PI / 180.0F;
+        float playerYaw = (player.prevRenderYawOffset + (player.renderYawOffset - player.prevRenderYawOffset) * partialTicks) * (float) Math.PI / 180.0F;
         double sinYaw = (double) MathHelper.sin(playerYaw);
         double cosYaw = (double) MathHelper.cos(playerYaw);
-        double offsetX = (left ? -1 : 1) * 0.3D;     //default: 0.35D
+        double offsetX = (left ? -1 : 1) * 0.3D;
         double offsetZ = 0.1D;     //default: 0.85D
         double offsetY = -0.3D;      //default: 0.0D
-        double x_P = player.prevPosX + (player.posX - player.prevPosX) * (double) f - cosYaw * offsetX - sinYaw * offsetZ;
-        double y_P = player.prevPosY + eyeHeight + offsetY + (player.posY - player.prevPosY) * (double) f - 0.45D;
-        double z_P = player.prevPosZ + (player.posZ - player.prevPosZ) * (double) f - sinYaw * offsetX + cosYaw * offsetZ;
+        double x_P = player.prevPosX + (player.posX - player.prevPosX) * (double) partialTicks - cosYaw * offsetX - sinYaw * offsetZ;
+        double y_P = player.prevPosY + eyeHeight + offsetY + (player.posY - player.prevPosY) * (double) partialTicks - 0.45D;
+        double z_P = player.prevPosZ + (player.posZ - player.prevPosZ) * (double) partialTicks - sinYaw * offsetX + cosYaw * offsetZ;
         //interpolate the entity's position based on its movement
-        f = dart.isHooked() ? 1 : f;
-        double x_D = dart.prevPosX + (dart.posX - dart.prevPosX) * (double) f;
-        double y_D = dart.prevPosY + (dart.posY - dart.prevPosY) * (double) f + 0.25D;
-        double z_D = dart.prevPosZ + (dart.posZ - dart.prevPosZ) * (double) f;
+        partialTicks = dart.isHooked() ? 1 : partialTicks;
+        double x_D = dart.prevPosX + (dart.posX - dart.prevPosX) * (double) partialTicks;
+        double y_D = dart.prevPosY + (dart.posY - dart.prevPosY) * (double) partialTicks + 0.25D;
+        double z_D = dart.prevPosZ + (dart.posZ - dart.prevPosZ) * (double) partialTicks;
+        //transform the coordinates of the cable's end attached to the player to the reference system of the dart
         double x_DP = (double) ((float) (x_P - x_D));
         double y_DP = (double) ((float) (y_P - y_D));
         double z_DP = (double) ((float) (z_P - z_D));
