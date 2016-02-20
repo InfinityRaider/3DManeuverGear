@@ -52,13 +52,13 @@ public class ItemRegistry {
         RegisterHelper.registerItem(itemResource, Names.Objects.RESOURCE);
         items.add(itemResource);
 
-        if(!ConfigurationHandler.disableFallBoots) {
+        if(!ConfigurationHandler.getInstance().disableFallBoots) {
             itemFallBoots = new ItemFallBoots();
             RegisterHelper.registerItem(itemFallBoots, Names.Objects.BOOTS);
             items.add(itemFallBoots);
         }
 
-        if(!ConfigurationHandler.disableMusicDisc) {
+        if(!ConfigurationHandler.getInstance().disableMusicDisc) {
             itemRecord = new ItemRecord();
             RegisterHelper.registerItem(itemRecord, Names.Objects.RECORD);
             items.add(itemRecord);

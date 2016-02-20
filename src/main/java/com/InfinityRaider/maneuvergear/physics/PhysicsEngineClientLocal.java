@@ -24,7 +24,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public final class PhysicsEngineClientLocal extends PhysicsEngine {
     /** Velocity at which the cable is retracted (blocks per second) */
-    public static final double retractingVelocity = ConfigurationHandler.retractingSpeed/20.0D;
+    public static final double retractingVelocity = ConfigurationHandler.getInstance().retractingSpeed/20.0D;
 
     /** Boost intensity */
     public static final int BOOST = 2;

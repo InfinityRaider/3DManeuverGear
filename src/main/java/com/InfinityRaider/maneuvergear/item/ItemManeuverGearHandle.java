@@ -32,11 +32,11 @@ import java.util.List;
 
 public class ItemManeuverGearHandle extends ItemSword implements IDualWieldedWeapon, IItemWithRecipe, ISpecialRenderedItem {
     public final int MAX_ITEM_DAMAGE;
-    public static final ToolMaterial material_SuperHardenedSteel = EnumHelper.addToolMaterial("superHardenedSteel", 3, ConfigurationHandler.durability, 10F, ConfigurationHandler.damage, 0);
+    public static final ToolMaterial material_SuperHardenedSteel = EnumHelper.addToolMaterial("superHardenedSteel", 3, ConfigurationHandler.getInstance().durability, 10F, ConfigurationHandler.getInstance().damage, 0);
 
     public ItemManeuverGearHandle() {
         super(material_SuperHardenedSteel);
-        this.MAX_ITEM_DAMAGE = ConfigurationHandler.durability;
+        this.MAX_ITEM_DAMAGE = ConfigurationHandler.getInstance().durability;
         this.setCreativeTab(CreativeTabs.tabCombat);
         this.setMaxStackSize(1);
     }

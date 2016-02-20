@@ -13,6 +13,7 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.input.Keyboard;
 
 @SideOnly(Side.CLIENT)
 public class MouseClickHandler {
@@ -47,8 +48,10 @@ public class MouseClickHandler {
         }
         if(stack.getItem() instanceof IDualWieldedWeapon) {
             if(leftButtonPressed) {
-                boolean shift = Minecraft.getMinecraft().gameSettings.keyBindSneak.isKeyDown();
-                boolean ctrl = Minecraft.getMinecraft().gameSettings.keyBindSprint.isKeyDown();
+                //boolean shift = Minecraft.getMinecraft().gameSettings.keyBindSneak.isKeyDown();
+                //boolean ctrl = Minecraft.getMinecraft().gameSettings.keyBindSprint.isKeyDown();
+                boolean shift = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
+                boolean ctrl = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL);
                 IDualWieldedWeapon weapon = (IDualWieldedWeapon) stack.getItem();
                 attackEntity(weapon, player, stack, true, shift, ctrl);
                 weapon.onLeftItemUsed(stack, player, shift, ctrl);

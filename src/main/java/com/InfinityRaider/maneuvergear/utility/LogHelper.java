@@ -34,7 +34,7 @@ public abstract  class LogHelper {
      * @param object the object to be logged (interpreted into a string).
      */
     public static void debug(Object object) {
-        if(ConfigurationHandler.debug) {
+        if(ConfigurationHandler.getInstance().debug) {
             log(Level.INFO, "[DEBUG] "+object);
         }
     }
@@ -99,7 +99,7 @@ public abstract  class LogHelper {
      * @param e an exception to log.
      */
     public static void printStackTrace(Exception e) {
-        if(ConfigurationHandler.debug) {
+        if(ConfigurationHandler.getInstance().debug) {
             e.printStackTrace();
         }
     }

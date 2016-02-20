@@ -14,7 +14,13 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
-@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, dependencies = "required-after:"+ Names.Mods.baubles)
+@Mod(
+        modid = Reference.MOD_ID,
+        name = Reference.MOD_NAME,
+        version = Reference.VERSION,
+        guiFactory = Reference.GUI_FACTORY_CLASS,
+        dependencies = "required-after:"+ Names.Mods.baubles
+)
 public class ManeuverGear {
     @Mod.Instance(Reference.MOD_ID)
     public static ManeuverGear instance;

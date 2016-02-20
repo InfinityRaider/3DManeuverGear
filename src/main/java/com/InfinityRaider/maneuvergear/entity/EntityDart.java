@@ -29,7 +29,7 @@ public class EntityDart extends EntityThrowable implements IEntityAdditionalSpaw
     //number of blocks to fly per second
     public static final float INITIAL_VELOCITY = 100.0F;
     //length of the cable
-    public static final int CABLE_LENGTH =  ConfigurationHandler.cableLength;
+    public static final int CABLE_LENGTH =  ConfigurationHandler.getInstance().cableLength;
 
     private boolean left;
     private boolean hooked = false;

@@ -38,3 +38,9 @@ item.record.3dmaneuvergear:GurenNoYumiya.desc=Linked Horizon - Guren No Yumiya
 3DManeuverGear.ToolTip.damageLeft=Right blade integrity
 3DManeuverGear.ToolTip.boots1=These boots are equipped with shock dampers,
 3DManeuverGear.ToolTip.boots2=making it less painful to hit the ground at higher velocities
+
+//Config
+3dmaneuvergear.configGui.ctgy.Numbers.tooltip=Everything related to numbers and math
+3dmaneuvergear.configGui.ctgy.Content.tooltip=Everything related to items (these will require a game restart)
+3dmaneuvergear.configGui.ctgy.Client.tooltip=Client config settings, typically don't require a reboot and don't have to match the server
+3dmaneuvergear.configGui.ctgy.Debug.tooltip=Debug config settings, useful for devs or when reporting bugs.

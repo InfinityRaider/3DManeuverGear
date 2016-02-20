@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.input.Keyboard;
 
 @SideOnly(Side.CLIENT)
 public class KeyInputHandler {
@@ -30,8 +31,8 @@ public class KeyInputHandler {
     @SubscribeEvent
     @SuppressWarnings("unused")
     public void onKeyInput(InputEvent.KeyInputEvent event) {
-        boolean left = ClientProxy.retractLeft.isKeyDown();
-        boolean right = ClientProxy.retractRight.isKeyDown();
+        boolean left = ConfigurationHandler.getInstance().useConfigKeyBinds ? Keyboard.isKeyDown(ConfigurationHandler.getInstance().retractLeftKey) : ClientProxy.retractLeft.isKeyDown();
+        boolean right = ConfigurationHandler.getInstance().useConfigKeyBinds ? Keyboard.isKeyDown(ConfigurationHandler.getInstance().retractRightKey) : ClientProxy.retractRight.isKeyDown();
         boolean space = Minecraft.getMinecraft().gameSettings.keyBindJump.isKeyDown();
         boolean sneak = Minecraft.getMinecraft().gameSettings.keyBindSneak.isKeyDown();
 

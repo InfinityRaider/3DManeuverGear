@@ -32,7 +32,7 @@ public class EntityLivingHandler {
         EntityPlayer player = (EntityPlayer) event.entity;
         ItemStack boots = player.inventory.armorInventory[0];
         if(boots != null && boots.getItem() != null && boots.getItem() == ItemRegistry.getInstance().itemFallBoots) {
-            event.ammount = (1.0F-ConfigurationHandler.bootFallDamageReduction)*event.ammount;
+            event.ammount = (1.0F-ConfigurationHandler.getInstance().bootFallDamageReduction)*event.ammount;
         }
 
     }

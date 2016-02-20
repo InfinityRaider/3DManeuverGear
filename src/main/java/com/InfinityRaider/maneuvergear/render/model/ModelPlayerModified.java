@@ -159,7 +159,7 @@ public class ModelPlayerModified extends ModelPlayer {
     }
 
     public static void replaceOldModel() {
-        if(!ConfigurationHandler.overridePlayerRenderer) {
+        if(!ConfigurationHandler.getInstance().overridePlayerRenderer) {
             return;
         }
         RenderPlayer renderer = getOldRenderer("default");

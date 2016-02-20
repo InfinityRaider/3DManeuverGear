@@ -1,5 +1,8 @@
 Changelog
 ---------
+0.5:
+-ADDED: A key binding config system to avoid key binding clutter, if you have a small amount of mods you can disable this and use the vanilla system instead
+
 0.4
 -FIXED: Recipes showing up multiple times in JEI
 -FIXED: Cables not rendering correctly in first person
