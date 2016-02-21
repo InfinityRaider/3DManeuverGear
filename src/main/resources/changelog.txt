@@ -1,6 +1,7 @@
 Changelog
 ---------
 0.5:
+-FIXED: Other clients disconnecting when trying to swing the left arm of a player which is out of rendering range
 -ADDED: A key binding config system to avoid key binding clutter, if you have a small amount of mods you can disable this and use the vanilla system instead
 
 0.4
