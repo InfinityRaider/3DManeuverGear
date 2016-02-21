@@ -13,6 +13,7 @@ import java.util.UUID;
  */
 public class SwingLeftHandHandler {
     private static final SwingLeftHandHandler INSTANCE = new SwingLeftHandHandler();
+    private static final SwingProgress DEFAULT = new SwingProgress();
 
     private HashMap<UUID, SwingProgress> swingProgresses;
 
@@ -25,6 +26,9 @@ public class SwingLeftHandHandler {
     }
 
     public void onLeftWeaponSwing(EntityPlayer player) {
+        if(player == null) {
+            return;
+        }
         if (!isSwingInProgress(player) || getSwingProgressInt(player) >= getArmSwingAnimationEnd(player) / 2 || getSwingProgressInt(player) < 0) {
             setSwingProgressInt(player, -1);
             setSwingInProgress(player, true);
@@ -32,6 +36,9 @@ public class SwingLeftHandHandler {
     }
 
     public void updateArmSwingProgress(EntityPlayer player) {
+        if(player == null) {
+            return;
+        }
         int i = getArmSwingAnimationEnd(player);
         if (isSwingInProgress(player)) {
             setSwingProgressInt(player, getSwingProgressInt(player)+1);
@@ -50,6 +57,9 @@ public class SwingLeftHandHandler {
     }
 
     public void setSwingInProgress(EntityPlayer player, boolean status) {
+        if(player == null) {
+            return;
+        }
         getSwingProgressObject(player).setSwingInProgress(status);
     }
 
@@ -58,6 +68,9 @@ public class SwingLeftHandHandler {
     }
 
     public void setSwingProgressInt(EntityPlayer player, int progress) {
+        if(player == null) {
+            return;
+        }
         getSwingProgressObject(player).setSwingProgressInt(progress);
     }
 
@@ -66,6 +79,9 @@ public class SwingLeftHandHandler {
     }
 
     public void setSwingProgress(EntityPlayer player, float progress) {
+        if(player == null) {
+            return;
+        }
         getSwingProgressObject(player).setSwingProgress(progress);
     }
 
@@ -74,6 +90,9 @@ public class SwingLeftHandHandler {
     }
 
     public SwingProgress getSwingProgressObject(EntityPlayer player) {
+        if(player == null) {
+            return DEFAULT;
+        }
         if(!swingProgresses.containsKey(player.getUniqueID())) {
             swingProgresses.put(player.getUniqueID(), new SwingProgress());
         }
