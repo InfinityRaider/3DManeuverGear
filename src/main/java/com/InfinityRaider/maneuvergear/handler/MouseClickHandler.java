@@ -90,6 +90,9 @@ public class MouseClickHandler {
     }
 
     private void attackEntity(IDualWieldedWeapon weapon, EntityPlayer player, ItemStack stack, boolean left, boolean shift, boolean ctrl) {
+        if(Minecraft.getMinecraft().objectMouseOver == null) {
+            return;
+        }
         Entity e =  Minecraft.getMinecraft().objectMouseOver.entityHit;
         if(e != null) {
             boolean flag = left ? weapon.onLeftItemAttack(stack, player, e, shift, ctrl) : weapon.onRightItemAttack(stack, player, e, shift, ctrl);
