@@ -36,7 +36,7 @@ public class EntityDart extends EntityThrowable implements IEntityAdditionalSpaw
     private double cableLength;
     private EntityPlayer player;
 
-    /** Default constructer, this has to be here because the entity is contructed client side with this */
+    /** Default constructor, this has to be here because the entity is constructed client side with this */
     @SuppressWarnings("unused")
     public EntityDart(World world) {
         super(world);
