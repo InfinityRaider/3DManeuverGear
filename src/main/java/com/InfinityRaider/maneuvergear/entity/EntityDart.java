@@ -89,7 +89,7 @@ public class EntityDart extends EntityThrowable implements IEntityAdditionalSpaw
 
     public double calculateDistanceToPlayer() {
         EntityPlayer player = this.getPlayer();
-        return this.getPositionVector().substract(new Vector(player.posX, player.posY, player.posZ)).norm();
+        return player == null ? CABLE_LENGTH : this.getPositionVector().substract(new Vector(player.posX, player.posY, player.posZ)).norm();
     }
 
     /** sets the length of the cable */
