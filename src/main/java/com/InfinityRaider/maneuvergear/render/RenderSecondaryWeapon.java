@@ -14,7 +14,8 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -55,7 +56,7 @@ public class RenderSecondaryWeapon {
         }
 
         EntityPlayer player = event.entityPlayer;
-        ItemStack stack = player.getCurrentEquippedItem();
+        ItemStack stack = player.getHeldItem(EnumHand.OFF_HAND);
         if (stack == null || stack.getItem() == null || !(stack.getItem() instanceof IDualWieldedWeapon)) {
             return;
         }
@@ -141,7 +142,7 @@ public class RenderSecondaryWeapon {
             return;
         }
 
-        ItemStack stack = player.getCurrentEquippedItem();
+        ItemStack stack = player.getHeldItem(EnumHand.OFF_HAND);
         if (stack == null || stack.getItem() == null || !(stack.getItem() instanceof IDualWieldedWeapon)) {
             return;
         }
@@ -157,7 +158,7 @@ public class RenderSecondaryWeapon {
         int k = i / 65536;
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) j / 1.0F, (float) k / 1.0F);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        int l = stack.getItem().getColorFromItemStack(stack, 0);
+        int l = Minecraft.getMinecraft().getItemColors().getColorFromItemstack(stack, 0);
         float r = (float) (l >> 16 & 255) / 255.0F;
         float g = (float) (l >> 8 & 255) / 255.0F;
         float b = (float) (l & 255) / 255.0F;

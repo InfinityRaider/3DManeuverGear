@@ -9,7 +9,7 @@ import com.InfinityRaider.maneuvergear.reference.Names;
 import com.InfinityRaider.maneuvergear.reference.Reference;
 import com.InfinityRaider.maneuvergear.render.IBaubleRenderer;
 import com.InfinityRaider.maneuvergear.render.RenderManeuverGear;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,7 +17,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -209,9 +209,9 @@ public class ItemManeuverGear extends Item implements IBaubleRendered, IItemWith
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
         if(stack != null && stack.getItem() != null) {
-            list.add(StatCollector.translateToLocal("3DManeuverGear.ToolTip.belt"));
-            list.add(StatCollector.translateToLocal("3DManeuverGear.ToolTip.leftBlades")+": "+this.getBladeCount(stack, true)+"/"+MAX_HOLSTERED_BLADES);
-            list.add(StatCollector.translateToLocal("3DManeuverGear.ToolTip.rightBlades")+": "+this.getBladeCount(stack, false)+"/"+MAX_HOLSTERED_BLADES);
+            list.add(I18n.translateToLocal("3DManeuverGear.ToolTip.belt"));
+            list.add(I18n.translateToLocal("3DManeuverGear.ToolTip.leftBlades")+": "+this.getBladeCount(stack, true)+"/"+MAX_HOLSTERED_BLADES);
+            list.add(I18n.translateToLocal("3DManeuverGear.ToolTip.rightBlades")+": "+this.getBladeCount(stack, false)+"/"+MAX_HOLSTERED_BLADES);
         }
     }
 

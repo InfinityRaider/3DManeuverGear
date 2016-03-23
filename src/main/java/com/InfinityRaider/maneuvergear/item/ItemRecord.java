@@ -1,7 +1,7 @@
 package com.InfinityRaider.maneuvergear.item;
 
 import com.InfinityRaider.maneuvergear.reference.Reference;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.util.ResourceLocation;
 
 public class ItemRecord extends net.minecraft.item.ItemRecord implements IItemWithModel {

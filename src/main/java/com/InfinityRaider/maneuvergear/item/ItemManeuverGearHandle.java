@@ -8,8 +8,8 @@ import com.InfinityRaider.maneuvergear.reference.Reference;
 import com.InfinityRaider.maneuvergear.render.IItemModelRenderer;
 import com.InfinityRaider.maneuvergear.render.ItemSpecialRenderer;
 import com.InfinityRaider.maneuvergear.render.RenderItemHandle;
-import net.minecraft.block.Block;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.block.SoundType;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -19,7 +19,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -114,8 +118,8 @@ public class ItemManeuverGearHandle extends ItemSword implements IDualWieldedWea
 
     private void onSwordBladeBroken(EntityPlayer player) {
         if(player != null && !player.worldObj.isRemote) {
-            Block.SoundType sound = Block.soundTypeAnvil;
-            player.worldObj.playSoundAtEntity(player, sound.getPlaceSound(), (sound.getVolume() + 1.0F) / 4.0F, sound.getFrequency() * 0.8F);
+            SoundType type = Blocks.anvil.getStepSound();
+            player.worldObj.playSound(null, player.posX, player.posY, player.posZ, type.getPlaceSound(), SoundCategory.PLAYERS, (type.getVolume() + 1.0F) / 4.0F, type.getPitch() * 0.8F);
         }
     }
 
@@ -129,8 +133,8 @@ public class ItemManeuverGearHandle extends ItemSword implements IDualWieldedWea
     }
 
     @Override
-    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-        return stack;
+    public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
+        return new ActionResult<>(EnumActionResult.PASS, stack);
     }
 
     @Override
@@ -248,16 +252,16 @@ public class ItemManeuverGearHandle extends ItemSword implements IDualWieldedWea
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
         if(stack != null && stack.getItem() != null) {
-            list.add(StatCollector.translateToLocal("3DManeuverGear.ToolTip.handle"));
-            list.add(StatCollector.translateToLocal("3DManeuverGear.ToolTip.damageLeft") + ": " + this.getBladeDamage(stack, true) + "/" + this.MAX_ITEM_DAMAGE);
-            list.add(StatCollector.translateToLocal("3DManeuverGear.ToolTip.damageLeft") + ": " + this.getBladeDamage(stack, false) + "/" + this.MAX_ITEM_DAMAGE);
+            list.add(I18n.translateToLocal("3DManeuverGear.ToolTip.handle"));
+            list.add(I18n.translateToLocal("3DManeuverGear.ToolTip.damageLeft") + ": " + this.getBladeDamage(stack, true) + "/" + this.MAX_ITEM_DAMAGE);
+            list.add(I18n.translateToLocal("3DManeuverGear.ToolTip.damageLeft") + ": " + this.getBladeDamage(stack, false) + "/" + this.MAX_ITEM_DAMAGE);
             list.add("");
-            list.add(StatCollector.translateToLocal("3DManeuverGear.ToolTip.handleLeftNormal"));
-            list.add(StatCollector.translateToLocal("3DManeuverGear.ToolTip.handleRightNormal"));
-            list.add(StatCollector.translateToLocal("3DManeuverGear.ToolTip.handleLeftSneak"));
-            list.add(StatCollector.translateToLocal("3DManeuverGear.ToolTip.handleRightSneak"));
-            list.add(StatCollector.translateToLocal("3DManeuverGear.ToolTip.handleLeftSprint"));
-            list.add(StatCollector.translateToLocal("3DManeuverGear.ToolTip.handleRightSprint"));
+            list.add(I18n.translateToLocal("3DManeuverGear.ToolTip.handleLeftNormal"));
+            list.add(I18n.translateToLocal("3DManeuverGear.ToolTip.handleRightNormal"));
+            list.add(I18n.translateToLocal("3DManeuverGear.ToolTip.handleLeftSneak"));
+            list.add(I18n.translateToLocal("3DManeuverGear.ToolTip.handleRightSneak"));
+            list.add(I18n.translateToLocal("3DManeuverGear.ToolTip.handleLeftSprint"));
+            list.add(I18n.translateToLocal("3DManeuverGear.ToolTip.handleRightSprint"));
         }
     }
 

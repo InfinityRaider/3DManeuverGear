@@ -1,11 +1,11 @@
 package com.InfinityRaider.maneuvergear.handler;
 
-import baubles.api.BaublesApi;
 import com.InfinityRaider.maneuvergear.ManeuverGear;
 import com.InfinityRaider.maneuvergear.entity.EntityDart;
 import com.InfinityRaider.maneuvergear.item.ItemManeuverGear;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngine;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngineDummy;
+import com.InfinityRaider.maneuvergear.utility.BaublesWrapper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -137,11 +137,11 @@ public class DartHandler {
     }
 
     public ItemStack getManeuverGear(EntityPlayer player) {
-        return BaublesApi.getBaubles(player).getStackInSlot(BELT_SLOT);
+        return BaublesWrapper.getInstance().getBaubles(player).getStackInSlot(BELT_SLOT);
     }
 
     private boolean checkGear(EntityPlayer player) {
-        IInventory baubles = BaublesApi.getBaubles(player);
+        IInventory baubles = BaublesWrapper.getInstance().getBaubles(player);
         ItemStack belt = baubles.getStackInSlot(BELT_SLOT);
         return (belt!=null) && (belt.getItem()!=null) && (belt.getItem() instanceof ItemManeuverGear);
     }

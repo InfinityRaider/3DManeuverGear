@@ -16,12 +16,12 @@ import com.InfinityRaider.maneuvergear.reference.Reference;
 import com.InfinityRaider.maneuvergear.render.*;
 import com.InfinityRaider.maneuvergear.render.model.ModelPlayerModified;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.ModelLoader;
@@ -76,7 +76,7 @@ public class ClientProxy extends CommonProxy {
         double x = player.posX;
         double y = player.posY;
         double z = player.posZ;
-        Vec3 lookVec = player.getLook(2);
+        Vec3d lookVec = player.getLook(2);
         int nr = 10;
         for(int i=0;i<nr;i++) {
             Minecraft.getMinecraft().effectRenderer.spawnEffectParticle(EnumParticleTypes.CLOUD.getParticleID(), x, y, z, -(lookVec.xCoord * i) / (0.0F + nr), -(lookVec.yCoord * i) / (0.0F + nr), -(lookVec.zCoord * i) / (0.0F + nr));

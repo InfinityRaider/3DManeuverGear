@@ -4,14 +4,14 @@ import com.InfinityRaider.maneuvergear.entity.EntityDart;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
@@ -47,7 +47,7 @@ public class RenderEntityDart extends Render<EntityDart> {
         GlStateManager.rotate(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks - 90.0F, 0.0F, 1.0F, 0.0F);
         GlStateManager.rotate(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, 0.0F, 0.0F, 1.0F);
         Tessellator tessellator = Tessellator.getInstance();
-        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+        VertexBuffer buffer = tessellator.getBuffer();
         int i = 0;
         float f = 0.0F;
         float f1 = 0.5F;
@@ -70,28 +70,28 @@ public class RenderEntityDart extends Render<EntityDart> {
         GlStateManager.scale(f8, f8, f8);
         GlStateManager.translate(-4.0F, 0.0F, 0.0F);
         GL11.glNormal3f(f8, 0.0F, 0.0F);
-        worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
-        worldrenderer.pos(-7.0D, -2.0D, -2.0D).tex((double) f4, (double) f6).endVertex();
-        worldrenderer.pos(-7.0D, -2.0D, 2.0D).tex((double) f5, (double) f6).endVertex();
-        worldrenderer.pos(-7.0D, 2.0D, 2.0D).tex((double) f5, (double) f7).endVertex();
-        worldrenderer.pos(-7.0D, 2.0D, -2.0D).tex((double) f4, (double) f7).endVertex();
+        buffer.begin(7, DefaultVertexFormats.POSITION_TEX);
+        buffer.pos(-7.0D, -2.0D, -2.0D).tex((double) f4, (double) f6).endVertex();
+        buffer.pos(-7.0D, -2.0D, 2.0D).tex((double) f5, (double) f6).endVertex();
+        buffer.pos(-7.0D, 2.0D, 2.0D).tex((double) f5, (double) f7).endVertex();
+        buffer.pos(-7.0D, 2.0D, -2.0D).tex((double) f4, (double) f7).endVertex();
         tessellator.draw();
         GL11.glNormal3f(-f8, 0.0F, 0.0F);
-        worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
-        worldrenderer.pos(-7.0D, 2.0D, -2.0D).tex((double) f4, (double) f6).endVertex();
-        worldrenderer.pos(-7.0D, 2.0D, 2.0D).tex((double) f5, (double) f6).endVertex();
-        worldrenderer.pos(-7.0D, -2.0D, 2.0D).tex((double) f5, (double) f7).endVertex();
-        worldrenderer.pos(-7.0D, -2.0D, -2.0D).tex((double) f4, (double) f7).endVertex();
+        buffer.begin(7, DefaultVertexFormats.POSITION_TEX);
+        buffer.pos(-7.0D, 2.0D, -2.0D).tex((double) f4, (double) f6).endVertex();
+        buffer.pos(-7.0D, 2.0D, 2.0D).tex((double) f5, (double) f6).endVertex();
+        buffer.pos(-7.0D, -2.0D, 2.0D).tex((double) f5, (double) f7).endVertex();
+        buffer.pos(-7.0D, -2.0D, -2.0D).tex((double) f4, (double) f7).endVertex();
         tessellator.draw();
 
         for (int j = 0; j < 4; ++j) {
             GlStateManager.rotate(90.0F, 1.0F, 0.0F, 0.0F);
             GL11.glNormal3f(0.0F, 0.0F, f8);
-            worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
-            worldrenderer.pos(-8.0D, -2.0D, 0.0D).tex((double) f, (double) f2).endVertex();
-            worldrenderer.pos(8.0D, -2.0D, 0.0D).tex((double) f1, (double) f2).endVertex();
-            worldrenderer.pos(8.0D, 2.0D, 0.0D).tex((double) f1, (double) f3).endVertex();
-            worldrenderer.pos(-8.0D, 2.0D, 0.0D).tex((double) f, (double) f3).endVertex();
+            buffer.begin(7, DefaultVertexFormats.POSITION_TEX);
+            buffer.pos(-8.0D, -2.0D, 0.0D).tex((double) f, (double) f2).endVertex();
+            buffer.pos(8.0D, -2.0D, 0.0D).tex((double) f1, (double) f2).endVertex();
+            buffer.pos(8.0D, 2.0D, 0.0D).tex((double) f1, (double) f3).endVertex();
+            buffer.pos(-8.0D, 2.0D, 0.0D).tex((double) f, (double) f3).endVertex();
             tessellator.draw();
         }
 
@@ -106,7 +106,7 @@ public class RenderEntityDart extends Render<EntityDart> {
         double c1 = (left ? 0.8D : -0.8D);
         double c2 = -0.8D;
         double c3 = -0.6D;
-        Vec3 vec3 = new Vec3(c1, c2, c3);
+        Vec3d vec3 = new Vec3d(c1, c2, c3);
         vec3 = vec3.rotatePitch(-(player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * partialTick) * (float) Math.PI / 180.0F);
         vec3 = vec3.rotateYaw(-(player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * partialTick) * (float) Math.PI / 180.0F);
         //find the player's position, interpolating based on his movement
@@ -156,14 +156,14 @@ public class RenderEntityDart extends Render<EntityDart> {
     }
 
     private void renderWire(Tessellator tessellator, double x, double y, double z, double X, double Y, double Z, double A) {
-        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+        VertexBuffer buffer = tessellator.getBuffer();
         GlStateManager.disableTexture2D();
         GlStateManager.disableLighting();
-        worldrenderer.begin(3, DefaultVertexFormats.POSITION_COLOR);
+        buffer.begin(3, DefaultVertexFormats.POSITION_COLOR);
         byte n = 16;
         for (int i = 0; i <= n; ++i) {
             float t = (float) i / (float) n;
-            worldrenderer.pos(x + X * ((double) t), y + Y * ((double) t) - A * MathHelper.sin((float) Math.PI * i / n), z + Z * ((double) t)).color(0, 0, 0, 255).endVertex();
+            buffer.pos(x + X * ((double) t), y + Y * ((double) t) - A * MathHelper.sin((float) Math.PI * i / n), z + Z * ((double) t)).color(0, 0, 0, 255).endVertex();
             //y + d12 * (double)(f12 * f12 + f12) * 0.5D + 0.25D
         }
         tessellator.draw();

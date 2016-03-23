@@ -6,9 +6,9 @@ import com.InfinityRaider.maneuvergear.render.model.ModelManeuverGearHandle;
 import com.InfinityRaider.maneuvergear.utility.TransformationMatrix;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -42,8 +42,10 @@ public class RenderItemHandle extends ItemSpecialRenderer<RenderItemHandle.TileE
     @Override
     public TransformationMatrix getTransformMatrixForPerspective(ItemCameraTransforms.TransformType cameraTransformsType) {
         switch(cameraTransformsType) {
-            case FIRST_PERSON: return transformationMatrixFirstPerson();
-            case THIRD_PERSON: return transformationMatrixThirdPerson();
+            case FIRST_PERSON_RIGHT_HAND: return transformationMatrixFirstPerson();
+            case FIRST_PERSON_LEFT_HAND: return transformationMatrixFirstPerson();
+            case THIRD_PERSON_RIGHT_HAND: return transformationMatrixThirdPerson();
+            case THIRD_PERSON_LEFT_HAND: return transformationMatrixThirdPerson();
             case GUI: return transformationMatrixGui();
             case GROUND: return transformationMatrixGround();
             default: return transformationMatrixDefault();

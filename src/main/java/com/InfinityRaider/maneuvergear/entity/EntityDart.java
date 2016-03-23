@@ -14,9 +14,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
@@ -53,7 +53,7 @@ public class EntityDart extends EntityThrowable implements IEntityAdditionalSpaw
         this.left = left;
         //render the entity even if off screen
         this.ignoreFrustumCheck = true;
-        Vec3 direction = player.getLookVec();
+        Vec3d direction = player.getLookVec();
         double v_X = direction.xCoord*INITIAL_VELOCITY/20.0F;
         double v_Y = direction.yCoord*INITIAL_VELOCITY/20.0F;
         double v_Z = direction.zCoord*INITIAL_VELOCITY/20.0F;
@@ -61,7 +61,7 @@ public class EntityDart extends EntityThrowable implements IEntityAdditionalSpaw
     }
 
     @Override
-    protected void onImpact(MovingObjectPosition position) {
+    protected void onImpact(RayTraceResult position) {
         Vector impactPosition = new Vector(position.hitVec);
         double yaw = Math.atan2(impactPosition.getZ(), impactPosition.getX());
         double pitch = Math.asin(impactPosition.getY() / Math.sqrt(impactPosition.getX() * impactPosition.getX() + impactPosition.getZ() * impactPosition.getZ()));
@@ -137,14 +137,14 @@ public class EntityDart extends EntityThrowable implements IEntityAdditionalSpaw
         if (this.throwableShake > 0) {
             --this.throwableShake;
         }
-        Vec3 vec3 = new Vec3(this.posX, this.posY, this.posZ);
-        Vec3 vec31 = new Vec3(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
-        MovingObjectPosition movingobjectposition = this.worldObj.rayTraceBlocks(vec3, vec31);
-        if (movingobjectposition != null) {
-            if(movingobjectposition.typeOfHit != MovingObjectPosition.MovingObjectType.BLOCK) {
+        Vec3d vec3 = new Vec3d(this.posX, this.posY, this.posZ);
+        Vec3d vec31 = new Vec3d(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
+        RayTraceResult impact = this.worldObj.rayTraceBlocks(vec3, vec31);
+        if (impact != null) {
+            if(impact.typeOfHit != RayTraceResult.Type.BLOCK) {
                 this.retractDart();
             }
-            this.onImpact(movingobjectposition);
+            this.onImpact(impact);
             return;
         }
         //no collision detected, increase the components with the velocity

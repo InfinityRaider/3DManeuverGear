@@ -1,7 +1,7 @@
 package com.InfinityRaider.maneuvergear.utility;
 
 import com.InfinityRaider.maneuvergear.physics.Vector;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 
 import javax.vecmath.Matrix4f;
 
@@ -36,7 +36,7 @@ public class TransformationMatrix {
     }
 
     /** TransformationMatrix for a translation */
-    public TransformationMatrix(Vec3 translation) {
+    public TransformationMatrix(Vec3d translation) {
         this(translation.xCoord, translation.yCoord, translation.zCoord);
     }
 

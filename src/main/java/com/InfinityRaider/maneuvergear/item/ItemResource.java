@@ -3,7 +3,7 @@ package com.InfinityRaider.maneuvergear.item;
 import com.InfinityRaider.maneuvergear.handler.DartHandler;
 import com.InfinityRaider.maneuvergear.init.ItemRegistry;
 import com.InfinityRaider.maneuvergear.reference.Reference;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,8 +11,11 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -32,21 +35,21 @@ public class
     }
 
     @Override
-    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+    public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
         if(world.isRemote) {
-            return stack;
+            return new ActionResult<>(EnumActionResult.PASS, stack);
         }
         if(stack == null || stack.getItem() == null || stack.getItem() != this) {
-            return stack;
+            return new ActionResult<>(EnumActionResult.PASS, stack);
         }
         if(stack.getItemDamage() == EnumSubItems.SWORD_BLADE.ordinal()) {
             ItemStack maneuverGear = DartHandler.instance.getManeuverGear(player);
             if(maneuverGear == null || maneuverGear.getItem() == null || !(maneuverGear.getItem() instanceof ItemManeuverGear)) {
-                return stack;
+                return new ActionResult<>(EnumActionResult.PASS, stack);
             }
             stack.stackSize = ((ItemManeuverGear) maneuverGear.getItem()).addBlades(maneuverGear, stack.stackSize, player.isSneaking());
         }
-        return stack;
+        return new ActionResult<>(EnumActionResult.SUCCESS, stack);
     }
 
     @Override
@@ -79,8 +82,8 @@ public class
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
         if(stack != null && stack.getItem() != null && stack.getItemDamage() == EnumSubItems.SWORD_BLADE.ordinal()) {
-            list.add(StatCollector.translateToLocal("3DManeuverGear.ToolTip.swordBladeRight"));
-            list.add(StatCollector.translateToLocal("3DManeuverGear.ToolTip.swordBladeLeft"));
+            list.add(I18n.translateToLocal("3DManeuverGear.ToolTip.swordBladeRight"));
+            list.add(I18n.translateToLocal("3DManeuverGear.ToolTip.swordBladeLeft"));
         }
     }
 

@@ -36,7 +36,7 @@ public abstract  class MessageBase implements IMessage {
             buf.writeInt(0);
         } else {
             buf.writeInt(e.getEntityId());
-            buf.writeInt(e.worldObj.provider.getDimensionId());
+            buf.writeInt(e.worldObj.provider.getDimension());
         }
     }
 

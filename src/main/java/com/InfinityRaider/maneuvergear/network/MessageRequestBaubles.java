@@ -1,7 +1,7 @@
 package com.InfinityRaider.maneuvergear.network;
 
-import baubles.api.BaublesApi;
 import com.InfinityRaider.maneuvergear.item.IBaubleRendered;
+import com.InfinityRaider.maneuvergear.utility.BaublesWrapper;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -34,7 +34,7 @@ public class MessageRequestBaubles extends MessageBase {
     public static class MessageHandler implements IMessageHandler<MessageRequestBaubles, MessageSyncBaubles> {
         @Override
         public MessageSyncBaubles onMessage(MessageRequestBaubles message, MessageContext ctx) {
-            IInventory baubleInv = BaublesApi.getBaubles(message.subject);
+            IInventory baubleInv = BaublesWrapper.getInstance().getBaubles(message.subject);
             ArrayList<ItemStack> baubles = new ArrayList<>();
             if(baubleInv != null) {
                 for(int i=0;i<baubleInv.getSizeInventory();i++) {

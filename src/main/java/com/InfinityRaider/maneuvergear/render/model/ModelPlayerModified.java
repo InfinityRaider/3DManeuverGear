@@ -6,11 +6,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
-import net.minecraft.client.renderer.entity.RendererLivingEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -36,6 +36,7 @@ public class ModelPlayerModified extends ModelPlayer {
     @Override
     public void setRotationAngles(float arg0, float arg1, float arg2, float arg3, float arg4, float arg5, Entity entity) {
         super.setRotationAngles(arg0, arg1, arg2, arg3, arg4, arg5, entity);
+        /*
         if (leftArmSwingProgress > 0) {
             this.bipedHead.rotateAngleY = arg3 / (180F / (float)Math.PI);
             this.bipedHead.rotateAngleX = arg4 / (180F / (float)Math.PI);
@@ -156,6 +157,7 @@ public class ModelPlayerModified extends ModelPlayer {
             copyModelAngles(this.bipedRightArm, this.bipedRightArmwear);
             copyModelAngles(this.bipedBody, this.bipedBodyWear);
         }
+        */
     }
 
     public static void replaceOldModel() {
@@ -169,7 +171,7 @@ public class ModelPlayerModified extends ModelPlayer {
         }
         ModelPlayer oldModel = renderer.getMainModel();
         ModelPlayer newModel = null;
-        for(Field field : RendererLivingEntity.class.getDeclaredFields()) {
+        for(Field field : RenderLivingBase.class.getDeclaredFields()) {
             if(field.getType() == ModelBase.class) {
                 try {
                     field.setAccessible(true);
@@ -218,7 +220,7 @@ public class ModelPlayerModified extends ModelPlayer {
             return;
         }
         //replace relevant fields in RenderPlayer
-        for(Field field : RendererLivingEntity.class.getDeclaredFields()) {
+        for(Field field : RenderLivingBase.class.getDeclaredFields()) {
             if(field.getType() == ModelBase.class) {
                 field.setAccessible(true);
                 try {
