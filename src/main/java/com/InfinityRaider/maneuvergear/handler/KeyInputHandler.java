@@ -2,7 +2,7 @@ package com.InfinityRaider.maneuvergear.handler;
 
 import com.InfinityRaider.maneuvergear.ManeuverGear;
 import com.InfinityRaider.maneuvergear.network.MessageBoostUsed;
-import com.InfinityRaider.maneuvergear.network.NetworkWrapperManeuverGear;
+import com.InfinityRaider.maneuvergear.network.NetworkWrapper;
 import com.InfinityRaider.maneuvergear.proxy.ClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -66,7 +66,7 @@ public class KeyInputHandler {
 
     private void applyBoost(EntityPlayer player) {
         if(boostCoolDown <= 0 && DartHandler.instance.isWearingGear(player)) {
-            NetworkWrapperManeuverGear.wrapper.sendToServer(new MessageBoostUsed());
+            NetworkWrapper.getInstance().sendToServer(new MessageBoostUsed());
             DartHandler.instance.getPhysicsEngine(player).applyBoost();
             boostCoolDown = 20;
         }

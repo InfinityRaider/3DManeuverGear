@@ -34,8 +34,7 @@ item.record.3dmaneuvergear:GurenNoYumiya.desc=Linked Horizon - Guren No Yumiya
 3DManeuverGear.ToolTip.handleRightSneak=Use <shift> + <RMB> to fire/retract right dart
 3DManeuverGear.ToolTip.handleLeftSprint=Use <ctrl> + <LMB> to apply a blade to the left handle
 3DManeuverGear.ToolTip.handleRightSprint=Use <ctrl> + <RMB> to apply a blade to the right handle
-3DManeuverGear.ToolTip.damageLeft=Left blade integrity
-3DManeuverGear.ToolTip.damageLeft=Right blade integrity
+3DManeuverGear.ToolTip.damage=Blade integrity
 3DManeuverGear.ToolTip.boots1=These boots are equipped with shock dampers,
 3DManeuverGear.ToolTip.boots2=making it less painful to hit the ground at higher velocities
 

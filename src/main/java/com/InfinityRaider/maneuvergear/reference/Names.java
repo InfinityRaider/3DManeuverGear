@@ -15,6 +15,7 @@ public final class Names {
     }
 
     public static class NBT {
+        public static final String DAMAGE = "3DMG_DAMAGE";
         public static final String LEFT = "3DMG_LEFT";
         public static final String RIGHT = "3DMG_RIGHT";
         public static final String HOOKED = "3DMG_HOOKED";

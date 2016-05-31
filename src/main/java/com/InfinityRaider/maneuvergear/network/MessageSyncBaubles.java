@@ -5,12 +5,12 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.ArrayList;
 
-public class MessageSyncBaubles extends MessageBase {
+public class MessageSyncBaubles extends MessageBase<IMessage> {
     private EntityPlayer player;
     private ItemStack[] baubles;
 
@@ -40,11 +40,18 @@ public class MessageSyncBaubles extends MessageBase {
         }
     }
 
-    public static class MessageHandler implements IMessageHandler<MessageSyncBaubles, IMessage> {
-        @Override
-        public IMessage onMessage(MessageSyncBaubles message, MessageContext ctx) {
-            RenderBauble.getInstance().syncBaubles(message.player, message.baubles);
-            return null;
-        }
+    @Override
+    public Side getMessageHandlerSide() {
+        return Side.CLIENT;
+    }
+
+    @Override
+    protected void processMessage(MessageContext ctx) {
+        RenderBauble.getInstance().syncBaubles(this.player, this.baubles);
+    }
+
+    @Override
+    protected IMessage getReply(MessageContext ctx) {
+        return null;
     }
 }

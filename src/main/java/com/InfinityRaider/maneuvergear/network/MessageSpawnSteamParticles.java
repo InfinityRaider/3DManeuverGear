@@ -4,10 +4,10 @@ import com.InfinityRaider.maneuvergear.ManeuverGear;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
 
-public class MessageSpawnSteamParticles extends MessageBase {
+public class MessageSpawnSteamParticles extends MessageBase<IMessage> {
     private EntityPlayer player;
 
     @SuppressWarnings("unused")
@@ -27,13 +27,20 @@ public class MessageSpawnSteamParticles extends MessageBase {
         this.writePlayerToByteBuf(buf, player);
     }
 
-    public static class MessageHandler implements IMessageHandler<MessageSpawnSteamParticles, IMessage> {
-        @Override
-        public IMessage onMessage(MessageSpawnSteamParticles message, MessageContext ctx) {
-            if(message.player != null) {
-                ManeuverGear.proxy.spawnSteamParticles(message.player);
-            }
-            return null;
+    @Override
+    public Side getMessageHandlerSide() {
+        return Side.CLIENT;
+    }
+
+    @Override
+    protected void processMessage(MessageContext ctx) {
+        if(player != null) {
+            ManeuverGear.proxy.spawnSteamParticles(player);
         }
+    }
+
+    @Override
+    protected IMessage getReply(MessageContext ctx) {
+        return null;
     }
 }

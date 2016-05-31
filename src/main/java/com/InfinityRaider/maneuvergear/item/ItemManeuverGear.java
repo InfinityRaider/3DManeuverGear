@@ -3,7 +3,7 @@ package com.InfinityRaider.maneuvergear.item;
 import baubles.api.BaubleType;
 import com.InfinityRaider.maneuvergear.handler.DartHandler;
 import com.InfinityRaider.maneuvergear.network.MessageNotifyBaubleEquip;
-import com.InfinityRaider.maneuvergear.network.NetworkWrapperManeuverGear;
+import com.InfinityRaider.maneuvergear.network.NetworkWrapper;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngine;
 import com.InfinityRaider.maneuvergear.reference.Names;
 import com.InfinityRaider.maneuvergear.reference.Reference;
@@ -17,6 +17,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.Tuple;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -29,7 +30,7 @@ public class ItemManeuverGear extends Item implements IBaubleRendered, IItemWith
     public static int MAX_HOLSTERED_BLADES = 4;
 
     public ItemManeuverGear() {
-        this.setCreativeTab(CreativeTabs.tabCombat);
+        this.setCreativeTab(CreativeTabs.COMBAT);
         this.setMaxStackSize(1);
     }
 
@@ -137,7 +138,7 @@ public class ItemManeuverGear extends Item implements IBaubleRendered, IItemWith
      * @return if the stack is valid
      */
     public boolean isValidManeuverGearStack(ItemStack stack) {
-        return stack != null && stack.getItem() != null && stack.getItem() instanceof ItemManeuverGear;
+        return stack != null && stack.getItem() instanceof ItemManeuverGear;
     }
 
     @Override
@@ -153,7 +154,7 @@ public class ItemManeuverGear extends Item implements IBaubleRendered, IItemWith
         }
         EntityPlayer player = (EntityPlayer) entity;
         boolean remote = player.worldObj.isRemote;
-        if(remote && stack!=null && stack.getItem()!=null && stack.getItem()==this) {
+        if(remote && stack!=null && stack.getItem()==this) {
             if(DartHandler.instance.isWearingGear(player) && (DartHandler.instance.getLeftDart(player)!=null || DartHandler.instance.getRightDart(player)!=null)) {
                 PhysicsEngine engine = DartHandler.instance.getPhysicsEngine(player);
                 engine.updateTick();
@@ -167,11 +168,11 @@ public class ItemManeuverGear extends Item implements IBaubleRendered, IItemWith
             return;
         }
         EntityPlayer player = (EntityPlayer) entity;
-        if(stack!=null && stack.getItem()!=null && stack.getItem()==this) {
+        if(stack!=null && stack.getItem()==this) {
             DartHandler.instance.equipGear(player);
         }
         if(!player.worldObj.isRemote) {
-            NetworkWrapperManeuverGear.wrapper.sendToAll(new MessageNotifyBaubleEquip(player, stack, true));
+            NetworkWrapper.getInstance().sendToAll(new MessageNotifyBaubleEquip(player, stack, true));
         }
     }
 
@@ -181,11 +182,11 @@ public class ItemManeuverGear extends Item implements IBaubleRendered, IItemWith
             return;
         }
         EntityPlayer player = (EntityPlayer) entity;
-        if(stack!=null && stack.getItem()!=null && stack.getItem()==this) {
+        if(stack!=null && stack.getItem()==this) {
             DartHandler.instance.unEquipGear(player);
         }
         if(!player.worldObj.isRemote) {
-            NetworkWrapperManeuverGear.wrapper.sendToAll(new MessageNotifyBaubleEquip(player, stack, false));
+            NetworkWrapper.getInstance().sendToAll(new MessageNotifyBaubleEquip(player, stack, false));
         }
     }
 
@@ -207,8 +208,9 @@ public class ItemManeuverGear extends Item implements IBaubleRendered, IItemWith
 
     @Override
     @SideOnly(Side.CLIENT)
+    @SuppressWarnings("deprecation")
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
-        if(stack != null && stack.getItem() != null) {
+        if(stack != null) {
             list.add(I18n.translateToLocal("3DManeuverGear.ToolTip.belt"));
             list.add(I18n.translateToLocal("3DManeuverGear.ToolTip.leftBlades")+": "+this.getBladeCount(stack, true)+"/"+MAX_HOLSTERED_BLADES);
             list.add(I18n.translateToLocal("3DManeuverGear.ToolTip.rightBlades")+": "+this.getBladeCount(stack, false)+"/"+MAX_HOLSTERED_BLADES);
@@ -229,7 +231,10 @@ public class ItemManeuverGear extends Item implements IBaubleRendered, IItemWith
     }
 
     @Override
-    public ModelResourceLocation[] getModelDefinitions() {
-        return new ModelResourceLocation[] {new ModelResourceLocation(Reference.MOD_ID.toLowerCase() + ":maneuverGear", "inventory")};
+    @SideOnly(Side.CLIENT)
+    public List<Tuple<Integer, ModelResourceLocation>> getModelDefinitions() {
+        List<Tuple<Integer, ModelResourceLocation>> list = new ArrayList<>();
+        list.add(new Tuple<>(0, new ModelResourceLocation(Reference.MOD_ID.toLowerCase() + ":maneuverGear", "inventory")));
+        return list;
     }
 }

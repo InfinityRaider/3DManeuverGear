@@ -3,9 +3,16 @@ package com.InfinityRaider.maneuvergear.init;
 import com.InfinityRaider.maneuvergear.handler.ConfigurationHandler;
 import com.InfinityRaider.maneuvergear.item.*;
 import com.InfinityRaider.maneuvergear.reference.Names;
+import com.InfinityRaider.maneuvergear.render.item.ItemRendererRegistry;
+import com.InfinityRaider.maneuvergear.utility.LogHelper;
 import com.InfinityRaider.maneuvergear.utility.RegisterHelper;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
+import net.minecraft.util.Tuple;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,6 +78,24 @@ public class ItemRegistry {
         if(init) {
             getItems().stream().filter(item -> item instanceof IItemWithRecipe).forEach(
                     item -> ((IItemWithRecipe) item).getRecipes().forEach(GameRegistry::addRecipe));
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void registerRenderers() {
+        for(Item item : items) {
+            if(item instanceof IItemWithModel) {
+                for (Tuple<Integer, ModelResourceLocation> entry : ((IItemWithModel) item).getModelDefinitions()) {
+                    ModelLoader.setCustomModelResourceLocation(item, entry.getFirst(), entry.getSecond());
+                }
+            }
+            if(item instanceof ICustomRenderedItem) {
+                ItemRendererRegistry.getInstance().registerCustomItemRenderer((ICustomRenderedItem<? extends Item>) item);
+            }
+        }
+
+        for (ICustomRenderedItem item : ItemRendererRegistry.getInstance().getRegisteredItems()) {
+            LogHelper.debug("Registered custom renderer for " + item.getItemModelResourceLocation());
         }
     }
 }

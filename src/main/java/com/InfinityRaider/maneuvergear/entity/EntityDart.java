@@ -79,7 +79,7 @@ public class EntityDart extends EntityThrowable implements IEntityAdditionalSpaw
 
     @Override
     protected float getGravityVelocity() {
-        return hooked?0:GRAVITY_VELOCITY/20;
+        return hooked ? 0 : GRAVITY_VELOCITY/20;
     }
 
     /** returns the player that fired this dart */

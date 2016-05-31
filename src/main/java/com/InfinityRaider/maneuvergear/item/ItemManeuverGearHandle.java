@@ -5,9 +5,9 @@ import com.InfinityRaider.maneuvergear.handler.DartHandler;
 import com.InfinityRaider.maneuvergear.init.ItemRegistry;
 import com.InfinityRaider.maneuvergear.reference.Names;
 import com.InfinityRaider.maneuvergear.reference.Reference;
-import com.InfinityRaider.maneuvergear.render.IItemModelRenderer;
-import com.InfinityRaider.maneuvergear.render.ItemSpecialRenderer;
-import com.InfinityRaider.maneuvergear.render.RenderItemHandle;
+import com.InfinityRaider.maneuvergear.render.item.IItemRenderingHandler;
+import com.InfinityRaider.maneuvergear.render.item.RenderItemHandle;
+import com.google.common.collect.ImmutableList;
 import net.minecraft.block.SoundType;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
@@ -19,10 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.EnumHelper;
@@ -34,32 +31,35 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemManeuverGearHandle extends ItemSword implements IDualWieldedWeapon, IItemWithRecipe, ISpecialRenderedItem {
+public class ItemManeuverGearHandle extends ItemSword implements IDualWieldedWeapon, IItemWithRecipe, ICustomRenderedItem<ItemManeuverGearHandle> {
     public final int MAX_ITEM_DAMAGE;
+
+    @SideOnly(Side.CLIENT)
+    private IItemRenderingHandler<ItemManeuverGearHandle> renderer;
+
     public static final ToolMaterial material_SuperHardenedSteel = EnumHelper.addToolMaterial("superHardenedSteel", 3, ConfigurationHandler.getInstance().durability, 10F, ConfigurationHandler.getInstance().damage, 0);
 
     public ItemManeuverGearHandle() {
         super(material_SuperHardenedSteel);
         this.MAX_ITEM_DAMAGE = ConfigurationHandler.getInstance().durability;
-        this.setCreativeTab(CreativeTabs.tabCombat);
+        this.setCreativeTab(CreativeTabs.COMBAT);
         this.setMaxStackSize(1);
     }
 
     /**
      * Checks if there is a sword blade present on the respective handle
      * @param stack the ItemStack holding this
-     * @param left tho check the left or right handle
      * @return if there is a blade present
      */
-    public boolean hasSwordBlade(ItemStack stack, boolean left) {
+    public boolean hasSwordBlade(ItemStack stack) {
         if (!isValidManeuverGearHandleStack(stack)) {
             return false;
         }
         NBTTagCompound tag = stack.getTagCompound();
-        return tag != null && tag.getInteger(left ? Names.NBT.LEFT : Names.NBT.RIGHT) > 0;
+        return tag != null && tag.getInteger(Names.NBT.DAMAGE) > 0;
     }
 
-    public int getBladeDamage(ItemStack stack, boolean left) {
+    public int getBladeDamage(ItemStack stack) {
         if(!isValidManeuverGearHandleStack(stack)) {
             return 0;
         }
@@ -67,22 +67,25 @@ public class ItemManeuverGearHandle extends ItemSword implements IDualWieldedWea
         if(tag == null) {
             return 0;
         }
-        return tag.getInteger(left ? Names.NBT.LEFT : Names.NBT.RIGHT);
+        return tag.getInteger(Names.NBT.DAMAGE);
     }
 
     /**
      * Attempts to damage the sword blade
      * @param stack the ItemStack holding this
-     * @param left to damage the left or the right blade
      */
-    public void damageSwordBlade(EntityPlayer player, ItemStack stack, boolean left) {
-        if(!hasSwordBlade(stack, left)) {
+    public void damageSwordBlade(EntityPlayer player, ItemStack stack) {
+        if(!hasSwordBlade(stack)) {
             return;
         }
         NBTTagCompound tag = stack.getTagCompound();
-        int dmg = tag.getInteger(left ? Names.NBT.LEFT : Names.NBT.RIGHT);
+        if(tag == null) {
+            tag = new NBTTagCompound();
+            stack.setTagCompound(tag);
+        }
+        int dmg = tag.getInteger(Names.NBT.DAMAGE );
         dmg = dmg -1;
-        tag.setInteger(left ? Names.NBT.LEFT : Names.NBT.RIGHT, dmg);
+        tag.setInteger(Names.NBT.DAMAGE, dmg);
         if(dmg == 0) {
             onSwordBladeBroken(player);
         }
@@ -100,7 +103,7 @@ public class ItemManeuverGearHandle extends ItemSword implements IDualWieldedWea
         if(!isValidManeuverGearHandleStack(stack)) {
             return false;
         }
-        if(hasSwordBlade(stack, left)) {
+        if(hasSwordBlade(stack)) {
             return false;
         }
         ItemStack maneuverGearStack = DartHandler.instance.getManeuverGear(player);
@@ -109,7 +112,7 @@ public class ItemManeuverGearHandle extends ItemSword implements IDualWieldedWea
             maneuverGear.removeBlades(maneuverGearStack, 1, left);
             NBTTagCompound tag = stack.getTagCompound();
             tag = tag == null ? new NBTTagCompound() : tag;
-            tag.setInteger(left ? Names.NBT.LEFT : Names.NBT.RIGHT, MAX_ITEM_DAMAGE);
+            tag.setInteger(Names.NBT.DAMAGE, MAX_ITEM_DAMAGE);
             stack.setTagCompound(tag);
             return true;
         }
@@ -118,7 +121,7 @@ public class ItemManeuverGearHandle extends ItemSword implements IDualWieldedWea
 
     private void onSwordBladeBroken(EntityPlayer player) {
         if(player != null && !player.worldObj.isRemote) {
-            SoundType type = Blocks.anvil.getStepSound();
+            SoundType type = Blocks.ANVIL.getSoundType();
             player.worldObj.playSound(null, player.posX, player.posY, player.posZ, type.getPlaceSound(), SoundCategory.PLAYERS, (type.getVolume() + 1.0F) / 4.0F, type.getPitch() * 0.8F);
         }
     }
@@ -129,7 +132,7 @@ public class ItemManeuverGearHandle extends ItemSword implements IDualWieldedWea
      * @return if the stack is valid
      */
     public boolean isValidManeuverGearHandleStack(ItemStack stack) {
-        return stack != null && stack.getItem() != null && stack.getItem() instanceof ItemManeuverGearHandle;
+        return stack != null && stack.getItem() instanceof ItemManeuverGearHandle;
     }
 
     @Override
@@ -143,7 +146,7 @@ public class ItemManeuverGearHandle extends ItemSword implements IDualWieldedWea
     }
 
     @Override
-    public void onLeftItemUsed(ItemStack stack, EntityPlayer player, boolean shift, boolean ctrl) {
+    public void onItemUsed(ItemStack stack, EntityPlayer player, boolean shift, boolean ctrl, EnumHand hand) {
         if (stack.getItem() != this) {
             return;
         }
@@ -151,76 +154,35 @@ public class ItemManeuverGearHandle extends ItemSword implements IDualWieldedWea
             return;
         }
         if (!player.worldObj.isRemote) {
+            boolean left = hand == EnumHand.OFF_HAND;
             if (shift) {
                 if(!DartHandler.instance.isWearingGear(player)) {
                     return;
                 }
-                if (DartHandler.instance.hasLeftDart(player)) {
-                    DartHandler.instance.retractDart(player, true);
+                if (left ? DartHandler.instance.hasLeftDart(player) : DartHandler.instance.hasRightDart(player)) {
+                    DartHandler.instance.retractDart(player, left);
                 } else {
-                    DartHandler.instance.fireDart(player.worldObj, player, true);
+                    DartHandler.instance.fireDart(player.worldObj, player, left);
                 }
             } else if (ctrl) {
-                if (!hasSwordBlade(stack, true)) {
-                    applySwordBlade(player, stack, true);
+                if (!hasSwordBlade(stack)) {
+                    applySwordBlade(player, stack, left);
                 }
             }
         }
     }
 
     @Override
-    public void onRightItemUsed(ItemStack stack, EntityPlayer player, boolean shift, boolean ctrl) {
-        if(stack.getItem() != this) {
-            return;
-        }
-        if(!DartHandler.instance.isWearingGear(player)) {
-            return;
-        }
-        if (!player.worldObj.isRemote) {
-            if (shift) {
-                if(!DartHandler.instance.isWearingGear(player)) {
-                    return;
-                }
-                if (DartHandler.instance.hasRightDart(player)) {
-                    DartHandler.instance.retractDart(player, false);
-                } else {
-                    DartHandler.instance.fireDart(player.worldObj, player, false);
-                }
-            } else if (ctrl) {
-                if (!hasSwordBlade(stack, false)) {
-                    applySwordBlade(player, stack, false);
-                }
-            }
-        }
-    }
-
-    @Override
-    public boolean onLeftItemAttack(ItemStack stack, EntityPlayer player, Entity e, boolean shift, boolean ctrl) {
+    public boolean onItemAttack(ItemStack stack, EntityPlayer player, Entity e, boolean shift, boolean ctrl, EnumHand hand) {
         if(ctrl || shift) {
             return true;
         }
-        if(!this.hasSwordBlade(stack, true)) {
+        if(!this.hasSwordBlade(stack)) {
             return true;
         }
         if(!player.worldObj.isRemote) {
             if (!player.capabilities.isCreativeMode) {
-                this.damageSwordBlade(player, stack, true);
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public boolean onRightItemAttack(ItemStack stack, EntityPlayer player, Entity e, boolean shift, boolean ctrl) {
-        if(ctrl || shift) {
-            return true;
-        }
-        if(!this.hasSwordBlade(stack, false)) {
-            return true;
-        }
-        if(!player.worldObj.isRemote) {
-            if (!player.capabilities.isCreativeMode) {
-                this.damageSwordBlade(player, stack, false);
+                this.damageSwordBlade(player, stack);
             }
         }
         return false;
@@ -228,33 +190,11 @@ public class ItemManeuverGearHandle extends ItemSword implements IDualWieldedWea
 
     @Override
     @SideOnly(Side.CLIENT)
-    public float[] getTransformationComponents(EntityPlayer player, ItemStack stack, float partialTick, boolean firstPerson) {
-        if(firstPerson) {
-            return new float[] {0.0075F*0.4F, 0.02F, -0.03F, -0.02F, 5, 90};
-        } else {
-            return new float[]{0.0725F * 0.4F, 0.5F, 0.4F, -0.1F, 0, 0};
-        }
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public boolean useModel(ItemStack stack) {
-        return true;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public IItemModelRenderer getModel(ItemStack stack) {
-        return RenderItemHandle.getInstance();
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
+    @SuppressWarnings("deprecation")
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
-        if(stack != null && stack.getItem() != null) {
+        if(stack != null) {
             list.add(I18n.translateToLocal("3DManeuverGear.ToolTip.handle"));
-            list.add(I18n.translateToLocal("3DManeuverGear.ToolTip.damageLeft") + ": " + this.getBladeDamage(stack, true) + "/" + this.MAX_ITEM_DAMAGE);
-            list.add(I18n.translateToLocal("3DManeuverGear.ToolTip.damageLeft") + ": " + this.getBladeDamage(stack, false) + "/" + this.MAX_ITEM_DAMAGE);
+            list.add(I18n.translateToLocal("3DManeuverGear.ToolTip.damage") + ": " + this.getBladeDamage(stack) + "/" + this.MAX_ITEM_DAMAGE);
             list.add("");
             list.add(I18n.translateToLocal("3DManeuverGear.ToolTip.handleLeftNormal"));
             list.add(I18n.translateToLocal("3DManeuverGear.ToolTip.handleRightNormal"));
@@ -269,21 +209,31 @@ public class ItemManeuverGearHandle extends ItemSword implements IDualWieldedWea
     public List<IRecipe> getRecipes() {
         List<IRecipe> list = new ArrayList<>();
         list.add(new ShapedOreRecipe(ItemRegistry.getInstance().itemManeuverGearHandle, "ww ", "iib", "wwl",
-                'w', new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE),
+                'w', new ItemStack(Blocks.WOOL, 1, OreDictionary.WILDCARD_VALUE),
                 'i', "ingotIron",
-                'b', new ItemStack(Blocks.iron_bars),
-                'l', new ItemStack(Blocks.lever)));
+                'b', new ItemStack(Blocks.IRON_BARS),
+                'l', new ItemStack(Blocks.LEVER)));
         return list;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public ItemSpecialRenderer getSpecialRenderer() {
-        return RenderItemHandle.getInstance();
+    public IItemRenderingHandler<ItemManeuverGearHandle> getRenderer() {
+        if(this.renderer == null) {
+            this.renderer = new RenderItemHandle(this);
+        }
+        return this.renderer;
     }
 
     @Override
-    public ModelResourceLocation[] getModelDefinitions() {
-        return new ModelResourceLocation[] {new ModelResourceLocation(Reference.MOD_ID.toLowerCase() + ":handle", "inventory")};
+    @SideOnly(Side.CLIENT)
+    public ModelResourceLocation getItemModelResourceLocation() {
+        return new ModelResourceLocation(Reference.MOD_ID.toLowerCase() + ":handle", "inventory");
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public List<ResourceLocation> getTextures() {
+        return ImmutableList.of();
     }
 }

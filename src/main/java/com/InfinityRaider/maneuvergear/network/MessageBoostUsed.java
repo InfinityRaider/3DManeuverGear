@@ -4,11 +4,10 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class MessageBoostUsed extends MessageBase {
+public class MessageBoostUsed extends MessageBase<IMessage> {
     public MessageBoostUsed() {}
 
     @Override
@@ -17,18 +16,24 @@ public class MessageBoostUsed extends MessageBase {
     @Override
     public void toBytes(ByteBuf buf) {}
 
-    public static class MessageHandler implements IMessageHandler<MessageBoostUsed, IMessage> {
-        @Override
-        public IMessage onMessage(MessageBoostUsed message, MessageContext ctx) {
-            if(ctx.side == Side.SERVER) {
-                EntityPlayer player = ctx.getServerHandler().playerEntity;
-                if(player != null) {
-                    IMessage msg = new MessageSpawnSteamParticles(player);
-                    NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(player.worldObj.provider.getDimension(), player.posX, player.posY, player.posZ, 64);
-                    NetworkWrapperManeuverGear.wrapper.sendToAllAround(msg, point);
-                }
+    @Override
+    public Side getMessageHandlerSide() {
+        return Side.SERVER;
+    }
+
+    @Override
+    protected void processMessage(MessageContext ctx) {
+        if(ctx.side == Side.SERVER) {
+            EntityPlayer player = ctx.getServerHandler().playerEntity;
+            if(player != null) {
+                NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(player.worldObj.provider.getDimension(), player.posX, player.posY, player.posZ, 64);
+                NetworkWrapper.getInstance().sendToAllAround(new MessageSpawnSteamParticles(player), point);
             }
-            return null;
         }
+    }
+
+    @Override
+    protected IMessage getReply(MessageContext ctx) {
+        return null;
     }
 }

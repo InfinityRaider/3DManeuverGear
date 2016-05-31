@@ -1,5 +1,6 @@
 package com.InfinityRaider.maneuvergear.utility;
 
+import baubles.api.BaublesApi;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 

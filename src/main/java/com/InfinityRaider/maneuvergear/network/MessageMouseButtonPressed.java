@@ -1,16 +1,15 @@
 package com.InfinityRaider.maneuvergear.network;
 
-import com.InfinityRaider.maneuvergear.handler.SwingLeftHandHandler;
 import com.InfinityRaider.maneuvergear.item.IDualWieldedWeapon;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class MessageMouseButtonPressed extends MessageBase {
+public class MessageMouseButtonPressed extends MessageBase<IMessage> {
     private boolean left;
     private boolean shift;
     private boolean ctrl;
@@ -38,24 +37,25 @@ public class MessageMouseButtonPressed extends MessageBase {
         buf.writeBoolean(ctrl);
     }
 
-    public static class MessageHandler implements IMessageHandler<MessageMouseButtonPressed, IMessage> {
-        @Override
-        public IMessage onMessage(MessageMouseButtonPressed message, MessageContext ctx) {
-            if(ctx.side == Side.SERVER) {
-                EntityPlayer player = ctx.getServerHandler().playerEntity;
-                ItemStack stack = player.getCurrentEquippedItem();
-                if (stack != null && stack.getItem() != null && stack.getItem() instanceof IDualWieldedWeapon) {
-                    IDualWieldedWeapon weapon = (IDualWieldedWeapon) stack.getItem();
-                    if (message.left) {
-                        SwingLeftHandHandler.getInstance().onLeftWeaponSwing(player);
-                        NetworkWrapperManeuverGear.wrapper.sendToAll(new MessageSwingLeftWeapon(player));
-                        weapon.onLeftItemUsed(stack, player, message.shift, message.ctrl);
-                    } else {
-                        weapon.onRightItemUsed(stack, player, message.shift, message.ctrl);
-                    }
-                }
+    @Override
+    public Side getMessageHandlerSide() {
+        return Side.SERVER;
+    }
+
+    @Override
+    protected void processMessage(MessageContext ctx) {
+        if(ctx.side == Side.SERVER) {
+            EntityPlayer player = ctx.getServerHandler().playerEntity;
+            ItemStack stack = player.getHeldItem(left ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND);
+            if (stack != null && stack.getItem() instanceof IDualWieldedWeapon) {
+                IDualWieldedWeapon weapon = (IDualWieldedWeapon) stack.getItem();
+                weapon.onItemUsed(stack, player, shift, ctrl, left ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND);
             }
-            return null;
         }
+    }
+
+    @Override
+    protected IMessage getReply(MessageContext ctx) {
+        return null;
     }
 }

@@ -10,6 +10,7 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.Tuple;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -22,14 +23,15 @@ import java.util.List;
 public class ItemFallBoots extends ItemArmor implements IItemWithRecipe, IItemWithModel {
     public ItemFallBoots() {
         super(ArmorMaterial.LEATHER, 0, EntityEquipmentSlot.FEET); //(material: cloth, index: cloth, type: boots)
-        this.setCreativeTab(CreativeTabs.tabCombat);
+        this.setCreativeTab(CreativeTabs.COMBAT);
         this.setMaxStackSize(1);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
+    @SuppressWarnings("deprecation")
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
-        if(stack != null && stack.getItem() != null) {
+        if(stack != null) {
             list.add(I18n.translateToLocal("3DManeuverGear.ToolTip.boots1"));
             list.add(I18n.translateToLocal("3DManeuverGear.ToolTip.boots2"));
         }
@@ -39,15 +41,17 @@ public class ItemFallBoots extends ItemArmor implements IItemWithRecipe, IItemWi
     public List<IRecipe> getRecipes() {
         List<IRecipe> list = new ArrayList<>();
         list.add(new ShapedOreRecipe(new ItemStack(this), "lll", "pbp", "www",
-                'l', new ItemStack(Items.leather),
-                'p', new ItemStack(Blocks.sticky_piston),
-                'b', new ItemStack(Items.leather_boots),
-                'w', new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE)));
+                'l', new ItemStack(Items.LEATHER),
+                'p', new ItemStack(Blocks.STICKY_PISTON),
+                'b', new ItemStack(Items.LEATHER_BOOTS),
+                'w', new ItemStack(Blocks.WOOL, 1, OreDictionary.WILDCARD_VALUE)));
         return list;
     }
 
     @Override
-    public ModelResourceLocation[] getModelDefinitions() {
-        return new ModelResourceLocation[] {new ModelResourceLocation(Reference.MOD_ID.toLowerCase() + ":fallBoots", "inventory")};
+    public List<Tuple<Integer, ModelResourceLocation>> getModelDefinitions() {
+        List<Tuple<Integer, ModelResourceLocation>> list = new ArrayList<>();
+        list.add(new Tuple<>(0, new ModelResourceLocation(Reference.MOD_ID.toLowerCase() + ":fallBoots", "inventory")));
+        return list;
     }
 }

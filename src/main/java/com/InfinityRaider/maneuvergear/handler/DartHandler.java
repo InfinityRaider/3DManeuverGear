@@ -228,8 +228,8 @@ public class DartHandler {
     @SubscribeEvent
     @SuppressWarnings("unused")
     public void onEntityJoinWorldEvent(EntityJoinWorldEvent event) {
-        if (event.entity != null && event.entity instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer) event.entity;
+        if (event.getEntity() != null && event.getEntity() instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer) event.getEntity();
             if (checkGear(player)) {
                 equipGear(player);
             }
@@ -239,8 +239,8 @@ public class DartHandler {
     @SubscribeEvent
     @SuppressWarnings("unused")
     public void onPlayerDeath(LivingDeathEvent event) {
-        if(event.entity != null && event.entity instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer) event.entity;
+        if(event.getEntity() != null && event.getEntity() instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer) event.getEntity();
             if(isWearingGear(player)) {
                 retractDarts(player);
             }

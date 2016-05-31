@@ -7,10 +7,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
 
-public class MessageAttackDualWielded extends MessageBase {
+public class MessageAttackDualWielded extends MessageBase<IMessage> {
     private boolean left;
     private boolean shift;
     private boolean ctrl;
@@ -42,22 +42,25 @@ public class MessageAttackDualWielded extends MessageBase {
         writeEntityToByteBuf(buf, entity);
     }
 
-    public static class MessageHandler implements IMessageHandler<MessageAttackDualWielded, IMessage> {
-        @Override
-        public IMessage onMessage(MessageAttackDualWielded message, MessageContext ctx) {
-            EntityPlayer player = ctx.getServerHandler().playerEntity;
-            if(player != null) {
-                ItemStack stack = player.getHeldItem(message.left ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND);
-                if(stack != null && stack.getItem() != null && stack.getItem() instanceof IDualWieldedWeapon) {
-                    IDualWieldedWeapon weapon = (IDualWieldedWeapon) stack.getItem();
-                    if(message.left) {
-                        weapon.onLeftItemAttack(stack, player, message.entity, message.shift, message.ctrl);
-                    } else {
-                        weapon.onRightItemAttack(stack, player, message.entity, message.shift, message.ctrl);
-                    }
-                }
+    @Override
+    public Side getMessageHandlerSide() {
+        return Side.SERVER;
+    }
+
+    @Override
+    protected void processMessage(MessageContext ctx) {
+        EntityPlayer player = ctx.getServerHandler().playerEntity;
+        if(player != null) {
+            ItemStack stack = player.getHeldItem(left ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND);
+            if(stack != null && stack.getItem() instanceof IDualWieldedWeapon) {
+                IDualWieldedWeapon weapon = (IDualWieldedWeapon) stack.getItem();
+                weapon.onItemAttack(stack, player, entity, shift, ctrl, left ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND);
             }
-            return null;
         }
+    }
+
+    @Override
+    protected IMessage getReply(MessageContext ctx) {
+        return null;
     }
 }

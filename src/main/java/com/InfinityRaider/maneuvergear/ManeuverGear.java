@@ -2,7 +2,7 @@ package com.InfinityRaider.maneuvergear;
 
 import com.InfinityRaider.maneuvergear.handler.DartHandler;
 import com.InfinityRaider.maneuvergear.init.ItemRegistry;
-import com.InfinityRaider.maneuvergear.network.NetworkWrapperManeuverGear;
+import com.InfinityRaider.maneuvergear.network.NetworkWrapper;
 import com.InfinityRaider.maneuvergear.proxy.IProxy;
 import com.InfinityRaider.maneuvergear.reference.Names;
 import com.InfinityRaider.maneuvergear.reference.Reference;
@@ -33,7 +33,7 @@ public class ManeuverGear {
     public static void preInit(FMLPreInitializationEvent event) {
         LogHelper.debug("Starting Pre-Initialization");
         proxy.registerEventHandlers();
-        NetworkWrapperManeuverGear.init();
+        NetworkWrapper.getInstance().init();
         proxy.initConfiguration(event);
         ItemRegistry.getInstance().init();
         proxy.initEntities();
@@ -54,7 +54,6 @@ public class ManeuverGear {
     @SuppressWarnings("unused")
     public static void postInit(FMLPostInitializationEvent event) {
         LogHelper.debug("Starting Post-Initialization");
-        proxy.replacePlayerModel();
         LogHelper.debug("Post-Initialization Complete");
     }
 

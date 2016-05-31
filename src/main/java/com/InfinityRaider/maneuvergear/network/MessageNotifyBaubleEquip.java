@@ -5,10 +5,10 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
 
-public class MessageNotifyBaubleEquip extends MessageBase {
+public class MessageNotifyBaubleEquip extends MessageBase<IMessage> {
     private EntityPlayer player;
     private ItemStack bauble;
     private boolean equip;
@@ -36,15 +36,22 @@ public class MessageNotifyBaubleEquip extends MessageBase {
         buf.writeBoolean(equip);
     }
 
-    public static class MessageHandler implements IMessageHandler<MessageNotifyBaubleEquip, IMessage> {
-        @Override
-        public IMessage onMessage(MessageNotifyBaubleEquip message, MessageContext ctx) {
-            if(message.equip) {
-                RenderBauble.getInstance().equipBauble(message.player, message.bauble);
-            } else {
-                RenderBauble.getInstance().unequipBauble(message.player, message.bauble);
-            }
-            return null;
+    @Override
+    public Side getMessageHandlerSide() {
+        return Side.CLIENT;
+    }
+
+    @Override
+    protected void processMessage(MessageContext ctx) {
+        if(equip) {
+            RenderBauble.getInstance().equipBauble(player, bauble);
+        } else {
+            RenderBauble.getInstance().unequipBauble(player, bauble);
         }
+    }
+
+    @Override
+    protected IMessage getReply(MessageContext ctx) {
+        return null;
     }
 }

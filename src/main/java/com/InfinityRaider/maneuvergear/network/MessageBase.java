@@ -10,8 +10,16 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
 
-public abstract  class MessageBase implements IMessage {
+public abstract  class MessageBase<REPLY extends IMessage> implements IMessage {
+    public abstract Side getMessageHandlerSide();
+
+    protected abstract void processMessage(MessageContext ctx);
+
+    protected abstract REPLY getReply(MessageContext ctx);
+
     protected EntityPlayer readPlayerFromByteBuf(ByteBuf buf) {
         Entity entity = readEntityFromByteBuf(buf);
         return (entity instanceof EntityPlayer)?(EntityPlayer) entity:null;
@@ -43,11 +51,11 @@ public abstract  class MessageBase implements IMessage {
     protected Item readItemFromByteBuf(ByteBuf buf) {
         int itemNameLength = buf.readInt();
         String itemName = new String(buf.readBytes(itemNameLength).array());
-        return Item.itemRegistry.getObject(new ResourceLocation(itemName));
+        return Item.REGISTRY.getObject(new ResourceLocation(itemName));
     }
 
     protected void writeItemToByteBuf(Item item, ByteBuf buf) {
-        String itemName = item==null?"null":Item.itemRegistry.getNameForObject(item).toString();
+        String itemName = item==null?"null":Item.REGISTRY.getNameForObject(item).toString();
         buf.writeInt(itemName.length());
         buf.writeBytes(itemName.getBytes());
     }

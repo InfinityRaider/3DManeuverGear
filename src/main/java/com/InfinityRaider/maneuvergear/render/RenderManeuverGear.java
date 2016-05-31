@@ -14,7 +14,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class RenderManeuverGear implements IBaubleRenderer {
+public class RenderManeuverGear extends RenderUtilBase implements IBaubleRenderer {
     public static final RenderManeuverGear instance = new RenderManeuverGear();
 
     @SideOnly(Side.CLIENT)
@@ -46,7 +46,8 @@ public class RenderManeuverGear implements IBaubleRenderer {
             GL11.glTranslatef(0, 0.1F, 0.25F);
         }
         model.render(entity, 0, 0, 0, 0, 0, 1);
-        if(stack != null && stack.getItem() != null && stack.getItem() instanceof ItemManeuverGear) {
+
+        if(stack != null && stack.getItem() instanceof ItemManeuverGear) {
             ItemManeuverGear maneuverGear = (ItemManeuverGear) stack.getItem();
 
             float f = 1F;
@@ -91,7 +92,7 @@ public class RenderManeuverGear implements IBaubleRenderer {
     private void renderBlades(ItemManeuverGear maneuverGear, ItemStack stack, boolean left) {
         int amount = maneuverGear.getBladeCount(stack, left);
         if(amount > 0) {
-            Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
+            Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
             float delta = 0.0675F;
 
             GL11.glPushMatrix();

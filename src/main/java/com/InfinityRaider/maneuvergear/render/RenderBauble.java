@@ -4,7 +4,7 @@ import baubles.api.BaubleType;
 import baubles.api.BaublesApi;
 import com.InfinityRaider.maneuvergear.item.IBaubleRendered;
 import com.InfinityRaider.maneuvergear.network.MessageRequestBaubles;
-import com.InfinityRaider.maneuvergear.network.NetworkWrapperManeuverGear;
+import com.InfinityRaider.maneuvergear.network.NetworkWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -19,7 +19,7 @@ import org.lwjgl.opengl.GL11;
 import java.util.HashMap;
 
 @SideOnly(Side.CLIENT)
-public class RenderBauble {
+public class RenderBauble extends RenderUtilBase {
     private static final RenderBauble INSTANCE = new RenderBauble();
 
     private HashMap<EntityPlayer, HashMap<BaubleType, ItemStack>> baublesToRender;
@@ -35,7 +35,7 @@ public class RenderBauble {
     public void syncBaubles(EntityPlayer player, ItemStack[] baubles) {
        HashMap<BaubleType, ItemStack> baubleMap = new HashMap<>();
         for(ItemStack stack:baubles) {
-            if((stack!=null) && (stack.getItem()!=null) && (stack.getItem() instanceof IBaubleRendered)) {
+            if((stack!=null) && (stack.getItem() instanceof IBaubleRendered)) {
                 baubleMap.put(((IBaubleRendered) stack.getItem()).getBaubleType(stack), stack);
             }
         }
@@ -43,7 +43,7 @@ public class RenderBauble {
     }
 
     public void equipBauble(EntityPlayer player, ItemStack bauble) {
-        if(bauble==null || bauble.getItem()==null || !(bauble.getItem() instanceof IBaubleRendered)) {
+        if(bauble==null || !(bauble.getItem() instanceof IBaubleRendered)) {
             return;
         }
         if(!baublesToRender.containsKey(player)) {
@@ -54,7 +54,7 @@ public class RenderBauble {
     }
 
     public void unequipBauble(EntityPlayer player, ItemStack bauble) {
-        if(bauble==null || bauble.getItem()==null || !(bauble.getItem() instanceof IBaubleRendered)) {
+        if(bauble==null || !(bauble.getItem() instanceof IBaubleRendered)) {
             return;
         }
         if(!baublesToRender.containsKey(player)) {
@@ -83,7 +83,7 @@ public class RenderBauble {
                 }
                 this.syncBaubles(event.player, baubles);
             } else {
-                NetworkWrapperManeuverGear.wrapper.sendToServer(new MessageRequestBaubles(event.player));
+                NetworkWrapper.getInstance().sendToServer(new MessageRequestBaubles(event.player));
             }
         }
     }
@@ -91,26 +91,26 @@ public class RenderBauble {
     @SubscribeEvent
     @SuppressWarnings("unused")
     public void renderBauble(RenderPlayerEvent.Post event) {
-        if(event.entityPlayer.isInvisibleToPlayer(Minecraft.getMinecraft().thePlayer)) {
+        if(event.getEntityPlayer().isInvisibleToPlayer(Minecraft.getMinecraft().thePlayer)) {
             return;
         }
-        if(!baublesToRender.containsKey(event.entityPlayer)) {
+        if(!baublesToRender.containsKey(event.getEntityPlayer())) {
             return;
         }
-        HashMap<BaubleType, ItemStack> map = baublesToRender.get((event.entityPlayer));
+        HashMap<BaubleType, ItemStack> map = baublesToRender.get((event.getEntityPlayer()));
         for(ItemStack stack:map.values()) {
-            if(stack==null || stack.getItem()==null || !(stack.getItem() instanceof IBaubleRendered)) {
+            if(stack==null || !(stack.getItem() instanceof IBaubleRendered)) {
                 continue;
             }
             IBaubleRendered bauble = (IBaubleRendered) stack.getItem();
 
-            applyEntityTransforms(event.entityPlayer, event.partialRenderTick, false);
+            applyEntityTransforms(event.getEntityPlayer(), event.getPartialRenderTick(), false);
 
             GL11.glPushMatrix();
-            bauble.getRenderer(stack).renderBauble(event.entityPlayer, stack, event.partialRenderTick);
+            bauble.getRenderer(stack).renderBauble(event.getEntityPlayer(), stack, event.getPartialRenderTick());
 
             GL11.glPopMatrix();
-            applyEntityTransforms(event.entityPlayer, event.partialRenderTick, true);
+            applyEntityTransforms(event.getEntityPlayer(), event.getPartialRenderTick(), true);
         }
     }
 

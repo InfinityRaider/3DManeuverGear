@@ -11,6 +11,16 @@ import net.minecraftforge.fml.server.FMLServerHandler;
 @SideOnly(Side.SERVER)
 public class ServerProxy extends CommonProxy {
     @Override
+    public Side getPhysicalSide() {
+        return Side.SERVER;
+    }
+
+    @Override
+    public Side getEffectiveSide() {
+        return getPhysicalSide();
+    }
+
+    @Override
     public EntityPlayer getClientPlayer() {
         return null;
     }
@@ -41,7 +51,7 @@ public class ServerProxy extends CommonProxy {
     }
 
     @Override
-    public void replacePlayerModel() {
-
+    public void queueTask(Runnable task) {
+        FMLServerHandler.instance().getServer().addScheduledTask(task);
     }
 }

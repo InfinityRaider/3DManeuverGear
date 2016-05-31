@@ -2,29 +2,21 @@ package com.InfinityRaider.maneuvergear.proxy;
 
 import com.InfinityRaider.maneuvergear.handler.ConfigurationHandler;
 import com.InfinityRaider.maneuvergear.handler.KeyInputHandler;
-import com.InfinityRaider.maneuvergear.handler.ModelBakeHandler;
 import com.InfinityRaider.maneuvergear.handler.MouseClickHandler;
 import com.InfinityRaider.maneuvergear.init.EntityRegistry;
 import com.InfinityRaider.maneuvergear.init.ItemRegistry;
-import com.InfinityRaider.maneuvergear.item.IItemWithModel;
-import com.InfinityRaider.maneuvergear.item.ISpecialRenderedItem;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngine;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngineClientLocal;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngineDummy;
 import com.InfinityRaider.maneuvergear.reference.Names;
 import com.InfinityRaider.maneuvergear.reference.Reference;
 import com.InfinityRaider.maneuvergear.render.*;
-import com.InfinityRaider.maneuvergear.render.model.ModelPlayerModified;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -37,6 +29,16 @@ import org.lwjgl.input.Keyboard;
 @SuppressWarnings("unused")
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
+    @Override
+    public Side getPhysicalSide() {
+        return Side.CLIENT;
+    }
+
+    @Override
+    public Side getEffectiveSide() {
+        return FMLCommonHandler.instance().getEffectiveSide();
+    }
+
     public static KeyBinding retractLeft = new KeyBinding(Reference.MOD_ID+"."+Names.Objects.KEY+"."+Names.Objects.RETRACT+Names.Objects.LEFT, Keyboard.KEY_Z, "key.categories.movement");
     public static KeyBinding retractRight = new KeyBinding(Reference.MOD_ID+"."+Names.Objects.KEY+"."+Names.Objects.RETRACT+Names.Objects.RIGHT, Keyboard.KEY_X, "key.categories.movement");
 
@@ -95,11 +97,6 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void replacePlayerModel() {
-        ModelPlayerModified.replaceOldModel();
-    }
-
-    @Override
     public World getWorldByDimensionId(int dimension) {
         Side effectiveSide = FMLCommonHandler.instance().getEffectiveSide();
         if(effectiveSide == Side.SERVER) {
@@ -112,45 +109,28 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void registerEventHandlers() {
         super.registerEventHandlers();
-
         MinecraftForge.EVENT_BUS.register(MouseClickHandler.getInstance());
-
         MinecraftForge.EVENT_BUS.register(KeyInputHandler.getInstance());
-
-        MinecraftForge.EVENT_BUS.register(RenderSecondaryWeapon.getInstance());
-
         MinecraftForge.EVENT_BUS.register(RenderBauble.getInstance());
-
-        MinecraftForge.EVENT_BUS.register(ModelBakeHandler.getInstance());
     }
 
     @Override
-    @SuppressWarnings({"unchecked", "deprecation"})
     public void registerRenderers() {
-        //items
-        for(Item item : ItemRegistry.getInstance().getItems()) {
-            if(item instanceof ISpecialRenderedItem) {
-                ItemSpecialRenderer renderer = ((ISpecialRenderedItem) item).getSpecialRenderer();
-                ClientRegistry.bindTileEntitySpecialRenderer(renderer.getTileClass(), renderer);
-                ModelResourceLocation[] variants = ((IItemWithModel) item).getModelDefinitions();
-                for(int meta = 0; meta < variants.length; meta++) {
-                    ModelLoader.setCustomModelResourceLocation(item, meta, variants[meta]);
-                    ModelBakeHandler.getInstance().registerModelToSwap(variants[meta], renderer);
-                    ForgeHooksClient.registerTESRItemStack(item, meta, renderer.getTileClass());
-                }
-            }
-            else if(item instanceof IItemWithModel) {
-                ModelResourceLocation[] variants = ((IItemWithModel) item).getModelDefinitions();
-                for(int meta = 0; meta < variants.length; meta++) {
-                    ModelLoader.setCustomModelResourceLocation(item, meta, variants[meta]);
-                }
-            }
-        }
+        ItemRegistry.getInstance().registerRenderers();
     }
 
     @Override
     public void registerKeyBindings() {
         ClientRegistry.registerKeyBinding(retractLeft);
         ClientRegistry.registerKeyBinding(retractRight);
+    }
+
+    @Override
+    public void queueTask(Runnable task) {
+        if(getEffectiveSide() == Side.CLIENT) {
+            Minecraft.getMinecraft().addScheduledTask(task);
+        } else {
+            FMLClientHandler.instance().getServer().addScheduledTask(task);
+        }
     }
 }

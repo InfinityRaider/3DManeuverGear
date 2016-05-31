@@ -5,8 +5,14 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 public interface IProxy {
+    /** @return The physical side, is always Side.SERVER on the server and Side.CLIENT on the client */
+    Side getPhysicalSide();
+
+    /** @return The effective side, on the server, this is always Side.SERVER, on the client it is dependent on the thread */
+    Side getEffectiveSide();
     /** Registers the relevant event handlers for the current side */
     void registerEventHandlers();
 
@@ -21,9 +27,6 @@ public interface IProxy {
 
     /** Initializes the EntityRegistry */
     void initEntities();
-
-    /** Replaces the player model to have left arm animations on the client, does nothing on the server */
-    void replacePlayerModel();
 
     /** Returns the instance of the EntityPlayer on the client, null on the server */
     EntityPlayer getClientPlayer();
@@ -45,4 +48,7 @@ public interface IProxy {
 
     /** Spawns the steam particles on the client, does nothing on the server */
     void spawnSteamParticles(EntityPlayer player);
+
+    /** Queues a task to be executed on this side */
+    void queueTask(Runnable task);
 }
