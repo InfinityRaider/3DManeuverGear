@@ -1,5 +1,11 @@
 Changelog
 ---------
+0.7
+-Ported to Minecraft 1.9.4
+-FIXED: the dart impact desync bug has finally been fixed
+-CHANGE: The maneuver gear now requires two handles: one in each hand, this is to be consistent with Minecraft's 1.9 dual wielding system
+-CHANGE: overhauled damage system to be more in line with vanilla
+
 0.6
 -FIXED: occasional NPE when attacking nothing with no blades equipped
 -FIXED: NPE on other clients when an EntityDart is within range, but the corresponding player isn't

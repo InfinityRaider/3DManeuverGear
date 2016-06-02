@@ -94,7 +94,7 @@ public class MouseClickHandler {
         }
         Entity entity =  Minecraft.getMinecraft().objectMouseOver.entityHit;
         if(entity != null) {
-            if(weapon.onItemAttack(stack, player, entity, shift, ctrl, left ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND)) {
+            if(!weapon.onItemAttack(stack, player, entity, shift, ctrl, left ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND)) {
                 NetworkWrapper.getInstance().sendToServer(new MessageAttackDualWielded(entity, left, shift, ctrl));
                 Minecraft.getMinecraft().playerController.attackEntity(player, entity);
             }

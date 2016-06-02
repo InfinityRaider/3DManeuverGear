@@ -8,30 +8,40 @@ import com.InfinityRaider.maneuvergear.reference.Reference;
 import com.InfinityRaider.maneuvergear.render.item.IItemRenderingHandler;
 import com.InfinityRaider.maneuvergear.render.item.RenderItemHandle;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Multimap;
+import mcp.MethodsReturnNonnullByDefault;
+import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemSword;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemManeuverGearHandle extends ItemSword implements IDualWieldedWeapon, IItemWithRecipe, ICustomRenderedItem<ItemManeuverGearHandle> {
+@MethodsReturnNonnullByDefault
+public class ItemManeuverGearHandle extends Item implements IDualWieldedWeapon, IItemWithRecipe, ICustomRenderedItem<ItemManeuverGearHandle> {
     public static final ResourceLocation TEXTURE = new ResourceLocation("3dmaneuvergear:models/3DGearHandle");
 
     public final int MAX_ITEM_DAMAGE;
@@ -39,10 +49,8 @@ public class ItemManeuverGearHandle extends ItemSword implements IDualWieldedWea
     @SideOnly(Side.CLIENT)
     private IItemRenderingHandler<ItemManeuverGearHandle> renderer;
 
-    public static final ToolMaterial material_SuperHardenedSteel = EnumHelper.addToolMaterial("superHardenedSteel", 3, ConfigurationHandler.getInstance().durability, 10F, ConfigurationHandler.getInstance().damage, 0);
-
     public ItemManeuverGearHandle() {
-        super(material_SuperHardenedSteel);
+        super();
         this.MAX_ITEM_DAMAGE = ConfigurationHandler.getInstance().durability;
         this.setCreativeTab(CreativeTabs.COMBAT);
         this.setMaxStackSize(1);
@@ -85,7 +93,7 @@ public class ItemManeuverGearHandle extends ItemSword implements IDualWieldedWea
             tag = new NBTTagCompound();
             stack.setTagCompound(tag);
         }
-        int dmg = tag.getInteger(Names.NBT.DAMAGE );
+        int dmg = tag.getInteger(Names.NBT.DAMAGE);
         dmg = dmg -1;
         tag.setInteger(Names.NBT.DAMAGE, dmg);
         if(dmg == 0) {
@@ -138,13 +146,48 @@ public class ItemManeuverGearHandle extends ItemSword implements IDualWieldedWea
     }
 
     @Override
+    public float getStrVsBlock(ItemStack stack, IBlockState state) {
+        Block block = state.getBlock();
+        if (block == Blocks.WEB) {
+            return 15.0F;
+        } else {
+            Material material = state.getMaterial();
+            return material != Material.PLANTS
+                    && material != Material.VINE
+                    && material != Material.CORAL
+                    && material != Material.LEAVES
+                    && material != Material.GLASS
+                    ? 1.0F : 1.5F;
+        }
+    }
+
+    @Override
+    public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
+        return true;
+    }
+
+    @Override
+    public boolean onBlockDestroyed(ItemStack stack, World worldIn, IBlockState blockIn, BlockPos pos, EntityLivingBase entityLiving) {
+        if ((double)blockIn.getBlockHardness(worldIn, pos) != 0.0D && this.hasSwordBlade(stack)) {
+            stack.damageItem(2, entityLiving);
+        }
+        return true;
+    }
+
+    @Override
+    @ParametersAreNonnullByDefault
     public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
         return new ActionResult<>(EnumActionResult.PASS, stack);
     }
 
     @Override
-    public boolean hitEntity(ItemStack stack, EntityLivingBase attacker, EntityLivingBase attacked) {
-        return true;
+    public int getItemEnchantability() {
+        return 0;
+    }
+
+    @Override
+    public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
+        return false;
     }
 
     @Override
@@ -188,6 +231,20 @@ public class ItemManeuverGearHandle extends ItemSword implements IDualWieldedWea
             }
         }
         return false;
+    }
+
+    @Override
+    @ParametersAreNonnullByDefault
+    public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack) {
+        Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
+        if(this.hasSwordBlade(stack)) {
+            multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getAttributeUnlocalizedName(),
+                    new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", 3.0 + (ConfigurationHandler.getInstance().damage), 0));
+        } else {
+            multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getAttributeUnlocalizedName(),
+                    new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", 1.0, 0));
+        }
+        return multimap;
     }
 
     @Override
