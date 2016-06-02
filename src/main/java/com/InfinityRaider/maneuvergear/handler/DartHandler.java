@@ -3,10 +3,13 @@ package com.InfinityRaider.maneuvergear.handler;
 import com.InfinityRaider.maneuvergear.ManeuverGear;
 import com.InfinityRaider.maneuvergear.entity.EntityDart;
 import com.InfinityRaider.maneuvergear.item.ItemManeuverGear;
+import com.InfinityRaider.maneuvergear.network.MessageDartAnchored;
+import com.InfinityRaider.maneuvergear.network.NetworkWrapper;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngine;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngineDummy;
 import com.InfinityRaider.maneuvergear.utility.BaublesWrapper;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -104,9 +107,20 @@ public class DartHandler {
         }
     }
 
-    public void onDartAnchored(EntityDart dart) {
+    public void onDartAnchored(EntityDart dart, double x, double y, double z, float yaw, float pitch) {
         PhysicsEngine engine = this.getPhysicsEngine(dart.getPlayer());
+        dart.setPositionAndRotation(x, y, z, yaw, pitch);
+        dart.posX = x;
+        dart.posY = y;
+        dart.posZ = z;
+        dart.rotationYaw = yaw;
+        dart.rotationPitch = pitch;
+        dart.setVelocity(0, 0, 0);
+        dart.setHooked();
         engine.onDartAnchored(dart);
+        if(!dart.getEntityWorld().isRemote) {
+            NetworkWrapper.getInstance().sendTo(new MessageDartAnchored(dart, x, y, z, yaw, pitch), (EntityPlayerMP) dart.getPlayer());
+        }
     }
 
     /** performs needed operations when a dart is retracted */
@@ -143,7 +157,7 @@ public class DartHandler {
     private boolean checkGear(EntityPlayer player) {
         IInventory baubles = BaublesWrapper.getInstance().getBaubles(player);
         ItemStack belt = baubles.getStackInSlot(BELT_SLOT);
-        return (belt!=null) && (belt.getItem()!=null) && (belt.getItem() instanceof ItemManeuverGear);
+        return (belt!=null) && (belt.getItem() instanceof ItemManeuverGear);
     }
 
     public void equipGear(EntityPlayer player) {
@@ -191,6 +205,8 @@ public class DartHandler {
         }
         if(checkGear(event.player)) {
             equipGear(event.player);
+        } else {
+            unEquipGear(event.player);
         }
     }
 

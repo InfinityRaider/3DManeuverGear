@@ -6,6 +6,7 @@ import com.InfinityRaider.maneuvergear.physics.PhysicsEngine;
 import com.InfinityRaider.maneuvergear.physics.Vector;
 import com.InfinityRaider.maneuvergear.reference.Names;
 import com.InfinityRaider.maneuvergear.render.RenderEntityDart;
+import com.InfinityRaider.maneuvergear.utility.LogHelper;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -13,8 +14,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -22,6 +21,8 @@ import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 
 public class EntityDart extends EntityThrowable implements IEntityAdditionalSpawnData {
     //number of blocks to fall per second due to gravity
@@ -61,14 +62,12 @@ public class EntityDart extends EntityThrowable implements IEntityAdditionalSpaw
     }
 
     @Override
-    protected void onImpact(RayTraceResult position) {
-        Vector impactPosition = new Vector(position.hitVec);
-        double yaw = Math.atan2(impactPosition.getZ(), impactPosition.getX());
-        double pitch = Math.asin(impactPosition.getY() / Math.sqrt(impactPosition.getX() * impactPosition.getX() + impactPosition.getZ() * impactPosition.getZ()));
-        this.setLocationAndAngles(impactPosition.getX(), impactPosition.getY(), impactPosition.getZ(), (float) yaw, (float) pitch);
-        this.hooked = true;
-        setVelocity(0, 0, 0);
-        DartHandler.instance.onDartAnchored(this);
+    @ParametersAreNonnullByDefault
+    protected void onImpact(RayTraceResult impact) {
+        LogHelper.debug("impact " + (worldObj.isRemote ? "client side" : "server side"));
+        double yaw = -Math.atan2(motionZ, motionX);
+        double pitch = Math.asin(motionY / Math.sqrt(motionX * motionX + motionZ * motionZ));
+        DartHandler.instance.onDartAnchored(this, impact.hitVec.xCoord, impact.hitVec.yCoord, impact.hitVec.zCoord, (float) yaw, (float) pitch);
     }
 
     public void setVelocity(double v_X, double v_Y, double v_Z) {
@@ -90,6 +89,11 @@ public class EntityDart extends EntityThrowable implements IEntityAdditionalSpaw
     /** check if this is the left or the right dart */
     public boolean isLeft() {
         return left;
+    }
+
+    /** sets the dart to hooked status */
+    public void setHooked() {
+        this.hooked = true;
     }
 
     /** check if this dart is grappled somewhere in a block */
@@ -120,71 +124,27 @@ public class EntityDart extends EntityThrowable implements IEntityAdditionalSpaw
     @Override
     public void onUpdate() {
         //serverside, if this dart is not connected to a player, get rid of it
-        if(!worldObj.isRemote && this.getPlayer()==null) {
+        if(!worldObj.isRemote && this.getPlayer() == null) {
             this.setDead();
             return;
         }
         //if the dart is hooked somewhere, it shouldn't do anything anymore
         if(this.hooked) {
+            this.posX = this.prevPosX;
+            this.posY = this.prevPosY;
+            this.posZ = this.prevPosZ;
+            this.rotationYaw = this.prevRotationYaw;
+            this.rotationPitch = this.prevRotationPitch;
             return;
         }
         //check for collision during movement this tick
         this.cableLength = this.calculateDistanceToPlayer();
-        this.lastTickPosX = this.posX;
-        this.lastTickPosY = this.posY;
-        this.lastTickPosZ = this.posZ;
-        this.onEntityUpdate();
-        if (this.throwableShake > 0) {
-            --this.throwableShake;
-        }
-        Vec3d vec3 = new Vec3d(this.posX, this.posY, this.posZ);
-        Vec3d vec31 = new Vec3d(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
-        RayTraceResult impact = this.worldObj.rayTraceBlocks(vec3, vec31);
-        if (impact != null) {
-            if(impact.typeOfHit != RayTraceResult.Type.BLOCK) {
-                this.retractDart();
-            }
-            this.onImpact(impact);
-            return;
-        }
-        //no collision detected, increase the components with the velocity
-        this.posX += this.motionX;
-        this.posY += this.motionY;
-        this.posZ += this.motionZ;
         //check if the maximum cable length has been exceeded, and if so retract the dart
         if(this.cableLength > CABLE_LENGTH) {
             retractDart();
             return;
         }
-        //cable length has not been exceeded: set previous values of position and rotation and decrement velocity due to friction
-        float f1 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
-        this.rotationYaw = (float)(Math.atan2(this.motionX, this.motionZ) * 180.0D / Math.PI);
-        for (this.rotationPitch = (float)(Math.atan2(this.motionY, (double)f1) * 180.0D / Math.PI); this.rotationPitch - this.prevRotationPitch < -180.0F; this.prevRotationPitch -= 360.0F){}
-        while (this.rotationPitch - this.prevRotationPitch >= 180.0F) {
-            this.prevRotationPitch += 360.0F;
-        }
-        while (this.rotationYaw - this.prevRotationYaw < -180.0F) {
-            this.prevRotationYaw -= 360.0F;
-        }
-        while (this.rotationYaw - this.prevRotationYaw >= 180.0F) {
-            this.prevRotationYaw += 360.0F;
-        }
-        this.rotationPitch = this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * 0.2F;
-        this.rotationYaw = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw) * 0.2F;
-        float f2 = 0.99F;
-        float f3 = this.getGravityVelocity();
-        if (this.isInWater()) {
-            for (int i = 0; i < 4; ++i) {
-                float f4 = 0.25F;
-                this.worldObj.spawnParticle(EnumParticleTypes.WATER_BUBBLE, this.posX - this.motionX * (double)f4, this.posY - this.motionY * (double)f4, this.posZ - this.motionZ * (double)f4, this.motionX, this.motionY, this.motionZ);
-            }
-            f2 = 0.8F;
-        }
-        this.motionX *= (double)f2;
-        this.motionY *= (double)f2;
-        this.motionZ *= (double)f2;
-        this.motionY -= (double)f3;
-        this.setPosition(this.posX, this.posY, this.posZ);
+        super.onUpdate();
     }
 
     public void retractDart() {

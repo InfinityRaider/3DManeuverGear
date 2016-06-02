@@ -34,6 +34,7 @@ public class NetworkWrapper {
         registerMessage(MessageAttackDualWielded.class);
         registerMessage(MessageBoostUsed.class);
         registerMessage(MessageSpawnSteamParticles.class);
+        registerMessage(MessageDartAnchored.class);
     }
 
     public void sendToAll(MessageBase message) {

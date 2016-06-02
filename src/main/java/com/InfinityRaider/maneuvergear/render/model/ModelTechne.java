@@ -157,8 +157,7 @@ public class ModelTechne<M extends ModelBase> {
         for(VertexData data : vertexData) {
             data.applyVertexData(quadBuilder);
         }
-        BakedQuad bakedQuad = quadBuilder.build();
-        return bakedQuad;
+        return quadBuilder.build();
     }
 
     private static BakedQuad createBakedQuad(VertexFormat format, double scale, ModelRenderer renderer, TexturedQuad quad) {
