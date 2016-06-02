@@ -2,6 +2,7 @@ Changelog
 ---------
 0.7
 -Ported to Minecraft 1.9.4
+-ADDED: you can now right click the maneuver gear to automatically equip it in the belt slot
 -FIXED: the dart impact desync bug has finally been fixed
 -CHANGE: The maneuver gear now requires two handles: one in each hand, this is to be consistent with Minecraft's 1.9 dual wielding system
 -CHANGE: overhauled damage system to be more in line with vanilla

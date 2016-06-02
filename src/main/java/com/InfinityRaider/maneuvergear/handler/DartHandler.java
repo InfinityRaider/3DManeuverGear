@@ -10,7 +10,6 @@ import com.InfinityRaider.maneuvergear.physics.PhysicsEngineDummy;
 import com.InfinityRaider.maneuvergear.utility.BaublesWrapper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -25,8 +24,6 @@ import java.util.UUID;
 
 /** Handles all interaction between the player and his two darts */
 public class DartHandler {
-    public static final int BELT_SLOT = 3;
-
     private static final PhysicsEngine DUMMY = new PhysicsEngineDummy();
     public static final DartHandler instance = new DartHandler();
 
@@ -151,12 +148,11 @@ public class DartHandler {
     }
 
     public ItemStack getManeuverGear(EntityPlayer player) {
-        return BaublesWrapper.getInstance().getBaubles(player).getStackInSlot(BELT_SLOT);
+        return BaublesWrapper.getInstance().getBaubles(player).getStackInSlot(BaublesWrapper.BELT_SLOT);
     }
 
     private boolean checkGear(EntityPlayer player) {
-        IInventory baubles = BaublesWrapper.getInstance().getBaubles(player);
-        ItemStack belt = baubles.getStackInSlot(BELT_SLOT);
+        ItemStack belt = BaublesWrapper.getInstance().getBauble(player, BaublesWrapper.BELT_SLOT);
         return (belt!=null) && (belt.getItem() instanceof ItemManeuverGear);
     }
 

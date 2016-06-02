@@ -237,12 +237,14 @@ public class ItemManeuverGearHandle extends Item implements IDualWieldedWeapon, 
     @ParametersAreNonnullByDefault
     public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack) {
         Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
-        if(this.hasSwordBlade(stack)) {
-            multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getAttributeUnlocalizedName(),
-                    new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", 3.0 + (ConfigurationHandler.getInstance().damage), 0));
-        } else {
-            multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getAttributeUnlocalizedName(),
-                    new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", 1.0, 0));
+        if(slot == EntityEquipmentSlot.OFFHAND || slot == EntityEquipmentSlot.MAINHAND) {
+            if (this.hasSwordBlade(stack)) {
+                multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getAttributeUnlocalizedName(),
+                        new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", 3.0 + (ConfigurationHandler.getInstance().damage), 0));
+            } else {
+                multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getAttributeUnlocalizedName(),
+                        new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", 0, 0));
+            }
         }
         return multimap;
     }

@@ -2,6 +2,7 @@ package com.InfinityRaider.maneuvergear.item;
 
 import baubles.api.BaubleType;
 import com.InfinityRaider.maneuvergear.handler.DartHandler;
+import com.InfinityRaider.maneuvergear.network.MessageEquipBauble;
 import com.InfinityRaider.maneuvergear.network.MessageNotifyBaubleEquip;
 import com.InfinityRaider.maneuvergear.network.NetworkWrapper;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngine;
@@ -9,6 +10,7 @@ import com.InfinityRaider.maneuvergear.reference.Names;
 import com.InfinityRaider.maneuvergear.reference.Reference;
 import com.InfinityRaider.maneuvergear.render.IBaubleRenderer;
 import com.InfinityRaider.maneuvergear.render.RenderManeuverGear;
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
@@ -17,21 +19,36 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.text.translation.I18n;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 
+@MethodsReturnNonnullByDefault
 public class ItemManeuverGear extends Item implements IBaubleRendered, IItemWithRecipe, IItemWithModel {
     public static int MAX_HOLSTERED_BLADES = 4;
 
     public ItemManeuverGear() {
         this.setCreativeTab(CreativeTabs.COMBAT);
         this.setMaxStackSize(1);
+    }
+
+    @Override
+    @ParametersAreNonnullByDefault
+    public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
+        if(world.isRemote) {
+            NetworkWrapper.getInstance().sendToServer(new MessageEquipBauble(hand));
+        }
+        return new ActionResult<>(EnumActionResult.SUCCESS, stack);
     }
 
     /**

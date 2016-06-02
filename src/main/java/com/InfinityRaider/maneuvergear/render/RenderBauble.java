@@ -1,10 +1,10 @@
 package com.InfinityRaider.maneuvergear.render;
 
 import baubles.api.BaubleType;
-import baubles.api.BaublesApi;
 import com.InfinityRaider.maneuvergear.item.IBaubleRendered;
 import com.InfinityRaider.maneuvergear.network.MessageRequestBaubles;
 import com.InfinityRaider.maneuvergear.network.NetworkWrapper;
+import com.InfinityRaider.maneuvergear.utility.BaublesWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -76,7 +76,7 @@ public class RenderBauble extends RenderUtilBase {
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
         if(event.phase == TickEvent.Phase.END) {
             if(event.player == Minecraft.getMinecraft().thePlayer) {
-                IInventory inv = BaublesApi.getBaubles(event.player);
+                IInventory inv = BaublesWrapper.getInstance().getBaubles(event.player);
                 ItemStack[] baubles = new ItemStack[inv.getSizeInventory()];
                 for(int i=0;i<baubles.length;i++) {
                     baubles[i] = inv.getStackInSlot(i);
