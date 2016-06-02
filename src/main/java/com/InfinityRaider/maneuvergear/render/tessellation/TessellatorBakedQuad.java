@@ -101,7 +101,7 @@ public class TessellatorBakedQuad extends TessellatorAbstractBase {
     @Override
     public void addQuads(List<BakedQuad> quads) {
         if(drawMode != DRAW_MODE_NOT_DRAWING) {
-            this.quads.addAll(quads);
+            this.quads.addAll(this.transformQuads(quads));
         } else {
             throw new RuntimeException("NOT CONSTRUCTING VERTICES");
         }

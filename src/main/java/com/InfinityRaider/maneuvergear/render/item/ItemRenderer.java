@@ -5,6 +5,7 @@ import com.InfinityRaider.maneuvergear.render.tessellation.ITessellator;
 import com.InfinityRaider.maneuvergear.render.tessellation.TessellatorBakedQuad;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -18,7 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.client.model.IModel;
+import net.minecraftforge.client.model.IModelCustomData;
 import net.minecraftforge.client.model.IPerspectiveAwareModel;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
@@ -33,7 +34,7 @@ import java.util.Collections;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-public class ItemRenderer<I extends Item> extends RenderUtilBase implements IModel {
+public class ItemRenderer<I extends Item> extends RenderUtilBase implements IModelCustomData {
     private final IItemRenderingHandler<I> renderer;
 
     public ItemRenderer(IItemRenderingHandler<I> renderer) {
@@ -58,6 +59,11 @@ public class ItemRenderer<I extends Item> extends RenderUtilBase implements IMod
     @Override
     public IModelState getDefaultState() {
         return TRSRTransformation.identity();
+    }
+
+    @Override
+    public ItemRenderer<I> process(ImmutableMap<String, String> customData) {
+        return this;
     }
 
     public static class BakedSuperModel<I extends Item> implements IBakedModel {

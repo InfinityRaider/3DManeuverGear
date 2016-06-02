@@ -91,7 +91,7 @@ public class TessellatorVertexBuffer extends TessellatorAbstractBase {
      */
     @Override
     public void addQuads(List<BakedQuad> quads) {
-        for(BakedQuad quad : quads) {
+        for(BakedQuad quad : this.transformQuads(quads)) {
             buffer.addVertexData(quad.getVertexData());
         }
     }
@@ -120,8 +120,9 @@ public class TessellatorVertexBuffer extends TessellatorAbstractBase {
      * Resets the tessellator
      * @return this
      */
-    private TessellatorVertexBuffer reset() {
-        this.resetMatrix();
+    @Override
+    public TessellatorVertexBuffer reset() {
+        super.reset();
         this.setColorRGBA(1, 1, 1, 1);
         this.setBrightness(15 << 24);
         return this;

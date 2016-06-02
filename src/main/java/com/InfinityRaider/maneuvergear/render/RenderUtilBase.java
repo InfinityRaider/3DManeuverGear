@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -13,6 +14,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 
 /**
  * Utility base class for rendering event handlers
@@ -81,6 +83,25 @@ public abstract class RenderUtilBase {
 
             GlStateManager.enableLighting();
             GlStateManager.enableTexture2D();
+        }
+    }
+
+    /**
+     * Method to render the texture map for the current matrix
+     */
+    protected void renderTextureMapDebug() {
+        if(ConfigurationHandler.getInstance().debug) {
+            GlStateManager.disableLighting();
+            Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+            Tessellator tessellator = Tessellator.getInstance();
+            VertexBuffer buffer = tessellator.getBuffer();
+            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+            buffer.pos(-1, 0, -2).tex(0, 1).endVertex();
+            buffer.pos(-1, 2, -2).tex(0, 0).endVertex();
+            buffer.pos(1, 2, -2).tex(1, 0).endVertex();
+            buffer.pos(1, 0, -2).tex(1, 1).endVertex();
+            tessellator.draw();
+            GlStateManager.enableLighting();
         }
     }
 

@@ -32,6 +32,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemManeuverGearHandle extends ItemSword implements IDualWieldedWeapon, IItemWithRecipe, ICustomRenderedItem<ItemManeuverGearHandle> {
+    public static final ResourceLocation TEXTURE = new ResourceLocation("3dmaneuvergear:models/3DGearHandle");
+
     public final int MAX_ITEM_DAMAGE;
 
     @SideOnly(Side.CLIENT)
@@ -234,6 +236,6 @@ public class ItemManeuverGearHandle extends ItemSword implements IDualWieldedWea
     @Override
     @SideOnly(Side.CLIENT)
     public List<ResourceLocation> getTextures() {
-        return ImmutableList.of();
+        return ImmutableList.of(TEXTURE);
     }
 }

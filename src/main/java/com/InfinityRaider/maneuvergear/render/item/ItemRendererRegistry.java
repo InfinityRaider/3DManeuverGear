@@ -1,7 +1,6 @@
 package com.InfinityRaider.maneuvergear.render.item;
 
 import com.InfinityRaider.maneuvergear.item.ICustomRenderedItem;
-import com.InfinityRaider.maneuvergear.reference.Reference;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.IResourceManager;
@@ -15,6 +14,7 @@ import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,7 +48,8 @@ public class ItemRendererRegistry implements ICustomModelLoader {
     }
 
     @Override
-    public void onResourceManagerReload(IResourceManager resourceManager) {}
+    @ParametersAreNonnullByDefault
+    public void onResourceManagerReload( IResourceManager resourceManager) {}
 
     public List<ICustomRenderedItem<? extends Item>> getRegisteredItems() {
         return ImmutableList.copyOf(items);

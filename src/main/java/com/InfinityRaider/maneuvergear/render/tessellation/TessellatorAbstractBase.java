@@ -4,18 +4,24 @@ import com.InfinityRaider.maneuvergear.reference.Constants;
 import com.InfinityRaider.maneuvergear.utility.TransformationMatrix;
 import com.sun.javafx.geom.Vec3f;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
+import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.pipeline.LightUtil;
+import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.awt.*;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
+import java.util.List;
 
 @SideOnly(Side.CLIENT)
 @SuppressWarnings("unused")
@@ -47,7 +53,7 @@ public abstract class TessellatorAbstractBase implements ITessellator {
         this.color = STANDARD_COLOR;
         this.tintIndex = -1;
         this.applyDiffuseLighting = false;
-        this.resetMatrix();
+        this.reset();
     }
     /**
      * Method to start constructing quads
@@ -71,11 +77,7 @@ public abstract class TessellatorAbstractBase implements ITessellator {
     public final void draw() {
         this.onDrawCall();
         this.format = null;
-        this.normal = STANDARD_NORMAL;
-        this.color = STANDARD_COLOR;
-        this.tintIndex = -1;
-        this.applyDiffuseLighting = false;
-        this.resetMatrix();
+        this.reset();
     }
 
     /**
@@ -468,9 +470,14 @@ public abstract class TessellatorAbstractBase implements ITessellator {
      * Resets the transformation matrix
      * @return this
      */
-    public TessellatorAbstractBase resetMatrix() {
+    @Override
+    public TessellatorAbstractBase reset() {
         this.matrices.clear();
         this.matrices.push(new TransformationMatrix());
+        this.normal = STANDARD_NORMAL;
+        this.color = STANDARD_COLOR;
+        this.tintIndex = -1;
+        this.applyDiffuseLighting = false;
         return this;
     }
 
@@ -721,5 +728,54 @@ public abstract class TessellatorAbstractBase implements ITessellator {
     @Override
     public boolean getApplyDiffuseLighting() {
         return this.applyDiffuseLighting;
+    }
+
+    /**
+     * Applies the transformation of the tessellator to a list of quads
+     * @param quads the quads to be transformed
+     * @return the list with transformed quads
+     */
+    protected List<BakedQuad> transformQuads(List<BakedQuad> quads) {
+        List<BakedQuad> newQuads = new ArrayList<>();
+        for(BakedQuad quad : quads) {
+            VertexFormat format = quad.getFormat();
+            float[][][] vertexData = new float[4][format.getElementCount()][];
+            //unpack and transform vertex data
+            for(int v = 0; v < 4; v++) {
+                for(int e = 0; e < format.getElementCount(); e++) {
+                    float[] data = new float[4];
+                    LightUtil.unpack(quad.getVertexData(), data, format, v, e);
+                    vertexData[v][e] = transformUnpackedVertexDataElement(format.getElement(e).getUsage(), data);
+                }
+            }
+            //create new quad with the transformed vertex data
+            newQuads.add(new UnpackedBakedQuad(vertexData, quad.getTintIndex(), quad.getFace(), quad.getSprite(), quad.shouldApplyDiffuseLighting(), format));
+        }
+        return newQuads;
+    }
+
+    /**
+     * Transforms an unpacked vertex data element
+     * @param type the type of the vertex data element
+     * @param data the data of the vertex data element
+     * @return the transformed, unpacked vertex data
+     */
+    protected float[] transformUnpackedVertexDataElement(VertexFormatElement.EnumUsage type, float[] data) {
+        switch(type) {
+            case POSITION:
+            case NORMAL:
+                double[] pos = this.getTransformationMatrix().transform(data[0], data[1], data[2]);
+                data[0] = (float) pos[0];
+                data[1] = (float) pos[1];
+                data[2] = (float) pos[2];
+                break;
+            case COLOR:
+                data[0] = getRedValueFloat();
+                data[1] = getGreenValueFloat();
+                data[2] = getBlueValueFloat();
+                data[3] = getAlphaValueFloat();
+                break;
+        }
+        return data;
     }
 }

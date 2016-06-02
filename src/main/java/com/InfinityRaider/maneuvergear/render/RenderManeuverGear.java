@@ -93,9 +93,10 @@ public class RenderManeuverGear extends RenderUtilBase implements IBaubleRendere
         int amount = maneuverGear.getBladeCount(stack, left);
         if(amount > 0) {
             Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-            float delta = 0.0675F;
+            float delta = 0.0875F;
 
             GL11.glPushMatrix();
+            GL11.glScaled(0.75, 0.75, 0.75);
 
             for(int i = 0; i < amount; i++) {
                 GL11.glPushMatrix();

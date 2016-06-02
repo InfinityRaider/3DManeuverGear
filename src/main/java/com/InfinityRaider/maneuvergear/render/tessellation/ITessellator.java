@@ -407,5 +407,12 @@ public interface ITessellator {
      * @return the diffuse lighting setting
      */
     boolean getApplyDiffuseLighting();
+
+    /**
+     * Resets the tessellator transformations and settings
+     * @return this
+     */
+    ITessellator reset();
+
 }
 

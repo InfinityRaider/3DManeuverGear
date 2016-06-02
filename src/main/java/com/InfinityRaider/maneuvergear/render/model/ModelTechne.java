@@ -5,6 +5,7 @@ import com.InfinityRaider.maneuvergear.utility.TransformationMatrix;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.model.*;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.Vec3d;
@@ -50,9 +51,34 @@ public class ModelTechne<M extends ModelBase> {
 
     /**
      * Returns a list of baked quads to render this Techne model,
+     * use this method when the texture of the model is stitched to the texturemap
      * The returned list should be cached.
      *
      * @param format vertex format to create baked quads with
+     * @param icon an icon stitched to the texture map used to render this model
+     * @param scale the scale factor to apply to the model
+     * @return an immutable list of baked quads for this model
+     */
+    public List<BakedQuad> getBakedQuads(VertexFormat format, TextureAtlasSprite icon, double scale) {
+        if(icon == null) {
+            return getBakedQuads(format, scale);
+        } else {
+            List<BakedQuad> list = new ArrayList<>();
+            for (Tuple<ModelRenderer, List<TexturedQuad>> tuple : getTexturedQuads()) {
+                list.addAll(tuple.getSecond().stream().map(quad -> createBakedQuad(format, scale, tuple.getFirst(), quad, icon)).collect(Collectors.toList()));
+            }
+            return ImmutableList.copyOf(list);
+        }
+    }
+
+    /**
+     * Returns a list of baked quads to render this Techne model,
+     * use this method to render from a separate texture.
+     * The texture has to be bound first using Minecraft.getMinecraft().renderEngine.bindTexture()
+     * The returned list should be cached.
+     *
+     * @param format vertex format to create baked quads with
+     * @param scale the scale factor to apply to the model
      * @return an immutable list of baked quads for this model
      */
     public List<BakedQuad> getBakedQuads(VertexFormat format, double scale) {
@@ -102,6 +128,37 @@ public class ModelTechne<M extends ModelBase> {
             list.add(new Tuple<>(model, ImmutableList.copyOf(quadList)));
         }
         return ImmutableList.copyOf(list);
+    }
+
+    private static BakedQuad createBakedQuad(VertexFormat format, double scale, ModelRenderer renderer, TexturedQuad quad, TextureAtlasSprite icon) {
+        //Transformation
+        TransformationMatrix matrix = getTransformationMatrixForRenderer(renderer, scale);
+
+        //normal for the quad
+        Vec3d vec3d = quad.vertexPositions[1].vector3D.subtractReverse(quad.vertexPositions[0].vector3D);
+        Vec3d vec3d1 = quad.vertexPositions[1].vector3D.subtractReverse(quad.vertexPositions[2].vector3D);
+        Vec3d vec3d2 = vec3d1.crossProduct(vec3d).normalize();
+        double[] normal = matrix.transform(vec3d2.xCoord, vec3d2.yCoord, vec3d2.zCoord);
+
+        //define vertex data for the quad
+        VertexData[] vertexData = new VertexData[quad.vertexPositions.length];
+        for(int i = 0; i < vertexData.length; i++) {
+            PositionTextureVertex vertex = quad.vertexPositions[i];
+            double[] pos = matrix.transform(vertex.vector3D.xCoord*scale, vertex.vector3D.yCoord*scale, vertex.vector3D.zCoord*scale);
+            vertexData[i] = new VertexData(format,
+                    (float) pos[0], (float) pos[1], (float) pos[2],
+                    icon.getInterpolatedU(vertex.texturePositionX*16), icon.getInterpolatedV(vertex.texturePositionY*16));
+            vertexData[i].setRGBA(1, 1, 1, 1);
+            vertexData[i].setNormal((float) normal[0], (float) normal[1], (float) normal[2]);
+        }
+
+        //build and return the quad
+        UnpackedBakedQuad.Builder quadBuilder = new UnpackedBakedQuad.Builder(format);
+        for(VertexData data : vertexData) {
+            data.applyVertexData(quadBuilder);
+        }
+        BakedQuad bakedQuad = quadBuilder.build();
+        return bakedQuad;
     }
 
     private static BakedQuad createBakedQuad(VertexFormat format, double scale, ModelRenderer renderer, TexturedQuad quad) {
