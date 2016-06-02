@@ -69,7 +69,7 @@ public class ConfigurationHandler {
         //numbers
         durability = config.getInt("Blade durability", Categories.CATEGORY_NUMBERS.getName(), 64, 10, 100,
                 "The number of attacks after which a sword blade breaks");
-        damage = config.getFloat("Blade damage", Categories.CATEGORY_NUMBERS.getName(), 8.0F, 1.0F, 30.0F,
+        damage = config.getFloat("Blade damage", Categories.CATEGORY_NUMBERS.getName(), 10, 1.0F, 30.0F,
                 "The damage dealt by sword blade attacks");
         bootFallDamageReduction = config.getFloat("Fall boots damage reduction", Categories.CATEGORY_NUMBERS.getName(), 0.85F, 0.0F, 1.0F,
                 "The fraction of fall damage reduction when wearing fall boots");

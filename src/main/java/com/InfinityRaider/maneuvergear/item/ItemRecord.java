@@ -1,23 +1,27 @@
 package com.InfinityRaider.maneuvergear.item;
 
 import com.InfinityRaider.maneuvergear.reference.Reference;
+import com.InfinityRaider.maneuvergear.utility.LogHelper;
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.Tuple;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
+@MethodsReturnNonnullByDefault
 public class ItemRecord extends net.minecraft.item.ItemRecord implements IItemWithModel {
-    private final static String name = "GurenNoYumiya";
-
-    public ItemRecord() {
-        super(Reference.MOD_ID.toLowerCase()+":"+name, null);
+    public ItemRecord(String name) {
+        super(name, registerSoundAndCreateRecord(name));
     }
 
     @Override
     public ResourceLocation getRecordResource(String name) {
-        return new ResourceLocation(Reference.MOD_ID.toLowerCase()+":records."+ItemRecord.name);
+        return new ResourceLocation(Reference.MOD_ID.toLowerCase(), name);
     }
 
     @Override
@@ -25,5 +29,22 @@ public class ItemRecord extends net.minecraft.item.ItemRecord implements IItemWi
         List<Tuple<Integer, ModelResourceLocation>> list = new ArrayList<>();
         list.add(new Tuple<>(0, new ModelResourceLocation(Reference.MOD_ID.toLowerCase() + ":record", "inventory")));
         return list;
+    }
+
+    private static SoundEvent registerSoundAndCreateRecord(String name) {
+        ResourceLocation loc = new ResourceLocation(Reference.MOD_ID.toLowerCase(), "records." + name);
+        SoundEvent sound = new SoundEvent(loc);
+        for(Method method : SoundEvent.class.getDeclaredMethods()) {
+            if(Modifier.isStatic(method.getModifiers()) && method.getParameterCount() > 0) {
+                method.setAccessible(true);
+                try {
+                    method.invoke(null, loc.toString());
+                } catch (Exception e) {
+                    LogHelper.printStackTrace(e);
+                }
+                break;
+            }
+        }
+        return sound;
     }
 }

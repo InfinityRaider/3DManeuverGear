@@ -14,7 +14,7 @@ item.3dmaneuvergear:itemFallBoots.name=Shock Absorbing Boots
 item.3dmaneuvergear:itemRecord.name=Music Disc
 
 //Sounds
-item.record.3dmaneuvergear:GurenNoYumiya.desc=Linked Horizon - Guren No Yumiya
+item.record.GurenNoYumiya.desc=Linked Horizon - Guren No Yumiya
 
 //Key bindings
 3DManeuverGear.Key.RetractLeft=Retract left cable
