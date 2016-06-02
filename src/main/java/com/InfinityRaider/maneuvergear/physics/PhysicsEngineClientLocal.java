@@ -108,6 +108,9 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
         double r = right.getCableLength();
         Vector L = left.getPositionAsVector();
         Vector R = right.getPositionAsVector();
+        //apply gravity: velocity should increase with 10m/s / s, therefore velocity has to increase with 0.0025m/tick / tick
+        player.motionY = player.motionY - 0.0025D;
+        //determine new position
         Vector Pn = calculatePositionForConflictingCableLengths(L, R, l, r);
         if(Pn != null) {
             return calculateVelocity(Pn, p_old);
