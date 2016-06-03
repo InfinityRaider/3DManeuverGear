@@ -54,6 +54,7 @@ public class ManeuverGear {
     @SuppressWarnings("unused")
     public static void postInit(FMLPostInitializationEvent event) {
         LogHelper.debug("Starting Post-Initialization");
+        proxy.replacePlayerModel();
         LogHelper.debug("Post-Initialization Complete");
     }
 

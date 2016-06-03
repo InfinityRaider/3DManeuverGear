@@ -46,6 +46,7 @@ public class MessageMouseButtonPressed extends MessageBase<IMessage> {
     protected void processMessage(MessageContext ctx) {
         if(ctx.side == Side.SERVER) {
             EntityPlayer player = ctx.getServerHandler().playerEntity;
+            NetworkWrapper.getInstance().sendToAll(new MessageSwingArm(player, left ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND));
             ItemStack stack = player.getHeldItem(left ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND);
             if (stack != null && stack.getItem() instanceof IDualWieldedWeapon) {
                 IDualWieldedWeapon weapon = (IDualWieldedWeapon) stack.getItem();

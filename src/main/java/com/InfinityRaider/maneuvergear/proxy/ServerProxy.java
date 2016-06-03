@@ -36,9 +36,7 @@ public class ServerProxy extends CommonProxy {
     }
 
     @Override
-    public void spawnSteamParticles(EntityPlayer player) {
-
-    }
+    public void spawnSteamParticles(EntityPlayer player) {}
 
     @Override
     public void registerEventHandlers() {
@@ -54,4 +52,7 @@ public class ServerProxy extends CommonProxy {
     public void queueTask(Runnable task) {
         FMLServerHandler.instance().getServer().addScheduledTask(task);
     }
+
+    @Override
+    public void replacePlayerModel() {}
 }

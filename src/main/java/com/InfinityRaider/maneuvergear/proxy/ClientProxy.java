@@ -1,5 +1,6 @@
 package com.InfinityRaider.maneuvergear.proxy;
 
+import com.InfinityRaider.maneuvergear.handler.ArmSwingHandler;
 import com.InfinityRaider.maneuvergear.handler.ConfigurationHandler;
 import com.InfinityRaider.maneuvergear.handler.KeyInputHandler;
 import com.InfinityRaider.maneuvergear.handler.MouseClickHandler;
@@ -11,6 +12,7 @@ import com.InfinityRaider.maneuvergear.physics.PhysicsEngineDummy;
 import com.InfinityRaider.maneuvergear.reference.Names;
 import com.InfinityRaider.maneuvergear.reference.Reference;
 import com.InfinityRaider.maneuvergear.render.*;
+import com.InfinityRaider.maneuvergear.render.model.ModelPlayerCustomized;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
@@ -111,6 +113,7 @@ public class ClientProxy extends CommonProxy {
         super.registerEventHandlers();
         MinecraftForge.EVENT_BUS.register(MouseClickHandler.getInstance());
         MinecraftForge.EVENT_BUS.register(KeyInputHandler.getInstance());
+        MinecraftForge.EVENT_BUS.register(ArmSwingHandler.getInstance());
         MinecraftForge.EVENT_BUS.register(RenderBauble.getInstance());
     }
 
@@ -132,5 +135,10 @@ public class ClientProxy extends CommonProxy {
         } else {
             FMLClientHandler.instance().getServer().addScheduledTask(task);
         }
+    }
+
+    @Override
+    public void replacePlayerModel() {
+        ModelPlayerCustomized.replaceOldModel();
     }
 }

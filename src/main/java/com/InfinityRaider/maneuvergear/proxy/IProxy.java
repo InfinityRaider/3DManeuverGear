@@ -51,4 +51,7 @@ public interface IProxy {
 
     /** Queues a task to be executed on this side */
     void queueTask(Runnable task);
+
+    /** Replace the player model on the client, do nothing on the server */
+    void replacePlayerModel();
 }
