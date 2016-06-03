@@ -2,7 +2,7 @@ package com.InfinityRaider.maneuvergear.item;
 
 import baubles.api.BaubleType;
 import com.InfinityRaider.maneuvergear.handler.DartHandler;
-import com.InfinityRaider.maneuvergear.network.MessageEquipBauble;
+import com.InfinityRaider.maneuvergear.network.MessageEquipManeuverGear;
 import com.InfinityRaider.maneuvergear.network.MessageNotifyBaubleEquip;
 import com.InfinityRaider.maneuvergear.network.NetworkWrapper;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngine;
@@ -46,7 +46,7 @@ public class ItemManeuverGear extends Item implements IBaubleRendered, IItemWith
     @ParametersAreNonnullByDefault
     public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
         if(world.isRemote) {
-            NetworkWrapper.getInstance().sendToServer(new MessageEquipBauble(hand));
+            NetworkWrapper.getInstance().sendToServer(new MessageEquipManeuverGear(hand));
         }
         return new ActionResult<>(EnumActionResult.SUCCESS, stack);
     }

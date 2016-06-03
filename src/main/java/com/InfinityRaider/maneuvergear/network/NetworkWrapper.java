@@ -35,7 +35,8 @@ public class NetworkWrapper {
         registerMessage(MessageBoostUsed.class);
         registerMessage(MessageSpawnSteamParticles.class);
         registerMessage(MessageDartAnchored.class);
-        registerMessage(MessageEquipBauble.class);
+        registerMessage(MessageEquipManeuverGear.class);
+        registerMessage(MessageManeuverGearEquipped.class);
         registerMessage(MessageSwingArm.class);
     }
 

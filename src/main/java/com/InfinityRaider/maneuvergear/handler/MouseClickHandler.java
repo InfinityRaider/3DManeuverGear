@@ -52,9 +52,9 @@ public class MouseClickHandler {
                 boolean ctrl = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL);
                 IDualWieldedWeapon weapon = (IDualWieldedWeapon) stack.getItem();
                 attackEntity(weapon, player, stack, true, shift, ctrl);
-                Minecraft.getMinecraft().thePlayer.swingArm(EnumHand.OFF_HAND);
                 weapon.onItemUsed(stack, player, shift, ctrl, EnumHand.OFF_HAND);
                 NetworkWrapper.getInstance().sendToServer(new MessageMouseButtonPressed(true, shift, ctrl));
+                Minecraft.getMinecraft().thePlayer.swingArm(EnumHand.OFF_HAND);
             }
             event.setResult(Event.Result.DENY);
             event.setCanceled(true);
@@ -79,9 +79,9 @@ public class MouseClickHandler {
                 boolean ctrl = Minecraft.getMinecraft().gameSettings.keyBindSprint.isKeyDown();
                 IDualWieldedWeapon weapon = (IDualWieldedWeapon) stack.getItem();
                 attackEntity(weapon, player, stack, false, shift, ctrl);
-                Minecraft.getMinecraft().thePlayer.swingArm(EnumHand.MAIN_HAND);
                 weapon.onItemUsed(stack, player, shift, ctrl, EnumHand.MAIN_HAND);
                 NetworkWrapper.getInstance().sendToServer(new MessageMouseButtonPressed(false, shift, ctrl));
+                Minecraft.getMinecraft().thePlayer.swingArm(EnumHand.MAIN_HAND);
             }
             event.setResult(Event.Result.DENY);
             event.setCanceled(true);

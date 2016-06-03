@@ -1,23 +1,21 @@
 package com.InfinityRaider.maneuvergear.network;
 
 import com.InfinityRaider.maneuvergear.utility.BaublesWrapper;
-import com.InfinityRaider.maneuvergear.utility.LogHelper;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class MessageEquipBauble extends MessageBase<IMessage> {
+public class MessageEquipManeuverGear extends MessageBase<MessageManeuverGearEquipped> {
     EnumHand hand;
 
     @SuppressWarnings("unused")
-    public MessageEquipBauble() {}
+    public MessageEquipManeuverGear() {}
 
-    public MessageEquipBauble(EnumHand hand) {
+    public MessageEquipManeuverGear(EnumHand hand) {
         this.hand = hand;
     }
 
@@ -42,8 +40,8 @@ public class MessageEquipBauble extends MessageBase<IMessage> {
     }
 
     @Override
-    protected IMessage getReply(MessageContext ctx) {
-        return null;
+    protected MessageManeuverGearEquipped getReply(MessageContext ctx) {
+        return new MessageManeuverGearEquipped();
     }
 
     @Override

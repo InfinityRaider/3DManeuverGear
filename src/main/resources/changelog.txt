@@ -4,6 +4,7 @@ Changelog
 -Ported to Minecraft 1.9.4
 -ADDED: you can now right click the maneuver gear to automatically equip it in the belt slot
 -FIXED: the dart impact desync bug has finally been fixed
+-CHANGE: Since the LAN-bug in baubles has been fixed, this mod will also now work in LAN worlds
 -CHANGE: The maneuver gear now requires two handles: one in each hand, this is to be consistent with Minecraft's 1.9 dual wielding system
 -CHANGE: overhauled damage system to be more in line with vanilla
 
