@@ -1,5 +1,8 @@
 Changelog
 ---------
+0.9
+-FIXED: import java.util.Arrays instead of scala/actors/threadpool/Arrays -.-
+
 0.8
 -FIXED: A crash due to importing a wrong library
 
