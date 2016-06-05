@@ -2,7 +2,6 @@ package com.InfinityRaider.maneuvergear.render.tessellation;
 
 import com.InfinityRaider.maneuvergear.reference.Constants;
 import com.InfinityRaider.maneuvergear.utility.TransformationMatrix;
-import com.sun.javafx.geom.Vec3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -16,6 +15,7 @@ import net.minecraftforge.client.model.pipeline.LightUtil;
 import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import scala.actors.threadpool.Arrays;
 
 import java.awt.*;
 import java.util.ArrayDeque;
@@ -29,7 +29,7 @@ public abstract class TessellatorAbstractBase implements ITessellator {
     /** Default color (white) */
     public static final Color STANDARD_COLOR = new Color(255, 255, 255, 255);
     /** Default normal (up) */
-    public static final Vec3f STANDARD_NORMAL = new Vec3f(0, 1, 0);
+    public static final float[] STANDARD_NORMAL = new float[] {0, 1, 0};
 
     /** Current transformation matrix */
     private final Deque<TransformationMatrix> matrices;
@@ -37,7 +37,7 @@ public abstract class TessellatorAbstractBase implements ITessellator {
     /** Current vertex format */
     private VertexFormat format;
     /** Current normal */
-    private Vec3f normal;
+    private float[] normal;
     /** Current color*/
     private Color color;
     /** Current brightness value */
@@ -49,7 +49,7 @@ public abstract class TessellatorAbstractBase implements ITessellator {
 
     protected TessellatorAbstractBase() {
         this.matrices = new ArrayDeque<>();
-        this.normal = STANDARD_NORMAL;
+        this.normal = Arrays.copyOf(STANDARD_NORMAL, 3);
         this.color = STANDARD_COLOR;
         this.tintIndex = -1;
         this.applyDiffuseLighting = false;
@@ -276,7 +276,7 @@ public abstract class TessellatorAbstractBase implements ITessellator {
             }
             default: return;
         }
-        this.setNormal(new Vec3f(face.getFrontOffsetX(), face.getFrontOffsetY(), face.getFrontOffsetZ()));
+        this.setNormal(new float[]{face.getFrontOffsetX(), face.getFrontOffsetY(), face.getFrontOffsetZ()});
         addScaledVertexWithUV(x1, y1, z1, icon, u1, v1, color);
         addScaledVertexWithUV(x2, y2, z2, icon, u2, v2, color);
         addScaledVertexWithUV(x3, y3, z3, icon, u3, v3, color);
@@ -500,7 +500,7 @@ public abstract class TessellatorAbstractBase implements ITessellator {
      */
     @Override
     public TessellatorAbstractBase setNormal(float x, float y, float z) {
-        return this.setNormal(new Vec3f(x, y, z));
+        return this.setNormal(new float[] {x, y, z});
     }
 
     /**
@@ -509,17 +509,17 @@ public abstract class TessellatorAbstractBase implements ITessellator {
      * @return this
      */
     @Override
-    public TessellatorAbstractBase setNormal(Vec3f vec) {
-        this.normal = vec == null ? this.normal : vec;
+    public TessellatorAbstractBase setNormal(float[] vec) {
+        this.normal = ( (vec == null || vec.length != 3) ? this.normal : vec);
         return this;
     }
 
     /**
      * Gets the current normal for the tessellator
-     * @return the normal vector
+     * @return the normal vector, is always a non-null array of length 3
      */
     @Override
-    public Vec3f getNormal() {
+    public float[] getNormal() {
         return this.normal;
     }
 

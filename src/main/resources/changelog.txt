@@ -1,5 +1,8 @@
 Changelog
 ---------
+0.8
+-FIXED: A crash due to importing a wrong library
+
 0.7
 -Ported to Minecraft 1.9.4
 -ADDED: you can now right click the maneuver gear to automatically equip it in the belt slot
