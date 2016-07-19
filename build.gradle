@@ -23,12 +23,12 @@ plugins {
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-version = "1.9.4-0.9"
+version = "1.10.2-0.10"
 group= "com.InfinityRaider.3DManeuverGear" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "3DManeuverGear"
 
 minecraft {
-    version = "1.9.4-12.17.0.1937"
+    version = "1.10.2-12.18.1.2014"
     runDir = "run"
     
     // the mappings can be changed at any time, and must be in the following format.

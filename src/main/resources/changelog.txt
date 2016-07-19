@@ -1,5 +1,8 @@
 Changelog
 ---------
+0.10
+-Ported to Minecraft 1.10.2
+
 0.9
 -FIXED: import java.util.Arrays instead of scala/actors/threadpool/Arrays -.-
 
