@@ -5,7 +5,6 @@ import com.InfinityRaider.maneuvergear.handler.ConfigurationHandler;
 import com.InfinityRaider.maneuvergear.handler.KeyInputHandler;
 import com.InfinityRaider.maneuvergear.handler.MouseClickHandler;
 import com.InfinityRaider.maneuvergear.init.EntityRegistry;
-import com.InfinityRaider.maneuvergear.init.ItemRegistry;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngine;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngineClientLocal;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngineDummy;
@@ -13,6 +12,7 @@ import com.InfinityRaider.maneuvergear.reference.Names;
 import com.InfinityRaider.maneuvergear.reference.Reference;
 import com.InfinityRaider.maneuvergear.render.*;
 import com.InfinityRaider.maneuvergear.render.model.ModelPlayerCustomized;
+import com.infinityraider.infinitylib.proxy.IClientProxyBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,9 +20,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -30,29 +28,9 @@ import org.lwjgl.input.Keyboard;
 
 @SuppressWarnings("unused")
 @SideOnly(Side.CLIENT)
-public class ClientProxy extends CommonProxy {
-    @Override
-    public Side getPhysicalSide() {
-        return Side.CLIENT;
-    }
-
-    @Override
-    public Side getEffectiveSide() {
-        return FMLCommonHandler.instance().getEffectiveSide();
-    }
-
+public class ClientProxy extends CommonProxy implements IClientProxyBase {
     public static KeyBinding retractLeft = new KeyBinding(Reference.MOD_ID+"."+Names.Objects.KEY+"."+Names.Objects.RETRACT+Names.Objects.LEFT, Keyboard.KEY_Z, "key.categories.movement");
     public static KeyBinding retractRight = new KeyBinding(Reference.MOD_ID+"."+Names.Objects.KEY+"."+Names.Objects.RETRACT+Names.Objects.RIGHT, Keyboard.KEY_X, "key.categories.movement");
-
-    @Override
-    public EntityPlayer getClientPlayer() {
-        return Minecraft.getMinecraft().thePlayer;
-    }
-
-    @Override
-    public World getClientWorld() {
-        return Minecraft.getMinecraft().theWorld;
-    }
 
     @Override
     public PhysicsEngine createPhysicsEngine(EntityPlayer player) {
@@ -99,16 +77,6 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public World getWorldByDimensionId(int dimension) {
-        Side effectiveSide = FMLCommonHandler.instance().getEffectiveSide();
-        if(effectiveSide == Side.SERVER) {
-            return FMLClientHandler.instance().getServer().worldServerForDimension(dimension);
-        } else {
-            return getClientWorld();
-        }
-    }
-
-    @Override
     public void registerEventHandlers() {
         super.registerEventHandlers();
         MinecraftForge.EVENT_BUS.register(MouseClickHandler.getInstance());
@@ -118,23 +86,9 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void registerRenderers() {
-        ItemRegistry.getInstance().registerRenderers();
-    }
-
-    @Override
     public void registerKeyBindings() {
         ClientRegistry.registerKeyBinding(retractLeft);
         ClientRegistry.registerKeyBinding(retractRight);
-    }
-
-    @Override
-    public void queueTask(Runnable task) {
-        if(getEffectiveSide() == Side.CLIENT) {
-            Minecraft.getMinecraft().addScheduledTask(task);
-        } else {
-            FMLClientHandler.instance().getServer().addScheduledTask(task);
-        }
     }
 
     @Override

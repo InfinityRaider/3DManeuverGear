@@ -5,10 +5,13 @@ import com.InfinityRaider.maneuvergear.handler.DartHandler;
 import com.InfinityRaider.maneuvergear.init.ItemRegistry;
 import com.InfinityRaider.maneuvergear.reference.Names;
 import com.InfinityRaider.maneuvergear.reference.Reference;
-import com.InfinityRaider.maneuvergear.render.item.IItemRenderingHandler;
 import com.InfinityRaider.maneuvergear.render.item.RenderItemHandle;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
+import com.infinityraider.infinitylib.item.ICustomRenderedItem;
+import com.infinityraider.infinitylib.item.IItemWithRecipe;
+import com.infinityraider.infinitylib.item.ItemBase;
+import com.infinityraider.infinitylib.render.item.IItemRenderingHandler;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -23,7 +26,6 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
@@ -38,10 +40,11 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @MethodsReturnNonnullByDefault
-public class ItemManeuverGearHandle extends Item implements IDualWieldedWeapon, IItemWithRecipe, ICustomRenderedItem<ItemManeuverGearHandle> {
+public class ItemManeuverGearHandle extends ItemBase implements IDualWieldedWeapon, IItemWithRecipe, ICustomRenderedItem<ItemManeuverGearHandle> {
     public static final ResourceLocation TEXTURE = new ResourceLocation("3dmaneuvergear:models/3DGearHandle");
 
     public final int MAX_ITEM_DAMAGE;
@@ -50,10 +53,15 @@ public class ItemManeuverGearHandle extends Item implements IDualWieldedWeapon, 
     private IItemRenderingHandler<ItemManeuverGearHandle> renderer;
 
     public ItemManeuverGearHandle() {
-        super();
+        super(Names.Objects.MANEUVER_HANDLE);
         this.MAX_ITEM_DAMAGE = ConfigurationHandler.getInstance().durability;
         this.setCreativeTab(CreativeTabs.COMBAT);
         this.setMaxStackSize(1);
+    }
+
+    @Override
+    public List<String> getOreTags() {
+        return Collections.emptyList();
     }
 
     /**
@@ -284,6 +292,14 @@ public class ItemManeuverGearHandle extends Item implements IDualWieldedWeapon, 
             this.renderer = new RenderItemHandle(this);
         }
         return this.renderer;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public List<Tuple<Integer, ModelResourceLocation>> getModelDefinitions() {
+        List<Tuple<Integer, ModelResourceLocation>> list = new ArrayList<>();
+        list.add(new Tuple<>(0, getItemModelResourceLocation()));
+        return list;
     }
 
     @Override

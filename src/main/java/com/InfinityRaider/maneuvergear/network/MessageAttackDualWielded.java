@@ -1,6 +1,7 @@
 package com.InfinityRaider.maneuvergear.network;
 
 import com.InfinityRaider.maneuvergear.item.IDualWieldedWeapon;
+import com.infinityraider.infinitylib.network.MessageBase;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;

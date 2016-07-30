@@ -3,6 +3,7 @@ package com.InfinityRaider.maneuvergear.physics;
 import com.InfinityRaider.maneuvergear.entity.EntityDart;
 import com.InfinityRaider.maneuvergear.handler.ConfigurationHandler;
 import com.InfinityRaider.maneuvergear.utility.LogHelper;
+import com.infinityraider.infinitylib.utility.math.Vector;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

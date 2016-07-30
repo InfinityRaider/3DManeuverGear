@@ -2,7 +2,10 @@ package com.InfinityRaider.maneuvergear.item;
 
 import com.InfinityRaider.maneuvergear.handler.DartHandler;
 import com.InfinityRaider.maneuvergear.init.ItemRegistry;
+import com.InfinityRaider.maneuvergear.reference.Names;
 import com.InfinityRaider.maneuvergear.reference.Reference;
+import com.infinityraider.infinitylib.item.IItemWithRecipe;
+import com.infinityraider.infinitylib.item.ItemBase;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
@@ -20,13 +23,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class
-        ItemResource extends Item implements IItemWithRecipe, IItemWithModel {
-
+public class ItemResource extends ItemBase implements IItemWithRecipe {
     public ItemResource() {
-        super();
+        super(Names.Objects.RESOURCE);
         this.setCreativeTab(CreativeTabs.MISC);
         this.setHasSubtypes(true);
         this.setMaxStackSize(1);
@@ -132,6 +134,11 @@ public class
             list.add(new Tuple<>(subItem.ordinal(), subItem.getModelResourceLocation()));
         }
         return list;
+    }
+
+    @Override
+    public List<String> getOreTags() {
+        return Collections.emptyList();
     }
 
     public enum EnumSubItems {

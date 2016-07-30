@@ -1,8 +1,9 @@
 package com.InfinityRaider.maneuvergear.render.item;
 
-import com.InfinityRaider.maneuvergear.item.ICustomRenderedItem;
-import com.InfinityRaider.maneuvergear.render.RenderUtilBase;
-import com.InfinityRaider.maneuvergear.render.tessellation.ITessellator;
+import com.infinityraider.infinitylib.item.ICustomRenderedItem;
+import com.infinityraider.infinitylib.render.RenderUtilBase;
+import com.infinityraider.infinitylib.render.item.IItemRenderingHandler;
+import com.infinityraider.infinitylib.render.tessellation.ITessellator;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.entity.EntityLivingBase;

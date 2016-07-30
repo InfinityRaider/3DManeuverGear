@@ -1,7 +1,9 @@
 package com.InfinityRaider.maneuvergear.item;
 
+import com.InfinityRaider.maneuvergear.reference.Names;
 import com.InfinityRaider.maneuvergear.reference.Reference;
 import com.InfinityRaider.maneuvergear.utility.LogHelper;
+import com.infinityraider.infinitylib.item.IInfinityItem;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.util.ResourceLocation;
@@ -11,12 +13,28 @@ import net.minecraft.util.Tuple;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @MethodsReturnNonnullByDefault
-public class ItemRecord extends net.minecraft.item.ItemRecord implements IItemWithModel {
+public class ItemRecord extends net.minecraft.item.ItemRecord implements IInfinityItem {
     public ItemRecord(String name) {
         super(name, registerSoundAndCreateRecord(name));
+    }
+
+    @Override
+    public String getInternalName() {
+        return Names.Objects.RECORD;
+    }
+
+    @Override
+    public List<String> getOreTags() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
     @Override

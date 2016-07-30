@@ -2,6 +2,7 @@ package com.InfinityRaider.maneuvergear.network;
 
 import com.InfinityRaider.maneuvergear.entity.EntityDart;
 import com.InfinityRaider.maneuvergear.handler.DartHandler;
+import com.infinityraider.infinitylib.network.MessageBase;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;

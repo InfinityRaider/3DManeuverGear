@@ -1,6 +1,9 @@
 package com.InfinityRaider.maneuvergear.item;
 
+import com.InfinityRaider.maneuvergear.reference.Names;
 import com.InfinityRaider.maneuvergear.reference.Reference;
+import com.infinityraider.infinitylib.item.IInfinityItem;
+import com.infinityraider.infinitylib.item.IItemWithRecipe;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,13 +21,29 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class ItemFallBoots extends ItemArmor implements IItemWithRecipe, IItemWithModel {
+public class ItemFallBoots extends ItemArmor implements IItemWithRecipe, IInfinityItem {
     public ItemFallBoots() {
         super(ArmorMaterial.LEATHER, 0, EntityEquipmentSlot.FEET); //(material: cloth, index: cloth, type: boots)
         this.setCreativeTab(CreativeTabs.COMBAT);
         this.setMaxStackSize(1);
+    }
+
+    @Override
+    public String getInternalName() {
+        return Names.Objects.BOOTS;
+    }
+
+    @Override
+    public List<String> getOreTags() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
     @Override

@@ -3,7 +3,7 @@ package com.InfinityRaider.maneuvergear.handler;
 import com.InfinityRaider.maneuvergear.item.IDualWieldedWeapon;
 import com.InfinityRaider.maneuvergear.network.MessageAttackDualWielded;
 import com.InfinityRaider.maneuvergear.network.MessageMouseButtonPressed;
-import com.InfinityRaider.maneuvergear.network.NetworkWrapper;
+import com.infinityraider.infinitylib.network.NetworkWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
