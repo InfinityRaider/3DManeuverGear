@@ -16,23 +16,27 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @SideOnly(Side.CLIENT)
 public class RenderItemHandle extends RenderItemBase<ItemManeuverGearHandle> {
     private final ModelTechne<ModelManeuverGearHandle> model;
-    private final IdentityHashMap<VertexFormat, List<BakedQuad>> quads;
+    private final IdentityHashMap<VertexFormat, List<BakedQuad>> handleQuads;
+    private final IdentityHashMap<VertexFormat, Map<EnumFacing, List<BakedQuad>>> bladeQuads;
 
     public RenderItemHandle(ItemManeuverGearHandle item) {
         super(item);
         this.model = new ModelTechne<>(new ModelManeuverGearHandle());
-        this.quads = new IdentityHashMap<>();
+        this.handleQuads = new IdentityHashMap<>();
+        this.bladeQuads = new IdentityHashMap<>();
     }
 
     @Override
@@ -43,14 +47,16 @@ public class RenderItemHandle extends RenderItemBase<ItemManeuverGearHandle> {
         TextureAtlasSprite sprite = tessellator.getIcon(ItemManeuverGearHandle.TEXTURE);
         applyCameraTransforms(type);
 
+        //blade quads
         if(shouldRenderBlade(type, stack)) {
             renderBlade(tessellator);
         }
 
-        if(!quads.containsKey(format)) {
-            quads.put(format, model.getBakedQuads(format, sprite, 0.025));
+        //handle quads
+        if(!handleQuads.containsKey(format)) {
+            //handleQuads.put(format, model.getBakedQuads(format, sprite, 8 * Constants.UNIT));
         }
-        tessellator.addQuads(quads.get(format));
+        tessellator.addQuads(model.getBakedQuads(format, sprite, 8 * Constants.UNIT));
     }
 
     private void renderBlade(ITessellator tessellator) {
@@ -63,7 +69,7 @@ public class RenderItemHandle extends RenderItemBase<ItemManeuverGearHandle> {
         tessellator.rotate(-90, 1, 0, 0);
         tessellator.rotate(45, 0, 1, 0);
         tessellator.rotate(-45, 0, 0, 1);
-        tessellator.scale(1, 1, 0.5);
+        //tessellator.scale(1, 1, 0.5);
         ItemStack swordBlade = ItemResource.EnumSubItems.SWORD_BLADE.getStack();
         IBakedModel model = Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getItemModel(swordBlade);
         tessellator.addQuads(model.getQuads(null, null, 0));
@@ -83,56 +89,52 @@ public class RenderItemHandle extends RenderItemBase<ItemManeuverGearHandle> {
 
     private void transformFirstPersonLeft() {
         float u = Constants.UNIT;
-        float dx = 5*u;
-        float dy = 9*u;
-        float dz = 13*u;
+        float dx = 5 * u;
+        float dy = 1 * u;
+        float dz = -5 * u;
         GlStateManager.translate(dx, dy, dz);
-        GlStateManager.rotate(180, 0, 0, 1);
+        GlStateManager.rotate(180, 0, 1, 0);
         GlStateManager.rotate(-90, 1,  0, 0);
-        GlStateManager.scale(0.8, 0.8, 0.8);
     }
 
     private void transformFirstPersonRight() {
         float u = Constants.UNIT;
-        float dx = 7*u;
-        float dy = 9*u;
-        float dz = 13*u;
+        float dx = 15 * u;
+        float dy = 1 * u;
+        float dz = -5 * u;
         GlStateManager.translate(dx, dy, dz);
-        GlStateManager.rotate(180, 0, 0, 1);
+        GlStateManager.rotate(180, 0, 1, 0);
         GlStateManager.rotate(-90, 1,  0, 0);
-        GlStateManager.scale(0.8, 0.8, 0.8);
     }
 
     private void transformThirdPerson() {
         float u = Constants.UNIT;
-        float dx = 6*u;
-        float dy = 7*u;
-        float dz = 13*u;
+        float dx = 9.5F * u;
+        float dy = 3 * u;
+        float dz = 2.5F * u;
         GlStateManager.translate(dx, dy, dz);
-        GlStateManager.rotate(180, 0, 0, 1);
+        GlStateManager.rotate(180, 0, 1, 0);
         GlStateManager.rotate(-90, 1,  0, 0);
     }
 
     private void transformGround() {
         float u = Constants.UNIT;
-        float dx = 6*u;
-        float dy = 8*u;
-        float dz = 13*u;
+        float dx = 6 * u;
+        float dy = 8 * u;
+        float dz = 13 * u;
         GlStateManager.translate(dx, dy, dz);
-        GlStateManager.rotate(180, 0, 0, 1);
         GlStateManager.rotate(-90, 1,  0, 0);
     }
 
     private void transformGui() {
         float u = Constants.UNIT;
-        float dx = -5*u;
-        float dy = 5*u;
+        float dx = 2 * u;
+        float dy = 2 * u;
         float dz = 0;
         GlStateManager.translate(dx, dy, dz);
-        GlStateManager.rotate(180, 0, 0, 1);
-        GlStateManager.rotate(-135, 1,  0, 0);
-        GlStateManager.rotate(45, 0,  0, 1);
-        GlStateManager.scale(2.5F, 2.5F, 2.5F);
+        GlStateManager.rotate(-90, 1,  0, 0);
+        GlStateManager.rotate(-135, 0, 0, 1);
+        GlStateManager.scale(2.0F, 2.0F, 2.0F);
     }
 
     private boolean shouldRenderBlade(ItemCameraTransforms.TransformType type, ItemStack stack) {
