@@ -36,5 +36,6 @@ public abstract class RenderItemBase<I extends Item & ICustomRenderedItem> exten
     }
 
     @Override
-    public abstract void renderItem(ITessellator tessellator, World world, I item, ItemStack stack, EntityLivingBase entity, ItemCameraTransforms.TransformType type, VertexFormat format);
+    public abstract void renderItem(ITessellator tessellator, World world, I item, ItemStack stack,
+                                    EntityLivingBase entity, ItemCameraTransforms.TransformType type, VertexFormat format);
 }

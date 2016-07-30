@@ -28,7 +28,7 @@ import java.util.List;
 
 public class ItemResource extends ItemBase implements IItemWithRecipe {
     public ItemResource() {
-        super(Names.Objects.RESOURCE);
+        super(Names.Objects.RESOURCE, true);
         this.setCreativeTab(CreativeTabs.MISC);
         this.setHasSubtypes(true);
         this.setMaxStackSize(1);

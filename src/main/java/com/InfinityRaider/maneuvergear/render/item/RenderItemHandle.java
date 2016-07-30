@@ -36,7 +36,9 @@ public class RenderItemHandle extends RenderItemBase<ItemManeuverGearHandle> {
     }
 
     @Override
-    public void renderItem(ITessellator tessellator, World world, ItemManeuverGearHandle item, ItemStack stack, EntityLivingBase entity, ItemCameraTransforms.TransformType type, VertexFormat format) {
+    public void renderItem(ITessellator tessellator, World world, ItemManeuverGearHandle item, ItemStack stack,
+                           EntityLivingBase entity, ItemCameraTransforms.TransformType type, VertexFormat format) {
+
         Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
         TextureAtlasSprite sprite = tessellator.getIcon(ItemManeuverGearHandle.TEXTURE);
         applyCameraTransforms(type);
@@ -52,6 +54,7 @@ public class RenderItemHandle extends RenderItemBase<ItemManeuverGearHandle> {
     }
 
     private void renderBlade(ITessellator tessellator) {
+        tessellator.pushMatrix();
         double dx = -0.375;
         double dy = 0.975;
         double dz = -0.45;
@@ -64,7 +67,7 @@ public class RenderItemHandle extends RenderItemBase<ItemManeuverGearHandle> {
         ItemStack swordBlade = ItemResource.EnumSubItems.SWORD_BLADE.getStack();
         IBakedModel model = Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getItemModel(swordBlade);
         tessellator.addQuads(model.getQuads(null, null, 0));
-        tessellator.reset();
+        tessellator.popMatrix();
     }
 
     public void applyCameraTransforms(ItemCameraTransforms.TransformType type) {

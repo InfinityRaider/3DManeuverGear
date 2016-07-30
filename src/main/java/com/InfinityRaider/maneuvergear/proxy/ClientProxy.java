@@ -12,7 +12,7 @@ import com.InfinityRaider.maneuvergear.reference.Names;
 import com.InfinityRaider.maneuvergear.reference.Reference;
 import com.InfinityRaider.maneuvergear.render.*;
 import com.InfinityRaider.maneuvergear.render.model.ModelPlayerCustomized;
-import com.infinityraider.infinitylib.proxy.IClientProxyBase;
+import com.infinityraider.infinitylib.proxy.base.IClientProxyBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,7 +28,7 @@ import org.lwjgl.input.Keyboard;
 
 @SuppressWarnings("unused")
 @SideOnly(Side.CLIENT)
-public class ClientProxy extends CommonProxy implements IClientProxyBase {
+public class ClientProxy implements IClientProxyBase, IProxy {
     public static KeyBinding retractLeft = new KeyBinding(Reference.MOD_ID+"."+Names.Objects.KEY+"."+Names.Objects.RETRACT+Names.Objects.LEFT, Keyboard.KEY_Z, "key.categories.movement");
     public static KeyBinding retractRight = new KeyBinding(Reference.MOD_ID+"."+Names.Objects.KEY+"."+Names.Objects.RETRACT+Names.Objects.RIGHT, Keyboard.KEY_X, "key.categories.movement");
 
@@ -67,7 +67,7 @@ public class ClientProxy extends CommonProxy implements IClientProxyBase {
 
     @Override
     public void initConfiguration(FMLPreInitializationEvent event) {
-        super.initConfiguration(event);
+        IProxy.super.initConfiguration(event);
         ConfigurationHandler.getInstance().initClientConfigs(event);
     }
 
@@ -78,7 +78,7 @@ public class ClientProxy extends CommonProxy implements IClientProxyBase {
 
     @Override
     public void registerEventHandlers() {
-        super.registerEventHandlers();
+        IProxy.super.registerEventHandlers();
         MinecraftForge.EVENT_BUS.register(MouseClickHandler.getInstance());
         MinecraftForge.EVENT_BUS.register(KeyInputHandler.getInstance());
         MinecraftForge.EVENT_BUS.register(ArmSwingHandler.getInstance());

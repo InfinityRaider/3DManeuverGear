@@ -53,7 +53,7 @@ public class ItemManeuverGearHandle extends ItemBase implements IDualWieldedWeap
     private IItemRenderingHandler<ItemManeuverGearHandle> renderer;
 
     public ItemManeuverGearHandle() {
-        super(Names.Objects.MANEUVER_HANDLE);
+        super(Names.Objects.MANEUVER_HANDLE, true);
         this.MAX_ITEM_DAMAGE = ConfigurationHandler.getInstance().durability;
         this.setCreativeTab(CreativeTabs.COMBAT);
         this.setMaxStackSize(1);

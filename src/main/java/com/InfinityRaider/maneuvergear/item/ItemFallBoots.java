@@ -2,7 +2,7 @@ package com.InfinityRaider.maneuvergear.item;
 
 import com.InfinityRaider.maneuvergear.reference.Names;
 import com.InfinityRaider.maneuvergear.reference.Reference;
-import com.infinityraider.infinitylib.item.IInfinityItem;
+import com.infinityraider.infinitylib.item.IItemWithModel;
 import com.infinityraider.infinitylib.item.IItemWithRecipe;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ItemFallBoots extends ItemArmor implements IItemWithRecipe, IInfinityItem {
+public class ItemFallBoots extends ItemArmor implements IItemWithRecipe, IItemWithModel {
     public ItemFallBoots() {
         super(ArmorMaterial.LEATHER, 0, EntityEquipmentSlot.FEET); //(material: cloth, index: cloth, type: boots)
         this.setCreativeTab(CreativeTabs.COMBAT);

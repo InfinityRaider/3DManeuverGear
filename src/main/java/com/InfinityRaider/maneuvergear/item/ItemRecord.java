@@ -3,7 +3,7 @@ package com.InfinityRaider.maneuvergear.item;
 import com.InfinityRaider.maneuvergear.reference.Names;
 import com.InfinityRaider.maneuvergear.reference.Reference;
 import com.InfinityRaider.maneuvergear.utility.LogHelper;
-import com.infinityraider.infinitylib.item.IInfinityItem;
+import com.infinityraider.infinitylib.item.IItemWithModel;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.util.ResourceLocation;
@@ -17,7 +17,7 @@ import java.util.Collections;
 import java.util.List;
 
 @MethodsReturnNonnullByDefault
-public class ItemRecord extends net.minecraft.item.ItemRecord implements IInfinityItem {
+public class ItemRecord extends net.minecraft.item.ItemRecord implements IItemWithModel {
     public ItemRecord(String name) {
         super(name, registerSoundAndCreateRecord(name));
     }

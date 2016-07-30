@@ -40,7 +40,7 @@ public class ItemManeuverGear extends ItemBase implements IBaubleRendered, IItem
     public static int MAX_HOLSTERED_BLADES = 4;
 
     public ItemManeuverGear() {
-        super(Names.Objects.MANEUVER_GEAR);
+        super(Names.Objects.MANEUVER_GEAR, true);
         this.setCreativeTab(CreativeTabs.COMBAT);
         this.setMaxStackSize(1);
     }
