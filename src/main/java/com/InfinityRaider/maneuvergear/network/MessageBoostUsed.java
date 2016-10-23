@@ -1,7 +1,7 @@
 package com.InfinityRaider.maneuvergear.network;
 
+import com.InfinityRaider.maneuvergear.ManeuverGear;
 import com.infinityraider.infinitylib.network.MessageBase;
-import com.infinityraider.infinitylib.network.NetworkWrapper;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -29,7 +29,7 @@ public class MessageBoostUsed extends MessageBase<IMessage> {
             EntityPlayer player = ctx.getServerHandler().playerEntity;
             if(player != null) {
                 NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(player.worldObj.provider.getDimension(), player.posX, player.posY, player.posZ, 64);
-                NetworkWrapper.getInstance().sendToAllAround(new MessageSpawnSteamParticles(player), point);
+                ManeuverGear.instance.getNetworkWrapper().sendToAllAround(new MessageSpawnSteamParticles(player), point);
             }
         }
     }

@@ -4,6 +4,7 @@ import com.InfinityRaider.maneuvergear.handler.DartHandler;
 import com.InfinityRaider.maneuvergear.init.ItemRegistry;
 import com.InfinityRaider.maneuvergear.reference.Names;
 import com.InfinityRaider.maneuvergear.reference.Reference;
+import com.infinityraider.infinitylib.item.IItemWithModel;
 import com.infinityraider.infinitylib.item.IItemWithRecipe;
 import com.infinityraider.infinitylib.item.ItemBase;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -26,9 +27,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ItemResource extends ItemBase implements IItemWithRecipe {
+public class ItemResource extends ItemBase implements IItemWithRecipe, IItemWithModel {
     public ItemResource() {
-        super(Names.Objects.RESOURCE, true);
+        super(Names.Objects.RESOURCE);
         this.setCreativeTab(CreativeTabs.MISC);
         this.setHasSubtypes(true);
         this.setMaxStackSize(1);

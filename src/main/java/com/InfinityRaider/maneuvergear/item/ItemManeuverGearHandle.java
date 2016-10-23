@@ -4,9 +4,7 @@ import com.InfinityRaider.maneuvergear.handler.ConfigurationHandler;
 import com.InfinityRaider.maneuvergear.handler.DartHandler;
 import com.InfinityRaider.maneuvergear.init.ItemRegistry;
 import com.InfinityRaider.maneuvergear.reference.Names;
-import com.InfinityRaider.maneuvergear.reference.Reference;
 import com.InfinityRaider.maneuvergear.render.item.RenderItemHandle;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
 import com.infinityraider.infinitylib.item.ICustomRenderedItem;
 import com.infinityraider.infinitylib.item.IItemWithRecipe;
@@ -17,7 +15,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -44,16 +41,14 @@ import java.util.Collections;
 import java.util.List;
 
 @MethodsReturnNonnullByDefault
-public class ItemManeuverGearHandle extends ItemBase implements IDualWieldedWeapon, IItemWithRecipe, ICustomRenderedItem<ItemManeuverGearHandle> {
-    public static final ResourceLocation TEXTURE = new ResourceLocation("3dmaneuvergear:models/3DGearHandle");
-
+public class ItemManeuverGearHandle extends ItemBase implements IDualWieldedWeapon, IItemWithRecipe, ICustomRenderedItem {
     public final int MAX_ITEM_DAMAGE;
 
     @SideOnly(Side.CLIENT)
-    private IItemRenderingHandler<ItemManeuverGearHandle> renderer;
+    private IItemRenderingHandler renderer;
 
     public ItemManeuverGearHandle() {
-        super(Names.Objects.MANEUVER_HANDLE, true);
+        super(Names.Objects.MANEUVER_HANDLE);
         this.MAX_ITEM_DAMAGE = ConfigurationHandler.getInstance().durability;
         this.setCreativeTab(CreativeTabs.COMBAT);
         this.setMaxStackSize(1);
@@ -287,30 +282,10 @@ public class ItemManeuverGearHandle extends ItemBase implements IDualWieldedWeap
 
     @Override
     @SideOnly(Side.CLIENT)
-    public IItemRenderingHandler<ItemManeuverGearHandle> getRenderer() {
+    public IItemRenderingHandler getRenderer() {
         if(this.renderer == null) {
-            this.renderer = new RenderItemHandle(this);
+            this.renderer = new RenderItemHandle();
         }
         return this.renderer;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public List<Tuple<Integer, ModelResourceLocation>> getModelDefinitions() {
-        List<Tuple<Integer, ModelResourceLocation>> list = new ArrayList<>();
-        list.add(new Tuple<>(0, getItemModelResourceLocation()));
-        return list;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public ModelResourceLocation getItemModelResourceLocation() {
-        return new ModelResourceLocation(Reference.MOD_ID.toLowerCase() + ":handle", "inventory");
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public List<ResourceLocation> getTextures() {
-        return ImmutableList.of(TEXTURE);
     }
 }

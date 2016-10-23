@@ -7,7 +7,6 @@ import com.InfinityRaider.maneuvergear.network.MessageDartAnchored;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngine;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngineDummy;
 import com.InfinityRaider.maneuvergear.utility.BaublesWrapper;
-import com.infinityraider.infinitylib.network.NetworkWrapper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -116,7 +115,7 @@ public class DartHandler {
         dart.setHooked();
         engine.onDartAnchored(dart);
         if(!dart.getEntityWorld().isRemote) {
-            NetworkWrapper.getInstance().sendTo(new MessageDartAnchored(dart, x, y, z, yaw, pitch), (EntityPlayerMP) dart.getPlayer());
+            ManeuverGear.instance.getNetworkWrapper().sendTo(new MessageDartAnchored(dart, x, y, z, yaw, pitch), (EntityPlayerMP) dart.getPlayer());
         }
     }
 

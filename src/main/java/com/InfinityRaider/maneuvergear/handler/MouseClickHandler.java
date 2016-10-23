@@ -1,9 +1,9 @@
 package com.InfinityRaider.maneuvergear.handler;
 
+import com.InfinityRaider.maneuvergear.ManeuverGear;
 import com.InfinityRaider.maneuvergear.item.IDualWieldedWeapon;
 import com.InfinityRaider.maneuvergear.network.MessageAttackDualWielded;
 import com.InfinityRaider.maneuvergear.network.MessageMouseButtonPressed;
-import com.infinityraider.infinitylib.network.NetworkWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -53,7 +53,7 @@ public class MouseClickHandler {
                 IDualWieldedWeapon weapon = (IDualWieldedWeapon) stack.getItem();
                 attackEntity(weapon, player, stack, true, shift, ctrl);
                 weapon.onItemUsed(stack, player, shift, ctrl, EnumHand.OFF_HAND);
-                NetworkWrapper.getInstance().sendToServer(new MessageMouseButtonPressed(true, shift, ctrl));
+                ManeuverGear.instance.getNetworkWrapper().sendToServer(new MessageMouseButtonPressed(true, shift, ctrl));
                 Minecraft.getMinecraft().thePlayer.swingArm(EnumHand.OFF_HAND);
             }
             event.setResult(Event.Result.DENY);
@@ -80,7 +80,7 @@ public class MouseClickHandler {
                 IDualWieldedWeapon weapon = (IDualWieldedWeapon) stack.getItem();
                 attackEntity(weapon, player, stack, false, shift, ctrl);
                 weapon.onItemUsed(stack, player, shift, ctrl, EnumHand.MAIN_HAND);
-                NetworkWrapper.getInstance().sendToServer(new MessageMouseButtonPressed(false, shift, ctrl));
+                ManeuverGear.instance.getNetworkWrapper().sendToServer(new MessageMouseButtonPressed(false, shift, ctrl));
                 Minecraft.getMinecraft().thePlayer.swingArm(EnumHand.MAIN_HAND);
             }
             event.setResult(Event.Result.DENY);
@@ -95,7 +95,7 @@ public class MouseClickHandler {
         Entity entity =  Minecraft.getMinecraft().objectMouseOver.entityHit;
         if(entity != null) {
             if(!weapon.onItemAttack(stack, player, entity, shift, ctrl, left ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND)) {
-                NetworkWrapper.getInstance().sendToServer(new MessageAttackDualWielded(entity, left, shift, ctrl));
+                ManeuverGear.instance.getNetworkWrapper().sendToServer(new MessageAttackDualWielded(entity, left, shift, ctrl));
                 Minecraft.getMinecraft().playerController.attackEntity(player, entity);
             }
         }

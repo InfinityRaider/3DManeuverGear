@@ -4,6 +4,9 @@ import com.InfinityRaider.maneuvergear.item.ItemManeuverGearHandle;
 import com.InfinityRaider.maneuvergear.item.ItemResource;
 import com.InfinityRaider.maneuvergear.reference.Constants;
 import com.InfinityRaider.maneuvergear.render.model.ModelManeuverGearHandle;
+import com.google.common.collect.ImmutableList;
+import com.infinityraider.infinitylib.render.RenderUtilBase;
+import com.infinityraider.infinitylib.render.item.IItemRenderingHandler;
 import com.infinityraider.infinitylib.render.model.ModelTechne;
 import com.infinityraider.infinitylib.render.tessellation.ITessellator;
 import net.minecraft.client.Minecraft;
@@ -17,6 +20,7 @@ import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -27,25 +31,28 @@ import java.util.Map;
 
 
 @SideOnly(Side.CLIENT)
-public class RenderItemHandle extends RenderItemBase<ItemManeuverGearHandle> {
+public class RenderItemHandle extends RenderUtilBase implements IItemRenderingHandler {
+    public static final ResourceLocation TEXTURE = new ResourceLocation("3dmaneuvergear:models/3DGearHandle");
+
     private final ModelTechne<ModelManeuverGearHandle> model;
     private final IdentityHashMap<VertexFormat, List<BakedQuad>> handleQuads;
     private final IdentityHashMap<VertexFormat, Map<EnumFacing, List<BakedQuad>>> bladeQuads;
 
-    public RenderItemHandle(ItemManeuverGearHandle item) {
-        super(item);
+    public RenderItemHandle() {
+        super();
         this.model = new ModelTechne<>(new ModelManeuverGearHandle());
         this.handleQuads = new IdentityHashMap<>();
         this.bladeQuads = new IdentityHashMap<>();
     }
-
     @Override
-    public void renderItem(ITessellator tessellator, World world, ItemManeuverGearHandle item, ItemStack stack,
-                           EntityLivingBase entity, ItemCameraTransforms.TransformType type, VertexFormat format) {
+    public void renderItem(ITessellator tessellator, World world, ItemStack stack, EntityLivingBase entity) {
+        //TODO: fix this
+        ItemCameraTransforms.TransformType type = ItemCameraTransforms.TransformType.NONE;
 
         Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-        TextureAtlasSprite sprite = tessellator.getIcon(ItemManeuverGearHandle.TEXTURE);
+        TextureAtlasSprite sprite = tessellator.getIcon(TEXTURE);
         applyCameraTransforms(type);
+        VertexFormat format = tessellator.getVertexFormat();
 
         //blade quads
         if(shouldRenderBlade(type, stack)) {
@@ -139,5 +146,12 @@ public class RenderItemHandle extends RenderItemBase<ItemManeuverGearHandle> {
 
     private boolean shouldRenderBlade(ItemCameraTransforms.TransformType type, ItemStack stack) {
         return !(type == ItemCameraTransforms.TransformType.GUI || stack == null || !(stack.getItem() instanceof ItemManeuverGearHandle)) && ((ItemManeuverGearHandle) stack.getItem()).hasSwordBlade(stack);
+    }
+
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public List<ResourceLocation> getAllTextures() {
+        return ImmutableList.of(TEXTURE);
     }
 }

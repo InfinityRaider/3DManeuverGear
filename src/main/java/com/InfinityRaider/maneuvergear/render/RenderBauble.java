@@ -1,10 +1,10 @@
 package com.InfinityRaider.maneuvergear.render;
 
 import baubles.api.BaubleType;
+import com.InfinityRaider.maneuvergear.ManeuverGear;
 import com.InfinityRaider.maneuvergear.item.IBaubleRendered;
 import com.InfinityRaider.maneuvergear.network.MessageRequestBaubles;
 import com.InfinityRaider.maneuvergear.utility.BaublesWrapper;
-import com.infinityraider.infinitylib.network.NetworkWrapper;
 import com.infinityraider.infinitylib.render.RenderUtilBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -84,7 +84,7 @@ public class RenderBauble extends RenderUtilBase {
                 }
                 this.syncBaubles(event.player, baubles);
             } else {
-                NetworkWrapper.getInstance().sendToServer(new MessageRequestBaubles(event.player));
+                ManeuverGear.instance.getNetworkWrapper().sendToServer(new MessageRequestBaubles(event.player));
             }
         }
     }

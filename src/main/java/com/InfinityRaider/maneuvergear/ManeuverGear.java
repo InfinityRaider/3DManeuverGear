@@ -47,6 +47,11 @@ public class ManeuverGear extends InfinityMod {
     }
 
     @Override
+    public Object getModEntityRegistry() {
+        return null;
+    }
+
+    @Override
     public void registerMessages(INetworkWrapper wrapper) {
         wrapper.registerMessage(MessageAttackDualWielded.class);
         wrapper.registerMessage(MessageBoostUsed.class);

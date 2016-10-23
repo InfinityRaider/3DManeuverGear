@@ -51,14 +51,21 @@ public interface IProxy extends IProxyBase {
 
     default void replacePlayerModel() {}
 
+    @Override
+    default void registerCapabilities() {}
+
+    @Override
     default void registerEventHandlers() {
         MinecraftForge.EVENT_BUS.register(DartHandler.instance);
         MinecraftForge.EVENT_BUS.register(EntityLivingHandler.getInstance());
     }
 
+    @Override
     default void initConfiguration(FMLPreInitializationEvent event) {
         ConfigurationHandler.getInstance().init(event);
     }
 
+    @Override
+    default void activateRequiredModules() {}
 
 }

@@ -1,8 +1,8 @@
 package com.InfinityRaider.maneuvergear.network;
 
+import com.InfinityRaider.maneuvergear.ManeuverGear;
 import com.InfinityRaider.maneuvergear.item.IDualWieldedWeapon;
 import com.infinityraider.infinitylib.network.MessageBase;
-import com.infinityraider.infinitylib.network.NetworkWrapper;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -59,7 +59,7 @@ public class MessageMouseButtonPressed extends MessageBase<IMessage> {
     @Override
     protected IMessage getReply(MessageContext ctx) {
         if(ctx.side == Side.SERVER) {
-            NetworkWrapper.getInstance().sendToAll(new MessageSwingArm(ctx.getServerHandler().playerEntity, left ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND));
+            ManeuverGear.instance.getNetworkWrapper().sendToAll(new MessageSwingArm(ctx.getServerHandler().playerEntity, left ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND));
         }
         return null;
     }
