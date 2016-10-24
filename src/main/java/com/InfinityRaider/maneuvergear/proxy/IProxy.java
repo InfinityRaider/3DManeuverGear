@@ -17,9 +17,7 @@ public interface IProxy extends IProxyBase {
     /** Registers the key bindings on the client, does nothing on the server */
     @Override
     default void preInitStart(FMLPreInitializationEvent event) {
-        registerEventHandlers();
         initConfiguration(event);
-        initEntities();
     }
 
     @Override
@@ -39,9 +37,6 @@ public interface IProxy extends IProxyBase {
 
     default void registerKeyBindings() {}
 
-    /** Initializes the EntityRegistry */
-    default void initEntities() {}
-
     /** Create the relevant physics engine */
     default PhysicsEngine createPhysicsEngine(EntityPlayer player) {
         return new PhysicsEngineDummy();
@@ -56,8 +51,8 @@ public interface IProxy extends IProxyBase {
 
     @Override
     default void registerEventHandlers() {
-        MinecraftForge.EVENT_BUS.register(DartHandler.instance);
-        MinecraftForge.EVENT_BUS.register(EntityLivingHandler.getInstance());
+        this.registerEventHandler(DartHandler.instance);
+        this.registerEventHandler(EntityLivingHandler.getInstance());
     }
 
     @Override

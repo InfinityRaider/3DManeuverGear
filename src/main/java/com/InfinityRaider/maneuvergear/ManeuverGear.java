@@ -1,5 +1,6 @@
 package com.InfinityRaider.maneuvergear;
 
+import com.InfinityRaider.maneuvergear.init.EntityRegistry;
 import com.InfinityRaider.maneuvergear.init.ItemRegistry;
 import com.InfinityRaider.maneuvergear.network.*;
 import com.InfinityRaider.maneuvergear.proxy.IProxy;
@@ -48,7 +49,7 @@ public class ManeuverGear extends InfinityMod {
 
     @Override
     public Object getModEntityRegistry() {
-        return null;
+        return EntityRegistry.getInstance();
     }
 
     @Override

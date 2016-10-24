@@ -4,7 +4,6 @@ import com.InfinityRaider.maneuvergear.handler.ArmSwingHandler;
 import com.InfinityRaider.maneuvergear.handler.ConfigurationHandler;
 import com.InfinityRaider.maneuvergear.handler.KeyInputHandler;
 import com.InfinityRaider.maneuvergear.handler.MouseClickHandler;
-import com.InfinityRaider.maneuvergear.init.EntityRegistry;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngine;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngineClientLocal;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngineDummy;
@@ -19,7 +18,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -72,17 +70,12 @@ public class ClientProxy implements IClientProxyBase, IProxy {
     }
 
     @Override
-    public void initEntities() {
-        EntityRegistry.getInstance().clientInit();
-    }
-
-    @Override
     public void registerEventHandlers() {
         IProxy.super.registerEventHandlers();
-        MinecraftForge.EVENT_BUS.register(MouseClickHandler.getInstance());
-        MinecraftForge.EVENT_BUS.register(KeyInputHandler.getInstance());
-        MinecraftForge.EVENT_BUS.register(ArmSwingHandler.getInstance());
-        MinecraftForge.EVENT_BUS.register(RenderBauble.getInstance());
+        this.registerEventHandler(MouseClickHandler.getInstance());
+        this.registerEventHandler(KeyInputHandler.getInstance());
+        this.registerEventHandler(ArmSwingHandler.getInstance());
+        this.registerEventHandler(RenderBauble.getInstance());
     }
 
     @Override
