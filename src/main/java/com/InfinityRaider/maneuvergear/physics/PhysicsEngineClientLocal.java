@@ -1,8 +1,8 @@
 package com.InfinityRaider.maneuvergear.physics;
 
+import com.InfinityRaider.maneuvergear.ManeuverGear;
 import com.InfinityRaider.maneuvergear.entity.EntityDart;
 import com.InfinityRaider.maneuvergear.handler.ConfigurationHandler;
-import com.InfinityRaider.maneuvergear.utility.LogHelper;
 import com.infinityraider.infinitylib.utility.math.Vector;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.relauncher.Side;
@@ -345,15 +345,15 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
         double vY = V.getY();
         double vZ = V.getZ();
         if(Double.isNaN(vX)) {
-            LogHelper.debug("vX is Nan");
+            ManeuverGear.instance.getLogger().debug("vX is Nan");
             vX = 0;
         }
         if(Double.isNaN(vY)) {
-            LogHelper.debug("vY is Nan");
+            ManeuverGear.instance.getLogger().debug("vY is Nan");
             vY = 0;
         }
         if(Double.isNaN(vZ)) {
-            LogHelper.debug("vZ is Nan");
+            ManeuverGear.instance.getLogger().debug("vZ is Nan");
             vZ = 0;
         }
         player.motionX = vX;

@@ -1,8 +1,8 @@
 package com.InfinityRaider.maneuvergear.item;
 
+import com.InfinityRaider.maneuvergear.ManeuverGear;
 import com.InfinityRaider.maneuvergear.reference.Names;
 import com.InfinityRaider.maneuvergear.reference.Reference;
-import com.InfinityRaider.maneuvergear.utility.LogHelper;
 import com.infinityraider.infinitylib.item.IItemWithModel;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -58,7 +58,7 @@ public class ItemRecord extends net.minecraft.item.ItemRecord implements IItemWi
                 try {
                     method.invoke(null, loc.toString());
                 } catch (Exception e) {
-                    LogHelper.printStackTrace(e);
+                    ManeuverGear.instance.getLogger().printStackTrace(e);
                 }
                 break;
             }

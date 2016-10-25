@@ -1,7 +1,7 @@
 package com.InfinityRaider.maneuvergear.render.model;
 
+import com.InfinityRaider.maneuvergear.ManeuverGear;
 import com.InfinityRaider.maneuvergear.handler.ConfigurationHandler;
-import com.InfinityRaider.maneuvergear.utility.LogHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
@@ -224,7 +224,7 @@ public class ModelPlayerCustomized extends ModelPlayer {
         }
         RenderPlayer renderer = getOldRenderer("default");
         if(renderer == null) {
-            LogHelper.debug("Failed overriding left arm swing behaviour");
+            ManeuverGear.instance.getLogger().debug("Failed overriding left arm swing behaviour");
             return;
         }
         ModelPlayer oldModel = renderer.getMainModel();
@@ -240,7 +240,7 @@ public class ModelPlayerCustomized extends ModelPlayer {
                         break;
                     }
                 } catch (Exception e) {
-                    LogHelper.printStackTrace(e);
+                    ManeuverGear.instance.getLogger().printStackTrace(e);
                 }
             }
         }
@@ -266,7 +266,7 @@ public class ModelPlayerCustomized extends ModelPlayer {
                     Map<String, RenderPlayer> skinMap = (Map<String, RenderPlayer>) obj;
                     return skinMap.get(keyword);
                 } catch (IllegalAccessException e) {
-                    LogHelper.printStackTrace(e);
+                    ManeuverGear.instance.getLogger().printStackTrace(e);
                 }
             }
         }
@@ -284,7 +284,7 @@ public class ModelPlayerCustomized extends ModelPlayer {
                 try {
                     field.set(renderer, newModel);
                 } catch (IllegalAccessException e) {
-                    LogHelper.printStackTrace(e);
+                    ManeuverGear.instance.getLogger().printStackTrace(e);
                 }
                 break;
             }

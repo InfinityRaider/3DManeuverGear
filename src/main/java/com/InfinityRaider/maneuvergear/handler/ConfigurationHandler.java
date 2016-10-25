@@ -1,7 +1,7 @@
 package com.InfinityRaider.maneuvergear.handler;
 
+import com.InfinityRaider.maneuvergear.ManeuverGear;
 import com.InfinityRaider.maneuvergear.reference.Reference;
-import com.InfinityRaider.maneuvergear.utility.LogHelper;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -50,7 +50,7 @@ public class ConfigurationHandler {
         if(config.hasChanged()) {
             config.save();
         }
-        LogHelper.debug("Configuration Loaded");
+        ManeuverGear.instance.getLogger().debug("Configuration Loaded");
     }
 
     @SideOnly(Side.CLIENT)
@@ -62,7 +62,7 @@ public class ConfigurationHandler {
         if(config.hasChanged()) {
             config.save();
         }
-        LogHelper.debug("Client configuration Loaded");
+        ManeuverGear.instance.getLogger().debug("Client configuration Loaded");
     }
 
     private void loadConfiguration() {

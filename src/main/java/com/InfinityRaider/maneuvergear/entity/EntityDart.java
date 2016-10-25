@@ -1,11 +1,11 @@
 package com.InfinityRaider.maneuvergear.entity;
 
+import com.InfinityRaider.maneuvergear.ManeuverGear;
 import com.InfinityRaider.maneuvergear.handler.ConfigurationHandler;
 import com.InfinityRaider.maneuvergear.handler.DartHandler;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngine;
 import com.InfinityRaider.maneuvergear.reference.Names;
 import com.InfinityRaider.maneuvergear.render.RenderEntityDart;
-import com.InfinityRaider.maneuvergear.utility.LogHelper;
 import com.infinityraider.infinitylib.utility.math.Vector;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.renderer.entity.Render;
@@ -64,7 +64,7 @@ public class EntityDart extends EntityThrowable implements IEntityAdditionalSpaw
     @Override
     @ParametersAreNonnullByDefault
     protected void onImpact(RayTraceResult impact) {
-        LogHelper.debug("impact " + (worldObj.isRemote ? "client side" : "server side"));
+        ManeuverGear.instance.getLogger().debug("impact " + (worldObj.isRemote ? "client side" : "server side"));
         double yaw = -Math.atan2(motionZ, motionX);
         double pitch = Math.asin(motionY / Math.sqrt(motionX * motionX + motionZ * motionZ));
         DartHandler.instance.onDartAnchored(this, impact.hitVec.xCoord, impact.hitVec.yCoord, impact.hitVec.zCoord, (float) yaw, (float) pitch);
