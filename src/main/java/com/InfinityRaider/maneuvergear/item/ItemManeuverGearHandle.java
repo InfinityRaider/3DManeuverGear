@@ -9,6 +9,7 @@ import com.google.common.collect.Multimap;
 import com.infinityraider.infinitylib.item.ICustomRenderedItem;
 import com.infinityraider.infinitylib.item.IItemWithRecipe;
 import com.infinityraider.infinitylib.item.ItemBase;
+import com.infinityraider.infinitylib.modules.dualwield.IDualWieldedWeapon;
 import com.infinityraider.infinitylib.render.item.IItemRenderingHandler;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;

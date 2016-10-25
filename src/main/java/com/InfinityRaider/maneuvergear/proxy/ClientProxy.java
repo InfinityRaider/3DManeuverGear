@@ -1,16 +1,13 @@
 package com.InfinityRaider.maneuvergear.proxy;
 
-import com.InfinityRaider.maneuvergear.handler.ArmSwingHandler;
 import com.InfinityRaider.maneuvergear.handler.ConfigurationHandler;
 import com.InfinityRaider.maneuvergear.handler.KeyInputHandler;
-import com.InfinityRaider.maneuvergear.handler.MouseClickHandler;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngine;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngineClientLocal;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngineDummy;
 import com.InfinityRaider.maneuvergear.reference.Names;
 import com.InfinityRaider.maneuvergear.reference.Reference;
 import com.InfinityRaider.maneuvergear.render.*;
-import com.InfinityRaider.maneuvergear.render.model.ModelPlayerCustomized;
 import com.infinityraider.infinitylib.proxy.base.IClientProxyBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
@@ -72,9 +69,7 @@ public class ClientProxy implements IClientProxyBase, IProxy {
     @Override
     public void registerEventHandlers() {
         IProxy.super.registerEventHandlers();
-        this.registerEventHandler(MouseClickHandler.getInstance());
         this.registerEventHandler(KeyInputHandler.getInstance());
-        this.registerEventHandler(ArmSwingHandler.getInstance());
         this.registerEventHandler(RenderBauble.getInstance());
     }
 
@@ -82,10 +77,5 @@ public class ClientProxy implements IClientProxyBase, IProxy {
     public void registerKeyBindings() {
         ClientRegistry.registerKeyBinding(retractLeft);
         ClientRegistry.registerKeyBinding(retractRight);
-    }
-
-    @Override
-    public void replacePlayerModel() {
-        ModelPlayerCustomized.replaceOldModel();
     }
 }

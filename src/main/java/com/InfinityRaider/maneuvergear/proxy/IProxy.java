@@ -5,11 +5,10 @@ import com.InfinityRaider.maneuvergear.handler.DartHandler;
 import com.InfinityRaider.maneuvergear.handler.EntityLivingHandler;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngine;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngineDummy;
+import com.infinityraider.infinitylib.modules.dualwield.ModuleDualWield;
 import com.infinityraider.infinitylib.proxy.base.IProxyBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
@@ -26,11 +25,6 @@ public interface IProxy extends IProxyBase {
     }
 
     @Override
-    default void postInitStart(FMLPostInitializationEvent event) {
-        this.replacePlayerModel();
-    }
-
-    @Override
     default void onServerStarting(FMLServerStartingEvent event) {
         DartHandler.instance.reset();
     }
@@ -43,8 +37,6 @@ public interface IProxy extends IProxyBase {
     }
 
     default void spawnSteamParticles(EntityPlayer player) {}
-
-    default void replacePlayerModel() {}
 
     @Override
     default void registerCapabilities() {}
@@ -61,6 +53,8 @@ public interface IProxy extends IProxyBase {
     }
 
     @Override
-    default void activateRequiredModules() {}
+    default void activateRequiredModules() {
+        ModuleDualWield.getInstance().activate();
+    }
 
 }

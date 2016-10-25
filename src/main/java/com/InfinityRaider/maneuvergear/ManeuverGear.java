@@ -54,16 +54,13 @@ public class ManeuverGear extends InfinityMod {
 
     @Override
     public void registerMessages(INetworkWrapper wrapper) {
-        wrapper.registerMessage(MessageAttackDualWielded.class);
         wrapper.registerMessage(MessageBoostUsed.class);
         wrapper.registerMessage(MessageDartAnchored.class);
         wrapper.registerMessage(MessageEquipManeuverGear.class);
         wrapper.registerMessage(MessageManeuverGearEquipped.class);
-        wrapper.registerMessage(MessageMouseButtonPressed.class);
         wrapper.registerMessage(MessageNotifyBaubleEquip.class);
         wrapper.registerMessage(MessageRequestBaubles.class);
         wrapper.registerMessage(MessageSpawnSteamParticles.class);
-        wrapper.registerMessage(MessageSwingArm.class);
         wrapper.registerMessage(MessageSyncBaubles.class);
     }
 
