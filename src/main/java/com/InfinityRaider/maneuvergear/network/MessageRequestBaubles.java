@@ -42,6 +42,9 @@ public class MessageRequestBaubles extends MessageBase<MessageSyncBaubles> {
 
     @Override
     protected MessageSyncBaubles getReply(MessageContext ctx) {
+        if(this.subject == null) {
+            return null;
+        }
         IInventory baubleInv = BaublesWrapper.getInstance().getBaubles(this.subject);
         ArrayList<ItemStack> baubles = new ArrayList<>();
         if(baubleInv != null) {
