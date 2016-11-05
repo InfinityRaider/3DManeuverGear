@@ -115,7 +115,7 @@ public class DartHandler {
         dart.setHooked();
         engine.onDartAnchored(dart);
         if(!dart.getEntityWorld().isRemote) {
-            ManeuverGear.instance.getNetworkWrapper().sendTo(new MessageDartAnchored(dart, x, y, z, yaw, pitch), (EntityPlayerMP) dart.getPlayer());
+            new MessageDartAnchored(dart, x, y, z, yaw, pitch).sendTo((EntityPlayerMP) dart.getPlayer());
         }
     }
 

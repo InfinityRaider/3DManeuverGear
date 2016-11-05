@@ -2,7 +2,6 @@ package com.InfinityRaider.maneuvergear.network;
 
 import com.InfinityRaider.maneuvergear.render.RenderBauble;
 import com.infinityraider.infinitylib.network.MessageBase;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -14,27 +13,13 @@ public class MessageNotifyBaubleEquip extends MessageBase<IMessage> {
     private ItemStack bauble;
     private boolean equip;
 
-    @SuppressWarnings("unused")
     public MessageNotifyBaubleEquip() {}
 
     public MessageNotifyBaubleEquip(EntityPlayer player, ItemStack stack, boolean equip) {
+        this();
         this.player = player;
         this.bauble = stack;
         this.equip = equip;
-    }
-
-    @Override
-    public void fromBytes(ByteBuf buf) {
-        this.player = this.readPlayerFromByteBuf(buf);
-        this.bauble = this.readItemStackFromByteBuf(buf);
-        this.equip = buf.readBoolean();
-    }
-
-    @Override
-    public void toBytes(ByteBuf buf) {
-        this.writePlayerToByteBuf(buf, player);
-        this.writeItemStackToByteBuf(buf, bauble);
-        buf.writeBoolean(equip);
     }
 
     @Override

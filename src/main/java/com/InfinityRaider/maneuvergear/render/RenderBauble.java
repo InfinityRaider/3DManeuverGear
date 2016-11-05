@@ -1,7 +1,6 @@
 package com.InfinityRaider.maneuvergear.render;
 
 import baubles.api.BaubleType;
-import com.InfinityRaider.maneuvergear.ManeuverGear;
 import com.InfinityRaider.maneuvergear.item.IBaubleRendered;
 import com.InfinityRaider.maneuvergear.network.MessageRequestBaubles;
 import com.InfinityRaider.maneuvergear.utility.BaublesWrapper;
@@ -84,7 +83,7 @@ public class RenderBauble extends RenderUtilBase {
                 }
                 this.syncBaubles(event.player, baubles);
             } else {
-                ManeuverGear.instance.getNetworkWrapper().sendToServer(new MessageRequestBaubles(event.player));
+                new MessageRequestBaubles(event.player).sendToServer();
             }
         }
     }

@@ -3,7 +3,6 @@ package com.InfinityRaider.maneuvergear.network;
 import com.InfinityRaider.maneuvergear.item.IBaubleRendered;
 import com.InfinityRaider.maneuvergear.utility.BaublesWrapper;
 import com.infinityraider.infinitylib.network.MessageBase;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -15,21 +14,11 @@ import java.util.ArrayList;
 public class MessageRequestBaubles extends MessageBase<MessageSyncBaubles> {
     private EntityPlayer subject;
 
-    @SuppressWarnings("unused")
     public MessageRequestBaubles() {}
 
     public MessageRequestBaubles(EntityPlayer subject) {
+        this();
         this.subject = subject;
-    }
-
-    @Override
-    public void fromBytes(ByteBuf buf) {
-        this.subject = readPlayerFromByteBuf(buf);
-    }
-
-    @Override
-    public void toBytes(ByteBuf buf) {
-        this.writePlayerToByteBuf(buf, subject);
     }
 
     @Override

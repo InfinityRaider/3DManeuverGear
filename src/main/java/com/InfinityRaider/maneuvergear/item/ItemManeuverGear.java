@@ -1,7 +1,6 @@
 package com.InfinityRaider.maneuvergear.item;
 
 import baubles.api.BaubleType;
-import com.InfinityRaider.maneuvergear.ManeuverGear;
 import com.InfinityRaider.maneuvergear.handler.DartHandler;
 import com.InfinityRaider.maneuvergear.network.MessageEquipManeuverGear;
 import com.InfinityRaider.maneuvergear.network.MessageNotifyBaubleEquip;
@@ -55,7 +54,7 @@ public class ItemManeuverGear extends ItemBase implements IBaubleRendered, IItem
     @ParametersAreNonnullByDefault
     public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
         if(world.isRemote) {
-            ManeuverGear.instance.getNetworkWrapper().sendToServer(new MessageEquipManeuverGear(hand));
+            new MessageEquipManeuverGear(hand).sendToServer();
         }
         return new ActionResult<>(EnumActionResult.SUCCESS, stack);
     }
@@ -198,7 +197,7 @@ public class ItemManeuverGear extends ItemBase implements IBaubleRendered, IItem
             DartHandler.instance.equipGear(player);
         }
         if(!player.worldObj.isRemote) {
-            ManeuverGear.instance.getNetworkWrapper().sendToAll(new MessageNotifyBaubleEquip(player, stack, true));
+            new MessageNotifyBaubleEquip(player, stack, true).sendToAll();
         }
     }
 
@@ -212,7 +211,7 @@ public class ItemManeuverGear extends ItemBase implements IBaubleRendered, IItem
             DartHandler.instance.unEquipGear(player);
         }
         if(!player.worldObj.isRemote) {
-            ManeuverGear.instance.getNetworkWrapper().sendToAll(new MessageNotifyBaubleEquip(player, stack, false));
+            new MessageNotifyBaubleEquip(player, stack, false).sendToAll();
         }
     }
 

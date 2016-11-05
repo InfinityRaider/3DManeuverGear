@@ -65,7 +65,7 @@ public class KeyInputHandler {
 
     private void applyBoost(EntityPlayer player) {
         if(boostCoolDown <= 0 && DartHandler.instance.isWearingGear(player)) {
-            ManeuverGear.instance.getNetworkWrapper().sendToServer(new MessageBoostUsed());
+            new MessageBoostUsed().sendToServer();
             DartHandler.instance.getPhysicsEngine(player).applyBoost();
             boostCoolDown = 20;
         }

@@ -3,8 +3,6 @@ package com.InfinityRaider.maneuvergear.network;
 import com.InfinityRaider.maneuvergear.entity.EntityDart;
 import com.InfinityRaider.maneuvergear.handler.DartHandler;
 import com.infinityraider.infinitylib.network.MessageBase;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.Entity;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
@@ -18,10 +16,10 @@ public class MessageDartAnchored extends MessageBase<IMessage> {
     private float pitch;
     private float yaw;
 
-    @SuppressWarnings("unused")
     public MessageDartAnchored() {}
 
     public MessageDartAnchored(EntityDart dart, double x, double y, double z, float pitch, float yaw) {
+        this();
         this.dart = dart;
         this.cableLength = dart.getCableLength();
         this.x = x;
@@ -47,30 +45,5 @@ public class MessageDartAnchored extends MessageBase<IMessage> {
     @Override
     protected IMessage getReply(MessageContext ctx) {
         return null;
-    }
-
-    @Override
-    public void fromBytes(ByteBuf buf) {
-        Entity entity = this.readEntityFromByteBuf(buf);
-        if(entity instanceof EntityDart) {
-            this.dart = (EntityDart) entity;
-        }
-        this.cableLength = buf.readDouble();
-        this.x = buf.readDouble();
-        this.y = buf.readDouble();
-        this.z = buf.readDouble();
-        this.pitch = buf.readFloat();
-        this.yaw = buf.readFloat();
-    }
-
-    @Override
-    public void toBytes(ByteBuf buf) {
-        this.writeEntityToByteBuf(buf, this.dart);
-        buf.writeDouble(this.cableLength);
-        buf.writeDouble(this.x);
-        buf.writeDouble(this.y);
-        buf.writeDouble(this.z);
-        buf.writeFloat(this.pitch);
-        buf.writeFloat(this.yaw);
     }
 }
