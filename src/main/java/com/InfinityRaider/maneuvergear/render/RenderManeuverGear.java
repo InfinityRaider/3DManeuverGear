@@ -1,5 +1,6 @@
 package com.InfinityRaider.maneuvergear.render;
 
+import baubles.api.render.IRenderBauble;
 import com.InfinityRaider.maneuvergear.item.ItemManeuverGear;
 import com.InfinityRaider.maneuvergear.item.ItemResource;
 import com.InfinityRaider.maneuvergear.render.model.ModelManeuverGear;
@@ -15,7 +16,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class RenderManeuverGear extends RenderUtilBase implements IBaubleRenderer {
+public class RenderManeuverGear extends RenderUtilBase {
     public static final RenderManeuverGear instance = new RenderManeuverGear();
 
     @SideOnly(Side.CLIENT)
@@ -25,20 +26,11 @@ public class RenderManeuverGear extends RenderUtilBase implements IBaubleRendere
         this.model = new ModelManeuverGear();
     }
 
-    @Override
-    public void renderBauble(EntityLivingBase entity, ItemStack stack, float partialRenderTick) {
-        float yaw = entity.prevRenderYawOffset + (entity.renderYawOffset - entity.prevRenderYawOffset)*partialRenderTick;
-        float dy = -1.475F;
-
-        GL11.glRotatef(180, 1, 0, 0);
-        GL11.glRotatef(yaw, 0, 1, 0);
-        GL11.glTranslatef(0, dy, 0);
-
+    public void renderBauble(EntityLivingBase entity, ItemStack stack, IRenderBauble.RenderType type, float partialRenderTick) {
+        if(type != IRenderBauble.RenderType.BODY) {
+            return;
+        }
         renderModel(entity, stack);
-
-        GL11.glTranslatef(0, -dy, 0);
-        GL11.glRotatef(-yaw, 0, 1, 0);
-        GL11.glRotatef(-180, 1, 0, 0);
     }
 
     private void renderModel(Entity entity, ItemStack stack) {

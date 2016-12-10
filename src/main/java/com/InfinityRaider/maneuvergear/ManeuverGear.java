@@ -57,9 +57,6 @@ public class ManeuverGear extends InfinityMod {
         wrapper.registerMessage(MessageDartAnchored.class);
         wrapper.registerMessage(MessageEquipManeuverGear.class);
         wrapper.registerMessage(MessageManeuverGearEquipped.class);
-        wrapper.registerMessage(MessageNotifyBaubleEquip.class);
-        wrapper.registerMessage(MessageRequestBaubles.class);
         wrapper.registerMessage(MessageSpawnSteamParticles.class);
-        wrapper.registerMessage(MessageSyncBaubles.class);
     }
 }

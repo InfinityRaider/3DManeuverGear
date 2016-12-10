@@ -1,13 +1,13 @@
 package com.InfinityRaider.maneuvergear.item;
 
 import baubles.api.BaubleType;
+import baubles.api.IBauble;
+import baubles.api.render.IRenderBauble;
 import com.InfinityRaider.maneuvergear.handler.DartHandler;
 import com.InfinityRaider.maneuvergear.network.MessageEquipManeuverGear;
-import com.InfinityRaider.maneuvergear.network.MessageNotifyBaubleEquip;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngine;
 import com.InfinityRaider.maneuvergear.reference.Names;
 import com.InfinityRaider.maneuvergear.reference.Reference;
-import com.InfinityRaider.maneuvergear.render.IBaubleRenderer;
 import com.InfinityRaider.maneuvergear.render.RenderManeuverGear;
 import com.infinityraider.infinitylib.item.IItemWithModel;
 import com.infinityraider.infinitylib.item.IItemWithRecipe;
@@ -36,7 +36,7 @@ import java.util.Collections;
 import java.util.List;
 
 @MethodsReturnNonnullByDefault
-public class ItemManeuverGear extends ItemBase implements IBaubleRendered, IItemWithRecipe, IItemWithModel {
+public class ItemManeuverGear extends ItemBase implements IBauble, IItemWithRecipe, IItemWithModel, IRenderBauble {
     public static int MAX_HOLSTERED_BLADES = 4;
 
     public ItemManeuverGear() {
@@ -196,9 +196,6 @@ public class ItemManeuverGear extends ItemBase implements IBaubleRendered, IItem
         if(stack!=null && stack.getItem()==this) {
             DartHandler.instance.equipGear(player);
         }
-        if(!player.worldObj.isRemote) {
-            new MessageNotifyBaubleEquip(player, stack, true).sendToAll();
-        }
     }
 
     @Override
@@ -209,9 +206,6 @@ public class ItemManeuverGear extends ItemBase implements IBaubleRendered, IItem
         EntityPlayer player = (EntityPlayer) entity;
         if(stack!=null && stack.getItem()==this) {
             DartHandler.instance.unEquipGear(player);
-        }
-        if(!player.worldObj.isRemote) {
-            new MessageNotifyBaubleEquip(player, stack, false).sendToAll();
         }
     }
 
@@ -226,9 +220,14 @@ public class ItemManeuverGear extends ItemBase implements IBaubleRendered, IItem
     }
 
     @Override
+    public boolean willAutoSync(ItemStack stack, EntityLivingBase player) {
+        return true;
+    }
+
+    @Override
     @SideOnly(Side.CLIENT)
-    public IBaubleRenderer getRenderer(ItemStack stack) {
-        return RenderManeuverGear.instance;
+    public void onPlayerBaubleRender(ItemStack stack, EntityPlayer entityPlayer, RenderType renderType, float partialTick) {
+        RenderManeuverGear.instance.renderBauble(entityPlayer, stack, renderType, partialTick);
     }
 
     @Override

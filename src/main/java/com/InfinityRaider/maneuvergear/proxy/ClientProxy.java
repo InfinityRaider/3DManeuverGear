@@ -7,7 +7,6 @@ import com.InfinityRaider.maneuvergear.physics.PhysicsEngineClientLocal;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngineDummy;
 import com.InfinityRaider.maneuvergear.reference.Names;
 import com.InfinityRaider.maneuvergear.reference.Reference;
-import com.InfinityRaider.maneuvergear.render.*;
 import com.infinityraider.infinitylib.proxy.base.IClientProxyBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
@@ -70,7 +69,6 @@ public class ClientProxy implements IClientProxyBase, IProxy {
     public void registerEventHandlers() {
         IProxy.super.registerEventHandlers();
         this.registerEventHandler(KeyInputHandler.getInstance());
-        this.registerEventHandler(RenderBauble.getInstance());
     }
 
     @Override
