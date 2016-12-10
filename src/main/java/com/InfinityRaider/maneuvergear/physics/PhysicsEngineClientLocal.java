@@ -86,7 +86,7 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
         Vector D = conflicting.isLeft()?L:R;
         Vector DPnew = getCableVector(P_new, D);
         double norm = DPnew.norm();
-        DPnew = DPnew.scale(conflicting.getCableLength() / norm);
+        DPnew.scale(conflicting.getCableLength() / norm);
         Vector Pnew = DPnew.add(D);
         return calculateVelocity(Pnew, p_old);
     }

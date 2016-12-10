@@ -1,5 +1,9 @@
 Changelog
 ---------
+0.3.0
+-CHANGE: updated Baubles
+-CHANGE: ported to InfinityLib
+
 0.10
 -Ported to Minecraft 1.10.2
 
