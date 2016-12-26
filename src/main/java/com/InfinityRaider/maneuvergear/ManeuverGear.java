@@ -17,7 +17,7 @@ import net.minecraftforge.fml.common.SidedProxy;
         name = Reference.MOD_NAME,
         version = Reference.VERSION,
         guiFactory = Reference.GUI_FACTORY_CLASS,
-        dependencies = "required-after:"+ Names.Mods.baubles
+        dependencies = "required-after:infinitylib;after:"+ Names.Mods.baubles
 )
 public class ManeuverGear extends InfinityMod {
     @Mod.Instance(Reference.MOD_ID)
