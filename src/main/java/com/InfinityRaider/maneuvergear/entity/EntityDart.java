@@ -6,7 +6,6 @@ import com.InfinityRaider.maneuvergear.handler.DartHandler;
 import com.InfinityRaider.maneuvergear.physics.PhysicsEngine;
 import com.InfinityRaider.maneuvergear.reference.Names;
 import com.InfinityRaider.maneuvergear.render.RenderEntityDart;
-import com.infinityraider.infinitylib.utility.math.Vector;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -21,6 +20,7 @@ import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.joml.Vector3d;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -103,7 +103,7 @@ public class EntityDart extends EntityThrowable implements IEntityAdditionalSpaw
 
     public double calculateDistanceToPlayer() {
         EntityPlayer player = this.getPlayer();
-        return this.getPositionAsVector().substract(new Vector(player.posX, player.posY, player.posZ)).norm();
+        return this.getPositionAsVector().add(new Vector3d(-player.posX, -player.posY, -player.posZ)).length();
     }
 
     /** sets the length of the cable */
@@ -117,8 +117,8 @@ public class EntityDart extends EntityThrowable implements IEntityAdditionalSpaw
     }
 
     /** returns the coordinates of this entity in the form of a Vector */
-    public Vector getPositionAsVector() {
-        return new Vector(this.posX, this.posY, this.posZ);
+    public Vector3d getPositionAsVector() {
+        return new Vector3d(this.posX, this.posY, this.posZ);
     }
 
     @Override

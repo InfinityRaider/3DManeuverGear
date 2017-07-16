@@ -5,8 +5,8 @@ import com.InfinityRaider.maneuvergear.init.ItemRegistry;
 import com.InfinityRaider.maneuvergear.reference.Names;
 import com.InfinityRaider.maneuvergear.reference.Reference;
 import com.infinityraider.infinitylib.item.IItemWithModel;
-import com.infinityraider.infinitylib.item.IItemWithRecipe;
 import com.infinityraider.infinitylib.item.ItemBase;
+import com.infinityraider.infinitylib.utility.IRecipeRegister;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
@@ -19,6 +19,7 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.*;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ItemResource extends ItemBase implements IItemWithRecipe, IItemWithModel {
+public class ItemResource extends ItemBase implements IRecipeRegister, IItemWithModel {
     public ItemResource() {
         super(Names.Objects.RESOURCE);
         this.setCreativeTab(CreativeTabs.MISC);
@@ -89,6 +90,10 @@ public class ItemResource extends ItemBase implements IItemWithRecipe, IItemWith
     }
 
     @Override
+    public void registerRecipes() {
+        this.getRecipes().forEach(GameRegistry::addRecipe);
+    }
+
     public List<IRecipe> getRecipes() {
         List<IRecipe> list = new ArrayList<>();
         list.add(new ShapedOreRecipe(EnumSubItems.SWORD_BLADE.getStack(), "i", "i", "b",

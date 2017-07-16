@@ -1,5 +1,8 @@
 Changelog
 ---------
+0.11.0
+-CHANGE: updated InfinityLib
+
 0.4.0
 -FIXED: crash on startup
 -CHANGE: updated InfinityLib

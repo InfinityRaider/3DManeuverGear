@@ -10,8 +10,8 @@ import com.InfinityRaider.maneuvergear.reference.Names;
 import com.InfinityRaider.maneuvergear.reference.Reference;
 import com.InfinityRaider.maneuvergear.render.RenderManeuverGear;
 import com.infinityraider.infinitylib.item.IItemWithModel;
-import com.infinityraider.infinitylib.item.IItemWithRecipe;
 import com.infinityraider.infinitylib.item.ItemBase;
+import com.infinityraider.infinitylib.utility.IRecipeRegister;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
@@ -26,6 +26,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -36,7 +37,7 @@ import java.util.Collections;
 import java.util.List;
 
 @MethodsReturnNonnullByDefault
-public class ItemManeuverGear extends ItemBase implements IBauble, IItemWithRecipe, IItemWithModel, IRenderBauble {
+public class ItemManeuverGear extends ItemBase implements IBauble, IRecipeRegister, IItemWithModel, IRenderBauble {
     public static int MAX_HOLSTERED_BLADES = 4;
 
     public ItemManeuverGear() {
@@ -180,6 +181,7 @@ public class ItemManeuverGear extends ItemBase implements IBauble, IItemWithReci
         EntityPlayer player = (EntityPlayer) entity;
         boolean remote = player.worldObj.isRemote;
         if(remote && stack!=null && stack.getItem()==this) {
+            boolean b = DartHandler.instance.isWearingGear(player);
             if(DartHandler.instance.isWearingGear(player) && (DartHandler.instance.getLeftDart(player)!=null || DartHandler.instance.getRightDart(player)!=null)) {
                 PhysicsEngine engine = DartHandler.instance.getPhysicsEngine(player);
                 engine.updateTick();
@@ -242,6 +244,10 @@ public class ItemManeuverGear extends ItemBase implements IBauble, IItemWithReci
     }
 
     @Override
+    public void registerRecipes() {
+        this.getRecipes().forEach(GameRegistry::addRecipe);
+    }
+
     public List<IRecipe> getRecipes() {
         List<IRecipe> list = new ArrayList<>();
         list.add(new ShapedOreRecipe(this, "cnc", "lgl", "hbh",

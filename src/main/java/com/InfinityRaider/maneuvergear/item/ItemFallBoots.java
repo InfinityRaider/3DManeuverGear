@@ -3,7 +3,7 @@ package com.InfinityRaider.maneuvergear.item;
 import com.InfinityRaider.maneuvergear.reference.Names;
 import com.InfinityRaider.maneuvergear.reference.Reference;
 import com.infinityraider.infinitylib.item.IItemWithModel;
-import com.infinityraider.infinitylib.item.IItemWithRecipe;
+import com.infinityraider.infinitylib.utility.IRecipeRegister;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.text.translation.I18n;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ItemFallBoots extends ItemArmor implements IItemWithRecipe, IItemWithModel {
+public class ItemFallBoots extends ItemArmor implements IRecipeRegister, IItemWithModel {
     public ItemFallBoots() {
         super(ArmorMaterial.LEATHER, 0, EntityEquipmentSlot.FEET); //(material: cloth, index: cloth, type: boots)
         this.setCreativeTab(CreativeTabs.COMBAT);
@@ -57,6 +58,10 @@ public class ItemFallBoots extends ItemArmor implements IItemWithRecipe, IItemWi
     }
 
     @Override
+    public void registerRecipes() {
+        this.getRecipes().forEach(GameRegistry::addRecipe);
+    }
+
     public List<IRecipe> getRecipes() {
         List<IRecipe> list = new ArrayList<>();
         list.add(new ShapedOreRecipe(new ItemStack(this), "lll", "pbp", "www",

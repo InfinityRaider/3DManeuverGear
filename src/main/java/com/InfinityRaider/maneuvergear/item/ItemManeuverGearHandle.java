@@ -7,10 +7,10 @@ import com.InfinityRaider.maneuvergear.reference.Names;
 import com.InfinityRaider.maneuvergear.render.item.RenderItemHandle;
 import com.google.common.collect.Multimap;
 import com.infinityraider.infinitylib.item.ICustomRenderedItem;
-import com.infinityraider.infinitylib.item.IItemWithRecipe;
 import com.infinityraider.infinitylib.item.ItemBase;
 import com.infinityraider.infinitylib.modules.dualwield.IDualWieldedWeapon;
 import com.infinityraider.infinitylib.render.item.IItemRenderingHandler;
+import com.infinityraider.infinitylib.utility.IRecipeRegister;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -31,6 +31,7 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
@@ -42,7 +43,7 @@ import java.util.Collections;
 import java.util.List;
 
 @MethodsReturnNonnullByDefault
-public class ItemManeuverGearHandle extends ItemBase implements IDualWieldedWeapon, IItemWithRecipe, ICustomRenderedItem {
+public class ItemManeuverGearHandle extends ItemBase implements IDualWieldedWeapon, IRecipeRegister, ICustomRenderedItem {
     public final int MAX_ITEM_DAMAGE;
 
     @SideOnly(Side.CLIENT)
@@ -271,6 +272,10 @@ public class ItemManeuverGearHandle extends ItemBase implements IDualWieldedWeap
     }
 
     @Override
+    public void registerRecipes() {
+        this.getRecipes().forEach(GameRegistry::addRecipe);
+    }
+
     public List<IRecipe> getRecipes() {
         List<IRecipe> list = new ArrayList<>();
         list.add(new ShapedOreRecipe(ItemRegistry.getInstance().itemManeuverGearHandle, "ww ", "iib", "wwl",
