@@ -250,6 +250,7 @@ public class ItemManeuverGearHandle extends ItemBase implements IDualWieldedWeap
                 multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getAttributeUnlocalizedName(),
                         new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", 0, 0));
             }
+            multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getAttributeUnlocalizedName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", 1.8, 0));
         }
         return multimap;
     }
