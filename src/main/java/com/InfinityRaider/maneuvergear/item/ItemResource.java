@@ -7,6 +7,7 @@ import com.InfinityRaider.maneuvergear.reference.Reference;
 import com.infinityraider.infinitylib.item.IItemWithModel;
 import com.infinityraider.infinitylib.item.ItemBase;
 import com.infinityraider.infinitylib.utility.IRecipeRegister;
+import com.infinityraider.infinitylib.utility.TranslationHelper;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
@@ -17,7 +18,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.*;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -81,11 +81,10 @@ public class ItemResource extends ItemBase implements IRecipeRegister, IItemWith
 
     @Override
     @SideOnly(Side.CLIENT)
-    @SuppressWarnings("deprecation")
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
         if(stack != null && stack.getItemDamage() == EnumSubItems.SWORD_BLADE.ordinal()) {
-            list.add(I18n.translateToLocal("3DManeuverGear.ToolTip.swordBladeRight"));
-            list.add(I18n.translateToLocal("3DManeuverGear.ToolTip.swordBladeLeft"));
+            list.add(TranslationHelper.translateToLocal("3DManeuverGear.ToolTip.swordBladeRight"));
+            list.add(TranslationHelper.translateToLocal("3DManeuverGear.ToolTip.swordBladeLeft"));
         }
     }
 

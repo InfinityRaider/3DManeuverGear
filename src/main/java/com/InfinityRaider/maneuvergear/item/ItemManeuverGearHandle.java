@@ -11,6 +11,7 @@ import com.infinityraider.infinitylib.item.ItemBase;
 import com.infinityraider.infinitylib.modules.dualwield.IDualWieldedWeapon;
 import com.infinityraider.infinitylib.render.item.IItemRenderingHandler;
 import com.infinityraider.infinitylib.utility.IRecipeRegister;
+import com.infinityraider.infinitylib.utility.TranslationHelper;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -29,7 +30,6 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -257,18 +257,17 @@ public class ItemManeuverGearHandle extends ItemBase implements IDualWieldedWeap
 
     @Override
     @SideOnly(Side.CLIENT)
-    @SuppressWarnings("deprecation")
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
         if(stack != null) {
-            list.add(I18n.translateToLocal("3DManeuverGear.ToolTip.handle"));
-            list.add(I18n.translateToLocal("3DManeuverGear.ToolTip.damage") + ": " + this.getBladeDamage(stack) + "/" + this.MAX_ITEM_DAMAGE);
+            list.add(TranslationHelper.translateToLocal("3DManeuverGear.ToolTip.handle"));
+            list.add(TranslationHelper.translateToLocal("3DManeuverGear.ToolTip.damage") + ": " + this.getBladeDamage(stack) + "/" + this.MAX_ITEM_DAMAGE);
             list.add("");
-            list.add(I18n.translateToLocal("3DManeuverGear.ToolTip.handleLeftNormal"));
-            list.add(I18n.translateToLocal("3DManeuverGear.ToolTip.handleRightNormal"));
-            list.add(I18n.translateToLocal("3DManeuverGear.ToolTip.handleLeftSneak"));
-            list.add(I18n.translateToLocal("3DManeuverGear.ToolTip.handleRightSneak"));
-            list.add(I18n.translateToLocal("3DManeuverGear.ToolTip.handleLeftSprint"));
-            list.add(I18n.translateToLocal("3DManeuverGear.ToolTip.handleRightSprint"));
+            list.add(TranslationHelper.translateToLocal("3DManeuverGear.ToolTip.handleLeftNormal"));
+            list.add(TranslationHelper.translateToLocal("3DManeuverGear.ToolTip.handleRightNormal"));
+            list.add(TranslationHelper.translateToLocal("3DManeuverGear.ToolTip.handleLeftSneak"));
+            list.add(TranslationHelper.translateToLocal("3DManeuverGear.ToolTip.handleRightSneak"));
+            list.add(TranslationHelper.translateToLocal("3DManeuverGear.ToolTip.handleLeftSprint"));
+            list.add(TranslationHelper.translateToLocal("3DManeuverGear.ToolTip.handleRightSprint"));
         }
     }
 

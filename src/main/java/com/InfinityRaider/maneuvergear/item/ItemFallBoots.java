@@ -4,6 +4,7 @@ import com.InfinityRaider.maneuvergear.reference.Names;
 import com.InfinityRaider.maneuvergear.reference.Reference;
 import com.infinityraider.infinitylib.item.IItemWithModel;
 import com.infinityraider.infinitylib.utility.IRecipeRegister;
+import com.infinityraider.infinitylib.utility.TranslationHelper;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,7 +15,6 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.Tuple;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -49,11 +49,10 @@ public class ItemFallBoots extends ItemArmor implements IRecipeRegister, IItemWi
 
     @Override
     @SideOnly(Side.CLIENT)
-    @SuppressWarnings("deprecation")
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
         if(stack != null) {
-            list.add(I18n.translateToLocal("3DManeuverGear.ToolTip.boots1"));
-            list.add(I18n.translateToLocal("3DManeuverGear.ToolTip.boots2"));
+            list.add(TranslationHelper.translateToLocal("3DManeuverGear.ToolTip.boots1"));
+            list.add(TranslationHelper.translateToLocal("3DManeuverGear.ToolTip.boots2"));
         }
     }
 
