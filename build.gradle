@@ -23,7 +23,7 @@ plugins {
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-version = "1.10.2-0.11.0"
+version = "1.10.2-0.12.0"
 group= "com.InfinityRaider.3DManeuverGear" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "3DManeuverGear"
 

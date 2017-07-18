@@ -115,12 +115,11 @@ public class RenderItemHandle extends RenderUtilBase implements IItemRenderingHa
 
     //TODO: convert DefaultTransforms to JOML as well
     private Matrix4f convertFromJOML(org.joml.Matrix4f m) {
-        m.transpose();
         return new Matrix4f(
-                m.m00(), m.m01(), m.m02(), m.m03(),
-                m.m10(), m.m11(), m.m12(), m.m13(),
-                m.m20(), m.m21(), m.m22(), m.m23(),
-                m.m30(), m.m31(), m.m32(), m.m33()
+                m.m00(), m.m10(), m.m20(), m.m30(),
+                m.m01(), m.m11(), m.m21(), m.m31(),
+                m.m02(), m.m12(), m.m22(), m.m32(),
+                m.m03(), m.m13(), m.m23(), m.m33()
                 );
     }
 
