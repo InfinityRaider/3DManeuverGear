@@ -1,6 +1,6 @@
-package com.InfinityRaider.maneuvergear.network;
+package com.infinityraider.maneuvergear.network;
 
-import com.InfinityRaider.maneuvergear.ManeuverGear;
+import com.infinityraider.maneuvergear.ManeuverGear;
 import com.infinityraider.infinitylib.network.MessageBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;

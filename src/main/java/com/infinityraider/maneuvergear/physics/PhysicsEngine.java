@@ -1,6 +1,6 @@
-package com.InfinityRaider.maneuvergear.physics;
+package com.infinityraider.maneuvergear.physics;
 
-import com.InfinityRaider.maneuvergear.entity.EntityDart;
+import com.infinityraider.maneuvergear.entity.EntityDart;
 
 public abstract class PhysicsEngine {
     /** Left dart */

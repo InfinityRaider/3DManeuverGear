@@ -1,4 +1,4 @@
-package com.InfinityRaider.maneuvergear.reference;
+package com.infinityraider.maneuvergear.reference;
 
 public final class Names {
     public static class Objects {

@@ -1,6 +1,6 @@
-package com.InfinityRaider.maneuvergear.render;
+package com.infinityraider.maneuvergear.render;
 
-import com.InfinityRaider.maneuvergear.entity.EntityDart;
+import com.infinityraider.maneuvergear.entity.EntityDart;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;

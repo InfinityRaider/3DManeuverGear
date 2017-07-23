@@ -1,4 +1,4 @@
-package com.InfinityRaider.maneuvergear.proxy;
+package com.infinityraider.maneuvergear.proxy;
 
 import com.infinityraider.infinitylib.proxy.base.IServerProxyBase;
 import net.minecraftforge.fml.relauncher.Side;

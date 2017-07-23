@@ -1,4 +1,4 @@
-package com.InfinityRaider.maneuvergear.network;
+package com.infinityraider.maneuvergear.network;
 
 import com.infinityraider.infinitylib.network.MessageBase;
 import net.minecraft.entity.player.EntityPlayer;

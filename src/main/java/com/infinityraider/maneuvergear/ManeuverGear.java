@@ -1,11 +1,11 @@
-package com.InfinityRaider.maneuvergear;
+package com.infinityraider.maneuvergear;
 
-import com.InfinityRaider.maneuvergear.init.EntityRegistry;
-import com.InfinityRaider.maneuvergear.init.ItemRegistry;
-import com.InfinityRaider.maneuvergear.network.*;
-import com.InfinityRaider.maneuvergear.proxy.IProxy;
-import com.InfinityRaider.maneuvergear.reference.Names;
-import com.InfinityRaider.maneuvergear.reference.Reference;
+import com.infinityraider.maneuvergear.init.EntityRegistry;
+import com.infinityraider.maneuvergear.init.ItemRegistry;
+import com.infinityraider.maneuvergear.network.*;
+import com.infinityraider.maneuvergear.proxy.IProxy;
+import com.infinityraider.maneuvergear.reference.Names;
+import com.infinityraider.maneuvergear.reference.Reference;
 import com.infinityraider.infinitylib.InfinityMod;
 import com.infinityraider.infinitylib.network.INetworkWrapper;
 import com.infinityraider.infinitylib.proxy.base.IProxyBase;

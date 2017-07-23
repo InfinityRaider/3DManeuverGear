@@ -1,10 +1,10 @@
-package com.InfinityRaider.maneuvergear.proxy;
+package com.infinityraider.maneuvergear.proxy;
 
-import com.InfinityRaider.maneuvergear.handler.ConfigurationHandler;
-import com.InfinityRaider.maneuvergear.handler.DartHandler;
-import com.InfinityRaider.maneuvergear.handler.EntityLivingHandler;
-import com.InfinityRaider.maneuvergear.physics.PhysicsEngine;
-import com.InfinityRaider.maneuvergear.physics.PhysicsEngineDummy;
+import com.infinityraider.maneuvergear.handler.ConfigurationHandler;
+import com.infinityraider.maneuvergear.handler.DartHandler;
+import com.infinityraider.maneuvergear.handler.EntityLivingHandler;
+import com.infinityraider.maneuvergear.physics.PhysicsEngine;
+import com.infinityraider.maneuvergear.physics.PhysicsEngineDummy;
 import com.infinityraider.infinitylib.modules.dualwield.ModuleDualWield;
 import com.infinityraider.infinitylib.proxy.base.IProxyBase;
 import net.minecraft.entity.player.EntityPlayer;

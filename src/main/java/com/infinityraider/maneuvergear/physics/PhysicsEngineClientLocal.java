@@ -1,8 +1,8 @@
-package com.InfinityRaider.maneuvergear.physics;
+package com.infinityraider.maneuvergear.physics;
 
-import com.InfinityRaider.maneuvergear.ManeuverGear;
-import com.InfinityRaider.maneuvergear.entity.EntityDart;
-import com.InfinityRaider.maneuvergear.handler.ConfigurationHandler;
+import com.infinityraider.maneuvergear.ManeuverGear;
+import com.infinityraider.maneuvergear.entity.EntityDart;
+import com.infinityraider.maneuvergear.handler.ConfigurationHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;

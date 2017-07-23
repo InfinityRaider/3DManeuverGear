@@ -1,9 +1,9 @@
-package com.InfinityRaider.maneuvergear.render;
+package com.infinityraider.maneuvergear.render;
 
 import baubles.api.render.IRenderBauble;
-import com.InfinityRaider.maneuvergear.item.ItemManeuverGear;
-import com.InfinityRaider.maneuvergear.item.ItemResource;
-import com.InfinityRaider.maneuvergear.render.model.ModelManeuverGear;
+import com.infinityraider.maneuvergear.item.ItemManeuverGear;
+import com.infinityraider.maneuvergear.item.ItemResource;
+import com.infinityraider.maneuvergear.render.model.ModelManeuverGear;
 import com.infinityraider.infinitylib.render.RenderUtilBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.IBakedModel;

@@ -1,4 +1,4 @@
-package com.InfinityRaider.maneuvergear.reference;
+package com.infinityraider.maneuvergear.reference;
 
 public final class Reference {
     public static final String MOD_ID = "3DManeuverGear";

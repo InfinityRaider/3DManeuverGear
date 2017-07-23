@@ -1,4 +1,4 @@
-package com.InfinityRaider.maneuvergear.utility;
+package com.infinityraider.maneuvergear.utility;
 
 import baubles.api.BaublesApi;
 import net.minecraft.entity.player.EntityPlayer;

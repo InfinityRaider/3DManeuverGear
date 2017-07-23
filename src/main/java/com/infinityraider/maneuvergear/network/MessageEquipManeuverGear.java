@@ -1,6 +1,6 @@
-package com.InfinityRaider.maneuvergear.network;
+package com.infinityraider.maneuvergear.network;
 
-import com.InfinityRaider.maneuvergear.utility.BaublesWrapper;
+import com.infinityraider.maneuvergear.utility.BaublesWrapper;
 import com.infinityraider.infinitylib.network.MessageBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
