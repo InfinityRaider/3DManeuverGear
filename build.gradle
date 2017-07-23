@@ -14,30 +14,30 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-/*
-// for people who want stable - not yet functional for MC 1.8.8 - we require the forgegradle 2.1 snapshot
-plugins {
-    id "net.minecraftforge.gradle.forge" version "2.0.2"
-}
-*/
+// Load Properties
+Properties mod = new Properties()
+mod.load(new FileInputStream("${project.rootDir}/mod.properties"))
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-version = "1.10.2-0.12.0"
-group= "com.InfinityRaider.3DManeuverGear" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "3DManeuverGear"
+sourceCompatibility = mod.version_java
+targetCompatibility = mod.version_java
+version = "${mod.version_major}.${mod.version_minor}.${mod.version_patch}"
+mod.version = version
+group = "${mod.group}.${mod.id}"
+archivesBaseName = mod.id
 
 minecraft {
-    version = "1.10.2-12.18.2.2111"
-    runDir = "run"
+    version = "${mod.version_minecraft}-${mod.version_forge}"
+    mappings = mod.version_mappings
+    runDir = "/run/${mod.version_minecraft}"
+    makeObfSourceJar = false
     
-    // the mappings can be changed at any time, and must be in the following format.
-    // snapshot_YYYYMMDD   snapshot are built nightly.
-    // stable_#            stables are built at the discretion of the MCP team.
-    // Use non-default mappings at your own risk. they may not allways work.
-    // simply re-run your setup task after changing the mappings to update your workspace.
-    mappings = "snapshot_20160518"
-    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
+    // Replace mod information in reference class.
+	replaceIn mod.reference_class
+    mod.each { prop ->
+		replace "\${mod.${prop.key}}", prop.value
+		replace "/*^", "\""
+		replace "^*/", "\"; // Default:"
+    }
 }
 
 dependencies {
@@ -62,4 +62,12 @@ processResources
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
+}
+
+// Run Stuff
+runClient {
+	if( project.hasProperty('minecraft_username') && project.hasProperty('minecraft_password') ) {
+		args "--username=${project.minecraft_username}"
+		args "--password=${project.minecraft_password}"
+	}
 }
