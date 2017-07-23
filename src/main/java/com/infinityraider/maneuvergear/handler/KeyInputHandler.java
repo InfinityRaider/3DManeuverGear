@@ -1,8 +1,8 @@
-package com.InfinityRaider.maneuvergear.handler;
+package com.infinityraider.maneuvergear.handler;
 
-import com.InfinityRaider.maneuvergear.ManeuverGear;
-import com.InfinityRaider.maneuvergear.network.MessageBoostUsed;
-import com.InfinityRaider.maneuvergear.proxy.ClientProxy;
+import com.infinityraider.maneuvergear.ManeuverGear;
+import com.infinityraider.maneuvergear.network.MessageBoostUsed;
+import com.infinityraider.maneuvergear.proxy.ClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;

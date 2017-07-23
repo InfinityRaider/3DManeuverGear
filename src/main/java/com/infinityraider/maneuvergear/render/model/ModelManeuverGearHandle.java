@@ -1,4 +1,4 @@
-package com.InfinityRaider.maneuvergear.render.model;
+package com.infinityraider.maneuvergear.render.model;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;

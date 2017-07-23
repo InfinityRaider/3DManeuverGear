@@ -1,7 +1,7 @@
-package com.InfinityRaider.maneuvergear.gui;
+package com.infinityraider.maneuvergear.gui;
 
-import com.InfinityRaider.maneuvergear.handler.ConfigurationHandler;
-import com.InfinityRaider.maneuvergear.reference.Reference;
+import com.infinityraider.maneuvergear.handler.ConfigurationHandler;
+import com.infinityraider.maneuvergear.reference.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.common.config.ConfigElement;

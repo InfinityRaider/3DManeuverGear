@@ -1,7 +1,7 @@
-package com.InfinityRaider.maneuvergear.handler;
+package com.infinityraider.maneuvergear.handler;
 
-import com.InfinityRaider.maneuvergear.ManeuverGear;
-import com.InfinityRaider.maneuvergear.reference.Reference;
+import com.infinityraider.maneuvergear.ManeuverGear;
+import com.infinityraider.maneuvergear.reference.Reference;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;

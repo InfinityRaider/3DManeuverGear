@@ -1,12 +1,12 @@
-package com.InfinityRaider.maneuvergear.handler;
+package com.infinityraider.maneuvergear.handler;
 
-import com.InfinityRaider.maneuvergear.ManeuverGear;
-import com.InfinityRaider.maneuvergear.entity.EntityDart;
-import com.InfinityRaider.maneuvergear.item.ItemManeuverGear;
-import com.InfinityRaider.maneuvergear.network.MessageDartAnchored;
-import com.InfinityRaider.maneuvergear.physics.PhysicsEngine;
-import com.InfinityRaider.maneuvergear.physics.PhysicsEngineDummy;
-import com.InfinityRaider.maneuvergear.utility.BaublesWrapper;
+import com.infinityraider.maneuvergear.ManeuverGear;
+import com.infinityraider.maneuvergear.entity.EntityDart;
+import com.infinityraider.maneuvergear.item.ItemManeuverGear;
+import com.infinityraider.maneuvergear.network.MessageDartAnchored;
+import com.infinityraider.maneuvergear.physics.PhysicsEngine;
+import com.infinityraider.maneuvergear.physics.PhysicsEngineDummy;
+import com.infinityraider.maneuvergear.utility.BaublesWrapper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;

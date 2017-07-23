@@ -1,11 +1,11 @@
-package com.InfinityRaider.maneuvergear.entity;
+package com.infinityraider.maneuvergear.entity;
 
-import com.InfinityRaider.maneuvergear.ManeuverGear;
-import com.InfinityRaider.maneuvergear.handler.ConfigurationHandler;
-import com.InfinityRaider.maneuvergear.handler.DartHandler;
-import com.InfinityRaider.maneuvergear.physics.PhysicsEngine;
-import com.InfinityRaider.maneuvergear.reference.Names;
-import com.InfinityRaider.maneuvergear.render.RenderEntityDart;
+import com.infinityraider.maneuvergear.ManeuverGear;
+import com.infinityraider.maneuvergear.handler.ConfigurationHandler;
+import com.infinityraider.maneuvergear.handler.DartHandler;
+import com.infinityraider.maneuvergear.physics.PhysicsEngine;
+import com.infinityraider.maneuvergear.reference.Names;
+import com.infinityraider.maneuvergear.render.RenderEntityDart;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;

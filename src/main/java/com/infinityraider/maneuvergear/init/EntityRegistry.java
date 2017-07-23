@@ -1,7 +1,7 @@
-package com.InfinityRaider.maneuvergear.init;
+package com.infinityraider.maneuvergear.init;
 
-import com.InfinityRaider.maneuvergear.entity.EntityDart;
-import com.InfinityRaider.maneuvergear.reference.Names;
+import com.infinityraider.maneuvergear.entity.EntityDart;
+import com.infinityraider.maneuvergear.reference.Names;
 import com.infinityraider.infinitylib.entity.EntityRegistryEntry;
 
 public class EntityRegistry {

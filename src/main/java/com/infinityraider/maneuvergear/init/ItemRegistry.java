@@ -1,7 +1,7 @@
-package com.InfinityRaider.maneuvergear.init;
+package com.infinityraider.maneuvergear.init;
 
-import com.InfinityRaider.maneuvergear.handler.ConfigurationHandler;
-import com.InfinityRaider.maneuvergear.item.*;
+import com.infinityraider.maneuvergear.handler.ConfigurationHandler;
+import com.infinityraider.maneuvergear.item.*;
 import net.minecraft.item.Item;
 
 import java.util.ArrayList;

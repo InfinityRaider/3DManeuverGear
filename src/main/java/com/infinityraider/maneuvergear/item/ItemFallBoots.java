@@ -1,7 +1,7 @@
-package com.InfinityRaider.maneuvergear.item;
+package com.infinityraider.maneuvergear.item;
 
-import com.InfinityRaider.maneuvergear.reference.Names;
-import com.InfinityRaider.maneuvergear.reference.Reference;
+import com.infinityraider.maneuvergear.reference.Names;
+import com.infinityraider.maneuvergear.reference.Reference;
 import com.infinityraider.infinitylib.item.IItemWithModel;
 import com.infinityraider.infinitylib.utility.IRecipeRegister;
 import com.infinityraider.infinitylib.utility.TranslationHelper;

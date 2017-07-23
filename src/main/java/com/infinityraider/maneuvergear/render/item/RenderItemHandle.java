@@ -1,9 +1,9 @@
-package com.InfinityRaider.maneuvergear.render.item;
+package com.infinityraider.maneuvergear.render.item;
 
-import com.InfinityRaider.maneuvergear.item.ItemManeuverGearHandle;
-import com.InfinityRaider.maneuvergear.item.ItemResource;
-import com.InfinityRaider.maneuvergear.reference.Constants;
-import com.InfinityRaider.maneuvergear.render.model.ModelManeuverGearHandle;
+import com.infinityraider.maneuvergear.item.ItemManeuverGearHandle;
+import com.infinityraider.maneuvergear.item.ItemResource;
+import com.infinityraider.maneuvergear.reference.Constants;
+import com.infinityraider.maneuvergear.render.model.ModelManeuverGearHandle;
 import com.google.common.collect.ImmutableList;
 import com.infinityraider.infinitylib.render.DefaultTransforms;
 import com.infinityraider.infinitylib.render.RenderUtilBase;

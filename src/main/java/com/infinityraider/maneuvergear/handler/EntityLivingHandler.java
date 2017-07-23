@@ -1,6 +1,6 @@
-package com.InfinityRaider.maneuvergear.handler;
+package com.infinityraider.maneuvergear.handler;
 
-import com.InfinityRaider.maneuvergear.init.ItemRegistry;
+import com.infinityraider.maneuvergear.init.ItemRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.item.EntityItem;

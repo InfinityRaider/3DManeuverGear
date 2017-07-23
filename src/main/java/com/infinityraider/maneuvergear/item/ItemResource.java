@@ -1,9 +1,9 @@
-package com.InfinityRaider.maneuvergear.item;
+package com.infinityraider.maneuvergear.item;
 
-import com.InfinityRaider.maneuvergear.handler.DartHandler;
-import com.InfinityRaider.maneuvergear.init.ItemRegistry;
-import com.InfinityRaider.maneuvergear.reference.Names;
-import com.InfinityRaider.maneuvergear.reference.Reference;
+import com.infinityraider.maneuvergear.handler.DartHandler;
+import com.infinityraider.maneuvergear.init.ItemRegistry;
+import com.infinityraider.maneuvergear.reference.Names;
+import com.infinityraider.maneuvergear.reference.Reference;
 import com.infinityraider.infinitylib.item.IItemWithModel;
 import com.infinityraider.infinitylib.item.ItemBase;
 import com.infinityraider.infinitylib.utility.IRecipeRegister;
