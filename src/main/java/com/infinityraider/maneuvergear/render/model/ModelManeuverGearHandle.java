@@ -10,7 +10,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ModelManeuverGearHandle extends ModelBase {
-    public static final ResourceLocation TEXTURE = new ResourceLocation("3dmaneuvergear:textures/models/3DGearHandle.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation("3d_maneuver_gear:textures/models/3d_gear_handle.png");
 
     private final ModelRenderer hilt;
     private final ModelRenderer triggers;

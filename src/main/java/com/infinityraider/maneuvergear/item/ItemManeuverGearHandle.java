@@ -135,9 +135,9 @@ public class ItemManeuverGearHandle extends ItemBase implements IDualWieldedWeap
     }
 
     private void onSwordBladeBroken(EntityPlayer player) {
-        if(player != null && !player.worldObj.isRemote) {
+        if(player != null && !player.getEntityWorld().isRemote) {
             SoundType type = Blocks.ANVIL.getSoundType();
-            player.worldObj.playSound(null, player.posX, player.posY, player.posZ, type.getPlaceSound(), SoundCategory.PLAYERS, (type.getVolume() + 1.0F) / 4.0F, type.getPitch() * 0.8F);
+            player.getEntityWorld().playSound(null, player.posX, player.posY, player.posZ, type.getPlaceSound(), SoundCategory.PLAYERS, (type.getVolume() + 1.0F) / 4.0F, type.getPitch() * 0.8F);
         }
     }
 
@@ -181,8 +181,8 @@ public class ItemManeuverGearHandle extends ItemBase implements IDualWieldedWeap
 
     @Override
     @ParametersAreNonnullByDefault
-    public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
-        return new ActionResult<>(EnumActionResult.PASS, stack);
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+        return new ActionResult<>(EnumActionResult.PASS, player.getHeldItem(hand));
     }
 
     @Override
@@ -203,7 +203,7 @@ public class ItemManeuverGearHandle extends ItemBase implements IDualWieldedWeap
         if (!DartHandler.instance.isWearingGear(player)) {
             return;
         }
-        if (!player.worldObj.isRemote) {
+        if (!player.getEntityWorld().isRemote) {
             boolean left = hand == EnumHand.OFF_HAND;
             if (shift) {
                 if(!DartHandler.instance.isWearingGear(player)) {
@@ -212,7 +212,7 @@ public class ItemManeuverGearHandle extends ItemBase implements IDualWieldedWeap
                 if (left ? DartHandler.instance.hasLeftDart(player) : DartHandler.instance.hasRightDart(player)) {
                     DartHandler.instance.retractDart(player, left);
                 } else {
-                    DartHandler.instance.fireDart(player.worldObj, player, left);
+                    DartHandler.instance.fireDart(player.getEntityWorld(), player, left);
                 }
             } else if (ctrl) {
                 if (!hasSwordBlade(stack)) {
@@ -230,7 +230,7 @@ public class ItemManeuverGearHandle extends ItemBase implements IDualWieldedWeap
         if(!this.hasSwordBlade(stack)) {
             return true;
         }
-        if(!player.worldObj.isRemote) {
+        if(!player.getEntityWorld().isRemote) {
             if (!player.capabilities.isCreativeMode) {
                 this.damageSwordBlade(player, stack);
             }
@@ -244,13 +244,13 @@ public class ItemManeuverGearHandle extends ItemBase implements IDualWieldedWeap
         Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
         if(slot == EntityEquipmentSlot.OFFHAND || slot == EntityEquipmentSlot.MAINHAND) {
             if (this.hasSwordBlade(stack)) {
-                multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getAttributeUnlocalizedName(),
+                multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(),
                         new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", 3.0 + (ConfigurationHandler.getInstance().damage), 0));
             } else {
-                multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getAttributeUnlocalizedName(),
+                multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(),
                         new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", 0, 0));
             }
-            multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getAttributeUnlocalizedName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", 1.8, 0));
+            multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", 1.8, 0));
         }
         return multimap;
     }

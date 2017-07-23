@@ -47,7 +47,7 @@ public class ItemRegistry {
         }
 
         if(!ConfigurationHandler.getInstance().disableMusicDisc) {
-            itemRecord = new ItemRecord("GurenNoYumiya");
+            itemRecord = new ItemRecord("guren_no_yumiya");
             items.add(itemRecord);
         }
     }

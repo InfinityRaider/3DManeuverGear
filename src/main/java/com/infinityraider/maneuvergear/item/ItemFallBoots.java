@@ -74,7 +74,7 @@ public class ItemFallBoots extends ItemArmor implements IRecipeRegister, IItemWi
     @Override
     public List<Tuple<Integer, ModelResourceLocation>> getModelDefinitions() {
         List<Tuple<Integer, ModelResourceLocation>> list = new ArrayList<>();
-        list.add(new Tuple<>(0, new ModelResourceLocation(Reference.MOD_ID.toLowerCase() + ":fallBoots", "inventory")));
+        list.add(new Tuple<>(0, new ModelResourceLocation(Reference.MOD_ID.toLowerCase() + ":fall_boots", "inventory")));
         return list;
     }
 }

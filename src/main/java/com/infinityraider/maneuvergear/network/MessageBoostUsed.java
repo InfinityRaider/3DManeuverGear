@@ -19,7 +19,7 @@ public class MessageBoostUsed extends MessageBase<IMessage> {
     protected void processMessage(MessageContext ctx) {
         EntityPlayer player = ctx.getServerHandler().playerEntity;
         if (player != null) {
-            NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(player.worldObj.provider.getDimension(), player.posX, player.posY, player.posZ, 64);
+            NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(player.getEntityWorld().provider.getDimension(), player.posX, player.posY, player.posZ, 64);
             new MessageSpawnSteamParticles(player).sendToAllAround(point);
         }
     }

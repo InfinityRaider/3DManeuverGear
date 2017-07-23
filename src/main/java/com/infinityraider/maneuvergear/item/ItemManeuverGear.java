@@ -53,11 +53,11 @@ public class ItemManeuverGear extends ItemBase implements IBauble, IRecipeRegist
 
     @Override
     @ParametersAreNonnullByDefault
-    public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
         if(world.isRemote) {
             new MessageEquipManeuverGear(hand).sendToServer();
         }
-        return new ActionResult<>(EnumActionResult.SUCCESS, stack);
+        return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
     }
 
     /**
@@ -179,7 +179,7 @@ public class ItemManeuverGear extends ItemBase implements IBauble, IRecipeRegist
             return;
         }
         EntityPlayer player = (EntityPlayer) entity;
-        boolean remote = player.worldObj.isRemote;
+        boolean remote = player.getEntityWorld().isRemote;
         if(remote && stack!=null && stack.getItem()==this) {
             boolean b = DartHandler.instance.isWearingGear(player);
             if(DartHandler.instance.isWearingGear(player) && (DartHandler.instance.getLeftDart(player)!=null || DartHandler.instance.getRightDart(player)!=null)) {
@@ -263,7 +263,7 @@ public class ItemManeuverGear extends ItemBase implements IBauble, IRecipeRegist
     @SideOnly(Side.CLIENT)
     public List<Tuple<Integer, ModelResourceLocation>> getModelDefinitions() {
         List<Tuple<Integer, ModelResourceLocation>> list = new ArrayList<>();
-        list.add(new Tuple<>(0, new ModelResourceLocation(Reference.MOD_ID.toLowerCase() + ":maneuverGear", "inventory")));
+        list.add(new Tuple<>(0, new ModelResourceLocation(Reference.MOD_ID.toLowerCase() + ":maneuver_gear", "inventory")));
         return list;
     }
 }

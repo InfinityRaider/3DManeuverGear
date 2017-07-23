@@ -5,6 +5,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
@@ -27,11 +28,11 @@ public class EntityLivingHandler {
         if(!(event.getEntity() instanceof EntityPlayer)) {
             return;
         }
-        if(!event.getSource().damageType.equals(DamageSource.fall.getDamageType())) {
+        if(!event.getSource().damageType.equals(DamageSource.FALL.getDamageType())) {
             return;
         }
         EntityPlayer player = (EntityPlayer) event.getEntity();
-        ItemStack boots = player.inventory.armorInventory[0];
+        ItemStack boots = player.getItemStackFromSlot(EntityEquipmentSlot.FEET);
         if(boots != null && boots.getItem() == ItemRegistry.getInstance().itemFallBoots) {
             event.setAmount((1.0F-ConfigurationHandler.getInstance().bootFallDamageReduction)*event.getAmount());
         }
@@ -53,7 +54,7 @@ public class EntityLivingHandler {
             ItemStack left = player.getHeldItem(EnumHand.MAIN_HAND);
             ItemStack right = player.getHeldItem(EnumHand.OFF_HAND);
             if(isValidStack(left) && isValidStack(right)) {
-                EntityItem drop = new EntityItem(event.getEntity().worldObj, event.getEntity().posX, event.getEntity().posY+0.5D, event.getEntity().posZ,
+                EntityItem drop = new EntityItem(event.getEntity().getEntityWorld(), event.getEntity().posX, event.getEntity().posY+0.5D, event.getEntity().posZ,
                         new ItemStack(ItemRegistry.getInstance().itemRecord));
                 event.getDrops().add(drop);
             }

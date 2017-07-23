@@ -1,5 +1,8 @@
 Changelog
 ---------
+1.12.0
+-CHANGE: ported to 1.12.2
+
 0.12.0
 -CHANGE: updated InfinityLib
 -CHANGE: tweaked attack speed

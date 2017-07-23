@@ -22,6 +22,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @SideOnly(Side.CLIENT)
 @MethodsReturnNonnullByDefault
 public class RenderEntityDart extends Render<EntityDart> {
+    public static final ResourceLocation TEXTURE = new ResourceLocation("3d_maneuver_gear:textures/entities/entity_dart.png");
+
     public RenderEntityDart(RenderManager renderManager) {
         super(renderManager);
     }
@@ -34,7 +36,7 @@ public class RenderEntityDart extends Render<EntityDart> {
         if (player == null) {
             return;
         }
-        if (this.renderManager.options.thirdPersonView > 0 || player != Minecraft.getMinecraft().thePlayer) {
+        if (this.renderManager.options.thirdPersonView > 0 || player != Minecraft.getMinecraft().player) {
             this.renderWireThirdPerson(dart, player, x, y, z, partialTicks);
         } else {
             renderWireFirstPerson(dart, player, x, y, z, partialTicks);
@@ -186,6 +188,6 @@ public class RenderEntityDart extends Render<EntityDart> {
     @Override
     @ParametersAreNonnullByDefault
     protected ResourceLocation getEntityTexture(EntityDart entity) {
-        return new ResourceLocation("3dmaneuvergear:textures/entities/entityDart.png");
+        return TEXTURE;
     }
 }

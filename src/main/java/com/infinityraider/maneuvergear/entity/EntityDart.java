@@ -49,7 +49,7 @@ public class EntityDart extends EntityThrowable implements IEntityAdditionalSpaw
     }
 
     public EntityDart(EntityPlayer player, boolean left) {
-        super(player.worldObj, player);
+        super(player.getEntityWorld(), player);
         this.player = player;
         this.left = left;
         //render the entity even if off screen
@@ -64,7 +64,7 @@ public class EntityDart extends EntityThrowable implements IEntityAdditionalSpaw
     @Override
     @ParametersAreNonnullByDefault
     protected void onImpact(RayTraceResult impact) {
-        ManeuverGear.instance.getLogger().debug("impact " + (worldObj.isRemote ? "client side" : "server side"));
+        ManeuverGear.instance.getLogger().debug("impact " + (this.getEntityWorld().isRemote ? "client side" : "server side"));
         double yaw = -Math.atan2(motionZ, motionX);
         double pitch = Math.asin(motionY / Math.sqrt(motionX * motionX + motionZ * motionZ));
         DartHandler.instance.onDartAnchored(this, impact.hitVec.xCoord, impact.hitVec.yCoord, impact.hitVec.zCoord, (float) yaw, (float) pitch);
@@ -124,7 +124,7 @@ public class EntityDart extends EntityThrowable implements IEntityAdditionalSpaw
     @Override
     public void onUpdate() {
         //serverside, if this dart is not connected to a player, get rid of it
-        if(!worldObj.isRemote && this.getPlayer() == null) {
+        if(!this.getEntityWorld().isRemote && this.getPlayer() == null) {
             this.setDead();
             return;
         }
@@ -154,7 +154,7 @@ public class EntityDart extends EntityThrowable implements IEntityAdditionalSpaw
 
     @Override
     public void setDead() {
-        if(this.worldObj.isRemote) {
+        if(this.getEntityWorld().isRemote) {
             PhysicsEngine engine = DartHandler.instance.getPhysicsEngine(player);
             engine.setDart(null, left);
             engine.onDartRetracted(left);
@@ -177,7 +177,7 @@ public class EntityDart extends EntityThrowable implements IEntityAdditionalSpaw
         left = tag.getBoolean(Names.NBT.LEFT);
         hooked = tag.getBoolean(Names.NBT.HOOKED);
         cableLength = tag.getDouble(Names.NBT.LENGTH);
-        player = worldObj.getPlayerEntityByName(tag.getString(Names.NBT.PLAYER));
+        player = this.getEntityWorld().getPlayerEntityByName(tag.getString(Names.NBT.PLAYER));
     }
 
     @Override
@@ -193,7 +193,7 @@ public class EntityDart extends EntityThrowable implements IEntityAdditionalSpaw
         this.left = data.readBoolean();
         this.hooked = data.readBoolean();
         this.cableLength = data.readDouble();
-        Entity entity = worldObj.getEntityByID(data.readInt());
+        Entity entity = this.getEntityWorld().getEntityByID(data.readInt());
         if (entity instanceof EntityPlayer) {
             //Should always be the case
             this.player = (EntityPlayer) entity;

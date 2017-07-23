@@ -10,7 +10,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ModelManeuverGearGirdle extends ModelBase {
-    private ResourceLocation texture = new ResourceLocation("3dmaneuvergear:textures/models/3DGearGirdle.png");
+    private ResourceLocation texture = new ResourceLocation("3d_maneuver_gear:textures/models/3d_gear_girdle.png");
 
     //fields
     ModelRenderer Girdle;

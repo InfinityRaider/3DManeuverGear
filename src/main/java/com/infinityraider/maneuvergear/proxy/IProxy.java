@@ -57,4 +57,7 @@ public interface IProxy extends IProxyBase {
         ModuleDualWield.getInstance().activate();
     }
 
+    @Override
+    default void registerSounds() {}
+
 }

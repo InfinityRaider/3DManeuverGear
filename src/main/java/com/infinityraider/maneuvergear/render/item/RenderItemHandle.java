@@ -29,7 +29,7 @@ import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class RenderItemHandle extends RenderUtilBase implements IItemRenderingHandler, DefaultTransforms.Transformer {
-    public static final ResourceLocation TEXTURE = new ResourceLocation("3dmaneuvergear:models/3DGearHandle");
+    public static final ResourceLocation TEXTURE = new ResourceLocation("3d_maneuver_gear:models/3d_gear_handle");
 
     private final ModelTechne<ModelManeuverGearHandle> model;
 

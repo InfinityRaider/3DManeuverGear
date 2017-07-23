@@ -37,7 +37,8 @@ public class ItemResource extends ItemBase implements IRecipeRegister, IItemWith
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+        ItemStack stack = player.getHeldItem(hand);
         if(world.isRemote) {
             return new ActionResult<>(EnumActionResult.PASS, stack);
         }
@@ -49,14 +50,14 @@ public class ItemResource extends ItemBase implements IRecipeRegister, IItemWith
             if(maneuverGear == null || !(maneuverGear.getItem() instanceof ItemManeuverGear)) {
                 return new ActionResult<>(EnumActionResult.PASS, stack);
             }
-            stack.stackSize = ((ItemManeuverGear) maneuverGear.getItem()).addBlades(maneuverGear, stack.stackSize, player.isSneaking());
+            stack.setCount(((ItemManeuverGear) maneuverGear.getItem()).addBlades(maneuverGear, stack.getCount(), player.isSneaking()));
         }
         return new ActionResult<>(EnumActionResult.SUCCESS, stack);
     }
 
     @Override
     public boolean hitEntity(ItemStack stack, EntityLivingBase attacker, EntityLivingBase attacked) {
-        if(!attacker.worldObj.isRemote
+        if(!attacker.getEntityWorld().isRemote
                 && attacker instanceof EntityPlayer
                 && stack != null
                 && stack.getItemDamage() == EnumSubItems.SWORD_BLADE.ordinal())  {
@@ -73,7 +74,7 @@ public class ItemResource extends ItemBase implements IRecipeRegister, IItemWith
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
+    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> list) {
         for(int i=0;i<EnumSubItems.values().length;i++) {
             list.add(new ItemStack(item, 1, i));
         }
@@ -147,15 +148,15 @@ public class ItemResource extends ItemBase implements IRecipeRegister, IItemWith
     }
 
     public enum EnumSubItems {
-        SWORD_BLADE("swordBlade"),
-        GAS_CANISTER("gasCanister"),
-        BLADE_HOLSTER("bladeHolster"),
-        BLADE_HOLSTER_ASSEMBLY("bladeHolsterAssembly"),
+        SWORD_BLADE("sword_blade"),
+        GAS_CANISTER("gas_canister"),
+        BLADE_HOLSTER("blade_holster"),
+        BLADE_HOLSTER_ASSEMBLY("blade_holster_assembly"),
         BELT("belt"),
         GIRDLE("girdle"),
-        GAS_NOZZLE("gasNozzle"),
-        CABLE_COIL("cableSpool"),
-        GRAPPLE_LAUNCHER("grappleLauncher");
+        GAS_NOZZLE("gas_nozzle"),
+        CABLE_COIL("cable_spool"),
+        GRAPPLE_LAUNCHER("grapple_launcher");
 
         public final String name;
 

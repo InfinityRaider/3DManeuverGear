@@ -60,7 +60,7 @@ public class DartHandler {
         if (player == null) {
             return DUMMY;
         }
-        HashMap<UUID, PhysicsEngine> physicsEngines = player.worldObj.isRemote ? physicsEnginesClient : physicsEnginesServer;
+        HashMap<UUID, PhysicsEngine> physicsEngines = player.getEntityWorld().isRemote ? physicsEnginesClient : physicsEnginesServer;
         if (!physicsEngines.containsKey(player.getUniqueID())) {
             return DUMMY;
         }
@@ -99,7 +99,7 @@ public class DartHandler {
         if(isWearingGear(player)) {
             EntityDart dart = new EntityDart(player, left);
             getPhysicsEngine(player).setDart(dart, left);
-            world.spawnEntityInWorld(dart);
+            world.spawnEntity(dart);
         }
     }
 
@@ -121,7 +121,7 @@ public class DartHandler {
 
     /** performs needed operations when a dart is retracted */
     public void retractDart(EntityPlayer player, boolean left) {
-        if (player.worldObj.isRemote) {
+        if (player.getEntityWorld().isRemote) {
             return;
         }
         PhysicsEngine physicsEngine = getPhysicsEngine(player);
@@ -139,7 +139,7 @@ public class DartHandler {
     }
 
     public boolean isWearingGear(EntityPlayer player) {
-        if(player.worldObj.isRemote) {
+        if(player.getEntityWorld().isRemote) {
             return physicsEnginesClient.containsKey(player.getUniqueID());
         } else {
             return physicsEnginesServer.containsKey(player.getUniqueID());
@@ -157,7 +157,7 @@ public class DartHandler {
 
     public void equipGear(EntityPlayer player) {
         if(!isWearingGear(player)) {
-            if(player.worldObj.isRemote) {
+            if(player.getEntityWorld().isRemote) {
                 physicsEnginesClient.put(player.getUniqueID(), ManeuverGear.proxy.createPhysicsEngine(player));
             } else {
                 physicsEnginesServer.put(player.getUniqueID(), ManeuverGear.proxy.createPhysicsEngine(player));
@@ -168,7 +168,7 @@ public class DartHandler {
     public void unEquipGear(EntityPlayer player) {
         if(isWearingGear(player)) {
             retractDarts(player);
-            if(player.worldObj.isRemote) {
+            if(player.getEntityWorld().isRemote) {
                 physicsEnginesClient.remove(player.getUniqueID());
             } else {
                 physicsEnginesServer.remove(player.getUniqueID());

@@ -1,20 +1,20 @@
 //Items
-item.3dmaneuvergear:3DManeuverGear.name=3D Maneuver Gear
-item.3dmaneuvergear:3DManeuverHandle.name=3D Maneuver Gear Hand Grips
-item.3dmaneuvergear:itemComponent.swordBlade.name=Sword Blade
-item.3dmaneuvergear:itemComponent.gasCanister.name=Gas Canister
-item.3dmaneuvergear:itemComponent.bladeHolster.name=Blade Holster
-item.3dmaneuvergear:itemComponent.bladeHolsterAssembly.name=Blade Holster Assembly
-item.3dmaneuvergear:itemComponent.girdle.name=Girdle
-item.3dmaneuvergear:itemComponent.belt.name=Belt
-item.3dmaneuvergear:itemComponent.gasNozzle.name=Gas Nozzle
-item.3dmaneuvergear:itemComponent.cableSpool.name=Cable Coil
-item.3dmaneuvergear:itemComponent.grappleLauncher.name=Grapple Launcher
-item.3dmaneuvergear:itemFallBoots.name=Shock Absorbing Boots
-item.3dmaneuvergear:itemRecord.name=Music Disc
+item.3dmaneuvergear:3d_maneuver_gear.name=3D Maneuver Gear
+item.3dmaneuvergear:3d_maneuver_handle.name=3D Maneuver Gear Hand Grips
+item.3dmaneuvergear:item_component.sword_blade.name=Sword Blade
+item.3dmaneuvergear:item_component.gas_canister.name=Gas Canister
+item.3dmaneuvergear:item_component.blade_holster.name=Blade Holster
+item.3dmaneuvergear:item_component.blade_holster_assembly.name=Blade Holster Assembly
+item.3dmaneuvergear:item_component.girdle.name=Girdle
+item.3dmaneuvergear:item_component.belt.name=Belt
+item.3dmaneuvergear:item_component.gas_nozzle.name=Gas Nozzle
+item.3dmaneuvergear:item_component.cable_spool.name=Cable Coil
+item.3dmaneuvergear:item_component.grapple_launcher.name=Grapple Launcher
+item.3dmaneuvergear:item_fall_boots.name=Shock Absorbing Boots
+item.3dmaneuvergear:item_record.name=Music Disc
 
 //Sounds
-item.record.GurenNoYumiya.desc=Linked Horizon - Guren No Yumiya
+item.record.guren_no_yumiya.desc=Linked Horizon - Guren No Yumiya
 
 //Key bindings
 3DManeuverGear.Key.RetractLeft=Retract left cable

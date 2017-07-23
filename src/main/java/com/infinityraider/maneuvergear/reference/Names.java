@@ -2,11 +2,11 @@ package com.infinityraider.maneuvergear.reference;
 
 public final class Names {
     public static class Objects {
-        public static final String MANEUVER_GEAR = "3DManeuverGear";
-        public static final String MANEUVER_HANDLE = "3DManeuverHandle";
-        public static final String RESOURCE = "itemComponent";
-        public static final String BOOTS = "itemFallBoots";
-        public static final String RECORD = "itemRecord";
+        public static final String MANEUVER_GEAR = "3d_maneuver_gear";
+        public static final String MANEUVER_HANDLE = "3d_maneuver_handle";
+        public static final String RESOURCE = "item_component";
+        public static final String BOOTS = "item_fall_boots";
+        public static final String RECORD = "item_record";
         public static final String DART = "dart";
         public static final String KEY = "Key";
         public static final String RETRACT = "Retract";

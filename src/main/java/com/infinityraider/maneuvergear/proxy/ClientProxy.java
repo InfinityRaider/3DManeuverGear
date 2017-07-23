@@ -28,7 +28,7 @@ public class ClientProxy implements IClientProxyBase, IProxy {
 
     @Override
     public PhysicsEngine createPhysicsEngine(EntityPlayer player) {
-        if(player == null || !player.worldObj.isRemote) {
+        if(player == null || !player.getEntityWorld().isRemote) {
             return new PhysicsEngineDummy();
         }
         EntityPlayer local = getClientPlayer();
@@ -48,7 +48,7 @@ public class ClientProxy implements IClientProxyBase, IProxy {
 
     @Override
     public void spawnSteamParticles(EntityPlayer player) {
-        World world = player.worldObj;
+        World world = player.getEntityWorld();
         double x = player.posX;
         double y = player.posY;
         double z = player.posZ;

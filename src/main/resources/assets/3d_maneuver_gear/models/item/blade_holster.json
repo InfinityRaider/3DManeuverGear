@@ -1,7 +1,7 @@
 {
   "parent": "builtin/generated",
   "textures": {
-    "layer0": "3dmaneuvergear:items/itemRecord"
+    "layer0": "3d_maneuver_gear:items/item_component.blade_holster"
   },
   "display": {
     "thirdperson": {
