@@ -1,80 +1,48 @@
 package com.infinityraider.maneuvergear.item;
 
+import com.infinityraider.infinitylib.item.IInfinityItem;
+import com.infinityraider.maneuvergear.ManeuverGear;
 import com.infinityraider.maneuvergear.reference.Names;
 import com.infinityraider.maneuvergear.reference.Reference;
-import com.infinityraider.infinitylib.item.IItemWithModel;
-import com.infinityraider.infinitylib.utility.IRecipeRegister;
-import com.infinityraider.infinitylib.utility.TranslationHelper;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemArmor;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ArmorItem;
+import net.minecraft.item.ArmorMaterial;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.util.Tuple;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import javax.annotation.Nullable;
 import java.util.List;
 
-public class ItemFallBoots extends ItemArmor implements IRecipeRegister, IItemWithModel {
+public class ItemFallBoots extends ArmorItem implements IInfinityItem {
+
+    private final String internalName;
+
     public ItemFallBoots() {
-        super(ArmorMaterial.LEATHER, 0, EntityEquipmentSlot.FEET); //(material: cloth, index: cloth, type: boots)
-        this.setCreativeTab(CreativeTabs.COMBAT);
-        this.setMaxStackSize(1);
+        super(ArmorMaterial.LEATHER, EquipmentSlotType.FEET, new Properties().group(ItemGroup.COMBAT));
+        this.internalName = Names.Items.BOOTS;
     }
 
     @Override
     public String getInternalName() {
-        return Names.Objects.BOOTS;
-    }
-
-    @Override
-    public List<String> getOreTags() {
-        return Collections.emptyList();
+        return this.internalName;
     }
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return !ManeuverGear.instance.getConfig().disableFallBoots();
     }
+
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
-        if(stack != null) {
-            list.add(TranslationHelper.translateToLocal("3DManeuverGear.ToolTip.boots1"));
-            list.add(TranslationHelper.translateToLocal("3DManeuverGear.ToolTip.boots2"));
-        }
-    }
-
-    @Override
-    public void registerRecipes() {
-        this.getRecipes().forEach(GameRegistry::addRecipe);
-    }
-
-    public List<IRecipe> getRecipes() {
-        List<IRecipe> list = new ArrayList<>();
-        list.add(new ShapedOreRecipe(new ItemStack(this), "lll", "pbp", "www",
-                'l', new ItemStack(Items.LEATHER),
-                'p', new ItemStack(Blocks.STICKY_PISTON),
-                'b', new ItemStack(Items.LEATHER_BOOTS),
-                'w', new ItemStack(Blocks.WOOL, 1, OreDictionary.WILDCARD_VALUE)));
-        return list;
-    }
-
-    @Override
-    public List<Tuple<Integer, ModelResourceLocation>> getModelDefinitions() {
-        List<Tuple<Integer, ModelResourceLocation>> list = new ArrayList<>();
-        list.add(new Tuple<>(0, new ModelResourceLocation(Reference.MOD_ID.toLowerCase() + ":fall_boots", "inventory")));
-        return list;
+    @OnlyIn(Dist.CLIENT)
+    public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag advanced) {
+        tooltip.add(new TranslationTextComponent(Reference.MOD_ID + ".tooltip." + this.getInternalName() + "_1"));
+        tooltip.add(new TranslationTextComponent(Reference.MOD_ID + ".tooltip." + this.getInternalName() + "_2"));
     }
 }

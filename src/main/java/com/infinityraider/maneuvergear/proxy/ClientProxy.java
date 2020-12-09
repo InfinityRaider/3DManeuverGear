@@ -1,6 +1,6 @@
 package com.infinityraider.maneuvergear.proxy;
 
-import com.infinityraider.maneuvergear.handler.ConfigurationHandler;
+import com.infinityraider.maneuvergear.config.Config;
 import com.infinityraider.maneuvergear.handler.KeyInputHandler;
 import com.infinityraider.maneuvergear.physics.PhysicsEngine;
 import com.infinityraider.maneuvergear.physics.PhysicsEngineClientLocal;
@@ -8,30 +8,41 @@ import com.infinityraider.maneuvergear.physics.PhysicsEngineDummy;
 import com.infinityraider.maneuvergear.reference.Names;
 import com.infinityraider.maneuvergear.reference.Reference;
 import com.infinityraider.infinitylib.proxy.base.IClientProxyBase;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import org.lwjgl.glfw.GLFW;
 
-@SuppressWarnings("unused")
-@SideOnly(Side.CLIENT)
-public class ClientProxy implements IClientProxyBase, IProxy {
-    public static KeyBinding retractLeft = new KeyBinding(Reference.MOD_ID+"."+Names.Objects.KEY+"."+Names.Objects.RETRACT+Names.Objects.LEFT, Keyboard.KEY_Z, "key.categories.movement");
-    public static KeyBinding retractRight = new KeyBinding(Reference.MOD_ID+"."+Names.Objects.KEY+"."+Names.Objects.RETRACT+Names.Objects.RIGHT, Keyboard.KEY_X, "key.categories.movement");
+import java.util.function.Function;
+
+@OnlyIn(Dist.CLIENT)
+public class ClientProxy implements IClientProxyBase<Config>, IProxy {
+    public static KeyBinding retractLeft = new KeyBinding(
+            Reference.MOD_ID+"."+Names.Objects.KEY+"."+Names.Objects.RETRACT+Names.Objects.LEFT,
+            GLFW.GLFW_KEY_Z,
+            "key.categories.movement");
+    public static KeyBinding retractRight = new KeyBinding(
+            Reference.MOD_ID+"."+Names.Objects.KEY+"."+Names.Objects.RETRACT+Names.Objects.RIGHT,
+            GLFW.GLFW_KEY_X,
+            "key.categories.movement");
 
     @Override
-    public PhysicsEngine createPhysicsEngine(EntityPlayer player) {
+    public void onClientSetupEvent(final FMLClientSetupEvent event) {
+        // Register key bindings
+        ClientRegistry.registerKeyBinding(retractLeft);
+        ClientRegistry.registerKeyBinding(retractRight);
+    }
+
+    @Override
+    public PhysicsEngine createPhysicsEngine(PlayerEntity player) {
         if(player == null || !player.getEntityWorld().isRemote) {
             return new PhysicsEngineDummy();
         }
-        EntityPlayer local = getClientPlayer();
+        PlayerEntity local = getClientPlayer();
         if(local == null) {
             //This only happens during first startup of an SSP world
             return new PhysicsEngineClientLocal(player);
@@ -47,33 +58,13 @@ public class ClientProxy implements IClientProxyBase, IProxy {
     }
 
     @Override
-    public void spawnSteamParticles(EntityPlayer player) {
-        World world = player.getEntityWorld();
-        double x = player.posX;
-        double y = player.posY;
-        double z = player.posZ;
-        Vec3d lookVec = player.getLook(2);
-        int nr = 10;
-        for(int i=0;i<nr;i++) {
-            Minecraft.getMinecraft().effectRenderer.spawnEffectParticle(EnumParticleTypes.CLOUD.getParticleID(), x, y, z, -(lookVec.xCoord * i) / (0.0F + nr), -(lookVec.yCoord * i) / (0.0F + nr), -(lookVec.zCoord * i) / (0.0F + nr));
-        }
-    }
-
-    @Override
-    public void initConfiguration(FMLPreInitializationEvent event) {
-        IProxy.super.initConfiguration(event);
-        ConfigurationHandler.getInstance().initClientConfigs(event);
+    public Function<ForgeConfigSpec.Builder, Config> getConfigConstructor() {
+        return Config.Client::new;
     }
 
     @Override
     public void registerEventHandlers() {
         IProxy.super.registerEventHandlers();
         this.registerEventHandler(KeyInputHandler.getInstance());
-    }
-
-    @Override
-    public void registerKeyBindings() {
-        ClientRegistry.registerKeyBinding(retractLeft);
-        ClientRegistry.registerKeyBinding(retractRight);
     }
 }

@@ -1,35 +1,22 @@
 package com.infinityraider.maneuvergear;
 
-import com.infinityraider.maneuvergear.init.EntityRegistry;
-import com.infinityraider.maneuvergear.init.ItemRegistry;
-import com.infinityraider.maneuvergear.network.*;
+import com.infinityraider.maneuvergear.config.Config;
+import com.infinityraider.maneuvergear.proxy.ClientProxy;
 import com.infinityraider.maneuvergear.proxy.IProxy;
-import com.infinityraider.maneuvergear.reference.Names;
+import com.infinityraider.maneuvergear.proxy.ServerProxy;
+import com.infinityraider.maneuvergear.registry.EntityRegistry;
+import com.infinityraider.maneuvergear.registry.ItemRegistry;
+import com.infinityraider.maneuvergear.network.*;
 import com.infinityraider.maneuvergear.reference.Reference;
 import com.infinityraider.infinitylib.InfinityMod;
 import com.infinityraider.infinitylib.network.INetworkWrapper;
-import com.infinityraider.infinitylib.proxy.base.IProxyBase;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.SidedProxy;
 
-@Mod(
-        modid = Reference.MOD_ID,
-        name = Reference.MOD_NAME,
-        version = Reference.VERSION,
-        guiFactory = Reference.GUI_FACTORY_CLASS,
-        dependencies = "required-after:infinitylib;after:"+ Names.Mods.baubles
-)
-public class ManeuverGear extends InfinityMod {
-    @Mod.Instance(Reference.MOD_ID)
+@Mod(Reference.MOD_ID)
+public class ManeuverGear extends InfinityMod<IProxy, Config> {
     public static ManeuverGear instance;
-
-    @SidedProxy(clientSide = Reference.CLIENT_PROXY_CLASS, serverSide = Reference.SERVER_PROXY_CLASS)
-    public static IProxy proxy;
-
-    @Override
-    public IProxyBase proxy() {
-        return proxy;
-    }
 
     @Override
     public String getModId() {
@@ -37,8 +24,20 @@ public class ManeuverGear extends InfinityMod {
     }
 
     @Override
-    public Object getModBlockRegistry() {
-        return this;
+    protected void onModConstructed() {
+        instance = this;
+    }
+
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    protected ClientProxy createClientProxy() {
+        return new ClientProxy();
+    }
+
+    @Override
+    @OnlyIn(Dist.DEDICATED_SERVER)
+    protected ServerProxy createServerProxy() {
+        return new ServerProxy();
     }
 
     @Override

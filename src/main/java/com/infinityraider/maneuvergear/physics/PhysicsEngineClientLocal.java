@@ -2,12 +2,10 @@ package com.infinityraider.maneuvergear.physics;
 
 import com.infinityraider.maneuvergear.ManeuverGear;
 import com.infinityraider.maneuvergear.entity.EntityDart;
-import com.infinityraider.maneuvergear.handler.ConfigurationHandler;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.joml.Vector3d;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * This class is used to calculate the player's new velocity when using one or two grapples,
@@ -21,18 +19,19 @@ import org.joml.Vector3d;
  *
  * Yes I know the parameter names are not conform with java naming conventions, but the fact that they didn't conform with my math notations bothered me more.
  *
- * And no I am not happy with this class, it started out as a simple calculation for two cases, but then the exceptions I didn't take into account attacked...
+ * And no I am not fully satisfied with the result, it started out as a simple calculation for two cases, but then the exceptions I didn't take into account decided to exist...
+ *
  */
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public final class PhysicsEngineClientLocal extends PhysicsEngine {
     /** Velocity at which the cable is retracted (blocks per second) */
-    public static final double retractingVelocity = ConfigurationHandler.getInstance().retractingSpeed/20.0D;
+    public static final double retractingVelocity = ManeuverGear.instance.getConfig().getRetractingSpeed()/20.0D;
 
     /** Boost intensity */
     public static final int BOOST = 2;
 
     /** Player */
-    private final EntityPlayer player;
+    private final PlayerEntity player;
 
     /** Left dart */
     private Vector3d L;
@@ -42,7 +41,7 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
     private Vector3d R;
     private boolean retractingRight;
 
-    public PhysicsEngineClientLocal(EntityPlayer player) {
+    public PhysicsEngineClientLocal(PlayerEntity player) {
         super();
         this.player = player;
     }
@@ -53,7 +52,7 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
         decrementCableLength(rightDart);
         Vector3d p = calculateOldPosition();
         Vector3d v_old = calculateVelocity();
-        Vector3d v = new Vector3d(v_old);
+        Vector3d v = v_old.add(0,0,0);
         Vector3d p_new = calculateNewPosition(p, v);
         getAnchoredDartPosition(leftDart);
         getAnchoredDartPosition(rightDart);
@@ -87,7 +86,8 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
         Vector3d D = conflicting.isLeft() ? L : R;
         Vector3d DPnew = getCableVector(P_new, D);
         double norm = DPnew.length();
-        DPnew.mul(conflicting.getCableLength() / norm);
+        double factor = conflicting.getCableLength() / norm;
+        DPnew = DPnew.mul(factor, factor, factor);
         Vector3d Pnew = DPnew.add(D);
         return calculateVelocity(Pnew, p_old);
     }
@@ -108,10 +108,10 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
     private Vector3d calculateVelocityForDoubleCondition(EntityDart left, EntityDart right, Vector3d p_old, Vector3d p_new, Vector3d v_old) {
         double l = left.getCableLength();
         double r = right.getCableLength();
-        Vector3d L = left.getPositionAsVector();
-        Vector3d R = right.getPositionAsVector();
+        Vector3d L = left.getPositionVec();
+        Vector3d R = right.getPositionVec();
         //apply gravity: velocity should increase with 10m/s / s, therefore velocity has to increase with 0.0025m/tick / tick
-        player.motionY = player.motionY - 0.0025D;
+        player.setMotion(player.getMotion().add(0, -0.0025D, 0));
         //determine new position
         Vector3d Pn = calculatePositionForConflictingCableLengths(L, R, l, r);
         if(Pn != null) {
@@ -133,7 +133,7 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
                 return calculateVelocity(P, p_old);
             }
             //one sphere is fully inside the other: only the one with the smallest radius matters
-            return calculateVelocity(findInterSectPointWithSphere(l < r ? L : R, l < r ? l : r, p_new), p_old);
+            return calculateVelocity(findInterSectPointWithSphere(l < r ? L : R, Math.min(l, r), p_new), p_old);
         }
     }
 
@@ -146,7 +146,7 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
      * @return a position vector of a point on the line AB, given by a distance interpolated by the ratio of lengths of a and b, or null if the cable lengths are not conflicting
      */
     private Vector3d calculatePositionForConflictingCableLengths(Vector3d A, Vector3d B, double a, double b) {
-        Vector3d AB = new Vector3d(B).sub(A);
+        Vector3d AB = B.subtract(A);
         double l = AB.length();
         if((a + b) <= l) {
             double f;
@@ -157,7 +157,7 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
             else {
                 f = a/ (a + b);
             }
-            return new Vector3d(A).add(AB.mul(f));
+            return A.add(AB.mul(f, f, f));
         } else {
             return null;
         }
@@ -188,10 +188,10 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
      * @return the new position of the player, might be null if there is no valid solution
      */
     private Vector3d calculateNewPositionForDoubleCondition(Vector3d A, Vector3d P, Vector3d V, double l) {
-        Vector3d AP = new Vector3d(P).sub(A);
-        double a = V.dot(V);
-        double b = 2*(V.x()*AP.x() + V.y()*AP.y()+ V.z()*AP.z());
-        double c = AP.dot(AP) - l*l;
+        Vector3d AP = P.subtract(A);
+        double a = V.dotProduct(V);
+        double b = 2*(V.getX()*AP.getX() + V.getY()*AP.getY()+ V.getZ()*AP.getZ());
+        double c = AP.dotProduct(AP) - l*l;
         double d = b*b - 4*a*c;
         if(d < 0) {
             return null;
@@ -216,7 +216,7 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
             double k2_abs = Math.abs(k2);
             k = k1_abs < k2_abs ? k1 : k2;
         }
-        return new Vector3d(A).add(AP.add(new Vector3d(V).mul(k)));
+        return A.add(AP.add(V.mul(k, k, k)));
     }
 
     /**
@@ -240,7 +240,7 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
      * @return The position vector, or null if there is no solution
      */
     private Vector3d calculateIntersectionPoint(Vector3d A, double a, Vector3d B, double b, Vector3d P) {
-        Vector3d AB = new Vector3d(B).sub(A);
+        Vector3d AB = B.subtract(A);
         double c = AB.length();
         //calculate intersection of circle plane and AB
         double k = calculateHypotenuseIntersectRatio(a, b, c);
@@ -248,13 +248,13 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
             return null;
         }
         double d = calculateHeight(a, c, k);
-        Vector3d M = new Vector3d(A).add(new Vector3d(AB).mul(k));
+        Vector3d M = A.add(AB).mul(k, k, k);
         //calculate projection of P on AB
         k = calculateProjectionRatio(AB, A, P);
-        Vector3d Pp = new Vector3d(A).add(new Vector3d(AB).mul(k));
-        Vector3d PpP = new Vector3d(P).sub(Pp);
+        Vector3d Pp = A.add(AB.mul(k, k, k));
+        Vector3d PpP = P.subtract(Pp);
         //point is defined by M + d.PpP/||PpP||
-        return M.add(PpP.normalize().mul(d));
+        return M.add(PpP.normalize().mul(d, d, d));
     }
 
     /**
@@ -265,17 +265,17 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
      * @return the intersection point with the sphere
      */
     private Vector3d findInterSectPointWithSphere(Vector3d A, double a, Vector3d P) {
-        Vector3d AP = new Vector3d(P).sub(A);
-        return new Vector3d(A).add(AP.normalize().mul(a));
+        Vector3d AP = P.subtract(A);
+        return A.add(AP.normalize().mul(a, a, a));
     }
 
     @Override
     public void onDartAnchored(EntityDart dart) {
         if(dart.isLeft()) {
-            L = dart.getPositionAsVector();
+            L = dart.getPositionVec();
         }
         else {
-            R = dart.getPositionAsVector();
+            R = dart.getPositionVec();
         }
     }
 
@@ -302,26 +302,26 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
 
     @Override
     public void applyBoost() {
-        Vec3d look = player.getLookVec();
-        Vector3d boost = (new Vector3d(look.xCoord, look.yCoord, look.zCoord)).mul(BOOST);
+        Vector3d look = player.getLookVec();
+        Vector3d boost = look.mul(BOOST, BOOST, BOOST);
         Vector3d v = calculateVelocity();
         setPlayerVelocity(v.add(boost));
     }
 
     private Vector3d calculateOldPosition() {
-        return new Vector3d(player.posX, player.posY, player.posZ);
+        return new Vector3d(player.getPosX(), player.getPosY(), player.getPosZ());
     }
 
     private Vector3d calculateNewPosition(Vector3d p, Vector3d v) {
-        return new Vector3d(p).add(v);
+        return p.add(v);
     }
 
     private Vector3d calculateVelocity() {
-        return new Vector3d(player.motionX, player.motionY, player.motionZ);
+        return player.getMotion();
     }
 
     private Vector3d calculateVelocity(Vector3d p_new, Vector3d p_old) {
-        return new Vector3d(p_new).sub(p_old);
+        return p_new.subtract(p_old);
     }
 
     private Vector3d getAnchoredDartPosition(EntityDart dart) {
@@ -330,12 +330,12 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
         }
         if(dart.isLeft()) {
             if(L == null) {
-                L = dart.isHooked()?dart.getPositionAsVector():null;
+                L = dart.isHooked()?dart.getPositionVec():null;
             }
             return L;
         } else {
             if(R == null) {
-                R = dart.isHooked()?dart.getPositionAsVector():null;
+                R = dart.isHooked()?dart.getPositionVec():null;
             }
             return R;
         }
@@ -343,9 +343,9 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
 
     /** Sets the player's velocity to correspond to a certain velocity given by vector V */
     private void setPlayerVelocity(Vector3d V) {
-        double vX = V.x();
-        double vY = V.y();
-        double vZ = V.z();
+        double vX = V.getX();
+        double vY = V.getY();
+        double vZ = V.getZ();
         if(Double.isNaN(vX)) {
             ManeuverGear.instance.getLogger().debug("vX is Nan");
             vX = 0;
@@ -358,19 +358,17 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
             ManeuverGear.instance.getLogger().debug("vZ is Nan");
             vZ = 0;
         }
-        player.motionX = vX;
-        player.motionY = vY;
-        player.motionZ = vZ;
+        player.setMotion(vX, vY, vZ);
     }
 
     /** checks if the player's distance to the dart is smaller than the cable length */
     private boolean compliesWithConstraint(Vector3d position, EntityDart dart) {
-        return dart==null || !dart.isHooked() || new Vector3d(position).sub(dart.isLeft() ? L : R).length() <= dart.getCableLength();
+        return dart==null || !dart.isHooked() || position.subtract(dart.isLeft() ? L : R).length() <= dart.getCableLength();
     }
 
     /** Returns a vector pointing from the player to the dart */
     private Vector3d getCableVector(Vector3d position, Vector3d dartPosition) {
-        return new Vector3d(position).sub(dartPosition);
+        return position.subtract(dartPosition);
     }
 
     /**
@@ -419,8 +417,8 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
      * @return k
      */
     private double calculateProjectionRatio(Vector3d AB, Vector3d A, Vector3d P) {
-        double a = AB.dot(AB);
-        double b = new Vector3d(P).sub(A).dot(AB);
+        double a = AB.dotProduct(AB);
+        double b = P.subtract(A).dotProduct(AB);
         return b/a;
     }
 }

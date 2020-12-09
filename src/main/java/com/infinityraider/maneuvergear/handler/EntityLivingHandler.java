@@ -1,17 +1,18 @@
 package com.infinityraider.maneuvergear.handler;
 
-import com.infinityraider.maneuvergear.init.ItemRegistry;
+import com.infinityraider.maneuvergear.ManeuverGear;
+import com.infinityraider.maneuvergear.registry.ItemRegistry;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.boss.EntityWither;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.boss.WitherEntity;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Hand;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class EntityLivingHandler {
     private static final EntityLivingHandler INSTANCE = new EntityLivingHandler();
@@ -25,16 +26,16 @@ public class EntityLivingHandler {
     @SubscribeEvent
     @SuppressWarnings("unused")
     public void onPlayerFall(LivingHurtEvent event) {
-        if(!(event.getEntity() instanceof EntityPlayer)) {
+        if(!(event.getEntity() instanceof PlayerEntity)) {
             return;
         }
         if(!event.getSource().damageType.equals(DamageSource.FALL.getDamageType())) {
             return;
         }
-        EntityPlayer player = (EntityPlayer) event.getEntity();
-        ItemStack boots = player.getItemStackFromSlot(EntityEquipmentSlot.FEET);
+        PlayerEntity player = (PlayerEntity) event.getEntity();
+        ItemStack boots = player.getItemStackFromSlot(EquipmentSlotType.FEET);
         if(boots != null && boots.getItem() == ItemRegistry.getInstance().itemFallBoots) {
-            event.setAmount((1.0F-ConfigurationHandler.getInstance().bootFallDamageReduction)*event.getAmount());
+            event.setAmount((1.0F - ManeuverGear.instance.getConfig().getBootFallDmgReduction())*event.getAmount());
         }
 
     }
@@ -45,16 +46,17 @@ public class EntityLivingHandler {
         if(ItemRegistry.getInstance().itemRecord == null) {
             return;
         }
-        if(!(event.getEntity() instanceof EntityWither)) {
+        if(!(event.getEntity() instanceof WitherEntity)) {
             return;
         }
-        Entity killer = event.getSource().getSourceOfDamage();
-        if(event.isRecentlyHit() && killer != null && killer instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer) killer;
-            ItemStack left = player.getHeldItem(EnumHand.MAIN_HAND);
-            ItemStack right = player.getHeldItem(EnumHand.OFF_HAND);
+        Entity killer = event.getSource().getTrueSource();
+        if(event.isRecentlyHit() && killer != null && killer instanceof PlayerEntity) {
+            PlayerEntity player = (PlayerEntity) killer;
+            ItemStack left = player.getHeldItem(Hand.MAIN_HAND);
+            ItemStack right = player.getHeldItem(Hand.OFF_HAND);
             if(isValidStack(left) && isValidStack(right)) {
-                EntityItem drop = new EntityItem(event.getEntity().getEntityWorld(), event.getEntity().posX, event.getEntity().posY+0.5D, event.getEntity().posZ,
+                ItemEntity drop = new ItemEntity(
+                        event.getEntity().getEntityWorld(), event.getEntity().getPosX(), event.getEntity().getPosY()+0.5D, event.getEntity().getPosZ(),
                         new ItemStack(ItemRegistry.getInstance().itemRecord));
                 event.getDrops().add(drop);
             }

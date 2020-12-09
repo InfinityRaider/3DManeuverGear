@@ -1,193 +1,179 @@
 package com.infinityraider.maneuvergear.render;
 
 import com.infinityraider.maneuvergear.entity.EntityDart;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import net.minecraft.util.math.vector.Matrix3f;
+import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3f;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 @MethodsReturnNonnullByDefault
-public class RenderEntityDart extends Render<EntityDart> {
-    public static final ResourceLocation TEXTURE = new ResourceLocation("3d_maneuver_gear:textures/entities/entity_dart.png");
+public class RenderEntityDart extends EntityRenderer<EntityDart> {
+    public static final ResourceLocation TEXTURE = new ResourceLocation("3d_maneuver_gear:textures/entities/dart.png");
+    private static final RenderType RENDER_TYPE = RenderType.getEntityCutout(TEXTURE);
 
-    public RenderEntityDart(RenderManager renderManager) {
+    public RenderEntityDart(EntityRendererManager renderManager) {
         super(renderManager);
     }
 
     @Override
     @ParametersAreNonnullByDefault
-    public void doRender(EntityDart dart, double x, double y, double z, float float1, float partialTicks) {
-        renderEntity(dart, x, y, z, partialTicks);
-        EntityPlayer player = dart.getPlayer();
+    public void render(EntityDart dart, float yaw, float partialTicks, MatrixStack transforms, IRenderTypeBuffer buffer, int light) {
+        this.renderEntity(dart, partialTicks, transforms, buffer, light);
+        PlayerEntity player = dart.getPlayer();
         if (player == null) {
             return;
         }
-        if (this.renderManager.options.thirdPersonView > 0 || player != Minecraft.getMinecraft().player) {
-            this.renderWireThirdPerson(dart, player, x, y, z, partialTicks);
+        if (this.renderManager.options.getPointOfView().ordinal() > 0 || player != Minecraft.getInstance().player) {
+            this.renderWireThirdPerson(dart, player, partialTicks, transforms, buffer);
         } else {
-            renderWireFirstPerson(dart, player, x, y, z, partialTicks);
+            renderWireFirstPerson(dart, player, partialTicks, transforms, buffer);
         }
     }
 
-    private void renderEntity(EntityDart entity, double x, double y, double z, float partialTicks) {
-        this.bindEntityTexture(entity);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        GlStateManager.pushMatrix();
-        GlStateManager.translate((float) x, (float) y, (float) z);
-        GlStateManager.rotate(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks - 90.0F, 0.0F, 1.0F, 0.0F);
-        GlStateManager.rotate(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, 0.0F, 0.0F, 1.0F);
-        Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer buffer = tessellator.getBuffer();
-        int i = 0;
-        float f = 0.0F;
-        float f1 = 0.5F;
-        float f2 = (float) (i * 10) / 32.0F;
-        float f3 = (float) (5 + i * 10) / 32.0F;
-        float f4 = 0.0F;
-        float f5 = 0.15625F;
-        float f6 = (float) (5 + i * 10) / 32.0F;
-        float f7 = (float) (10 + i * 10) / 32.0F;
-        float f8 = 0.05625F;
-        GlStateManager.enableRescaleNormal();
-        float f9 = -partialTicks;
+    private void renderEntity(EntityDart dart, float partialTicks, MatrixStack transforms, IRenderTypeBuffer buffer, int light) {
+        transforms.push();
 
-        if (f9 > 0.0F) {
-            float f10 = -MathHelper.sin(f9 * 3.0F) * f9;
-            GlStateManager.rotate(f10, 0.0F, 0.0F, 1.0F);
+        transforms.rotate(Vector3f.YP.rotationDegrees(MathHelper.lerp(partialTicks, dart.prevRotationYaw, dart.rotationYaw) - 90.0F));
+        transforms.rotate(Vector3f.ZP.rotationDegrees(MathHelper.lerp(partialTicks, dart.prevRotationPitch, dart.rotationPitch)));
+
+        transforms.rotate(Vector3f.XP.rotationDegrees(45.0F));
+        transforms.scale(0.05625F, 0.05625F, 0.05625F);
+        transforms.translate(-4.0D, 0.0D, 0.0D);
+
+        IVertexBuilder ivertexbuilder = buffer.getBuffer(RENDER_TYPE);
+        MatrixStack.Entry entry = transforms.getLast();
+        Matrix4f matrix4f = entry.getMatrix();
+        Matrix3f matrix3f = entry.getNormal();
+
+        this.addQuadVertex(matrix4f, matrix3f, ivertexbuilder, -7, -2, -2, 0.0F, 0.15625F, -1, 0, 0, light);
+        this.addQuadVertex(matrix4f, matrix3f, ivertexbuilder, -7, -2, 2, 0.15625F, 0.15625F, -1, 0, 0, light);
+        this.addQuadVertex(matrix4f, matrix3f, ivertexbuilder, -7, 2, 2, 0.15625F, 0.3125F, -1, 0, 0, light);
+        this.addQuadVertex(matrix4f, matrix3f, ivertexbuilder, -7, 2, -2, 0.0F, 0.3125F, -1, 0, 0, light);
+
+        this.addQuadVertex(matrix4f, matrix3f, ivertexbuilder, -7, 2, -2, 0.0F, 0.15625F, 1, 0, 0, light);
+        this.addQuadVertex(matrix4f, matrix3f, ivertexbuilder, -7, 2, 2, 0.15625F, 0.15625F, 1, 0, 0, light);
+        this.addQuadVertex(matrix4f, matrix3f, ivertexbuilder, -7, -2, 2, 0.15625F, 0.3125F, 1, 0, 0, light);
+        this.addQuadVertex(matrix4f, matrix3f, ivertexbuilder, -7, -2, -2, 0.0F, 0.3125F, 1, 0, 0, light);
+
+        for(int j = 0; j < 4; ++j) {
+            transforms.rotate(Vector3f.XP.rotationDegrees(90.0F));
+            this.addQuadVertex(matrix4f, matrix3f, ivertexbuilder, -8, -2, 0, 0.0F, 0.0F, 0, 1, 0, light);
+            this.addQuadVertex(matrix4f, matrix3f, ivertexbuilder, 8, -2, 0, 0.5F, 0.0F, 0, 1, 0, light);
+            this.addQuadVertex(matrix4f, matrix3f, ivertexbuilder, 8, 2, 0, 0.5F, 0.15625F, 0, 1, 0, light);
+            this.addQuadVertex(matrix4f, matrix3f, ivertexbuilder, -8, 2, 0, 0.0F, 0.15625F, 0, 1, 0, light);
         }
-
-        GlStateManager.rotate(45.0F, 1.0F, 0.0F, 0.0F);
-        GlStateManager.scale(f8, f8, f8);
-        GlStateManager.translate(-4.0F, 0.0F, 0.0F);
-        GL11.glNormal3f(f8, 0.0F, 0.0F);
-        buffer.begin(7, DefaultVertexFormats.POSITION_TEX);
-        buffer.pos(-7.0D, -2.0D, -2.0D).tex((double) f4, (double) f6).endVertex();
-        buffer.pos(-7.0D, -2.0D, 2.0D).tex((double) f5, (double) f6).endVertex();
-        buffer.pos(-7.0D, 2.0D, 2.0D).tex((double) f5, (double) f7).endVertex();
-        buffer.pos(-7.0D, 2.0D, -2.0D).tex((double) f4, (double) f7).endVertex();
-        tessellator.draw();
-        GL11.glNormal3f(-f8, 0.0F, 0.0F);
-        buffer.begin(7, DefaultVertexFormats.POSITION_TEX);
-        buffer.pos(-7.0D, 2.0D, -2.0D).tex((double) f4, (double) f6).endVertex();
-        buffer.pos(-7.0D, 2.0D, 2.0D).tex((double) f5, (double) f6).endVertex();
-        buffer.pos(-7.0D, -2.0D, 2.0D).tex((double) f5, (double) f7).endVertex();
-        buffer.pos(-7.0D, -2.0D, -2.0D).tex((double) f4, (double) f7).endVertex();
-        tessellator.draw();
-
-        for (int j = 0; j < 4; ++j) {
-            GlStateManager.rotate(90.0F, 1.0F, 0.0F, 0.0F);
-            GL11.glNormal3f(0.0F, 0.0F, f8);
-            buffer.begin(7, DefaultVertexFormats.POSITION_TEX);
-            buffer.pos(-8.0D, -2.0D, 0.0D).tex((double) f, (double) f2).endVertex();
-            buffer.pos(8.0D, -2.0D, 0.0D).tex((double) f1, (double) f2).endVertex();
-            buffer.pos(8.0D, 2.0D, 0.0D).tex((double) f1, (double) f3).endVertex();
-            buffer.pos(-8.0D, 2.0D, 0.0D).tex((double) f, (double) f3).endVertex();
-            tessellator.draw();
-        }
-
-        GlStateManager.disableRescaleNormal();
-        GlStateManager.popMatrix();
+        transforms.pop();
     }
 
-    private void renderWireFirstPerson(EntityDart dart, EntityPlayer player, double x, double y, double z, float partialTicks) {
-        Tessellator tessellator = Tessellator.getInstance();
+    private void renderWireFirstPerson(EntityDart dart, PlayerEntity player, float partialTicks, MatrixStack transforms, IRenderTypeBuffer buffer) {
         boolean left = dart.isLeft();
-        float yaw = -(player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * partialTicks) * 0.017453292F;
-        float pitch = -(player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * partialTicks) * 0.017453292F;
+        float yaw = -(player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * partialTicks) * ((float) Math.PI / 180F);
+        float pitch = -(player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * partialTicks) * ((float) Math.PI / 180F);
         //this vector defines the location of the points on the screen in first person
         double c1 = (left ? 0.8D : -0.8D);
         double c2 = -0.8D;
         double c3 = 1D;
-        double deltaY = (double) player.getEyeHeight();
-        Vec3d vec3d = new Vec3d(c1, c2, c3);
+        float deltaY = player.getEyeHeight();
+        Vector3d vec3d = new Vector3d(c1, c2, c3);
         vec3d = vec3d.rotatePitch(pitch);
         vec3d = vec3d.rotateYaw(yaw);
         //find the player's position, interpolating based on his movement
-        double x_P = player.prevPosX + (player.posX - player.prevPosX) * (double) partialTicks + vec3d.xCoord;
-        double y_P = player.prevPosY + (player.posY - player.prevPosY) * (double) partialTicks + vec3d.yCoord;
-        double z_P = player.prevPosZ + (player.posZ - player.prevPosZ) * (double) partialTicks + vec3d.zCoord;
-        //interpolate the entity's position based on its movement
-        double x_D = dart.prevPosX + (dart.posX - dart.prevPosX) * (double) partialTicks;
-        double y_D = dart.prevPosY + (dart.posY - dart.prevPosY) * (double) partialTicks + 0.25D;
-        double z_D = dart.prevPosZ + (dart.posZ - dart.prevPosZ) * (double) partialTicks;
+        double x_P = MathHelper.lerp(partialTicks, player.prevPosX, player.getPosX()) + vec3d.getX();
+        double y_P = MathHelper.lerp(partialTicks, player.prevPosY, player.getPosY()) + vec3d.getY();
+        double z_P = MathHelper.lerp(partialTicks, player.prevPosZ, player.getPosZ()) + vec3d.getZ();
+        //interpolate the dart's position based on its movement
+        double x_D = MathHelper.lerp(partialTicks, dart.prevPosX, dart.getPosX());
+        double y_D = MathHelper.lerp(partialTicks, dart.prevPosY, dart.getPosY()) + 0.25D;
+        double z_D = MathHelper.lerp(partialTicks, dart.prevPosZ, dart.getPosZ());
         //transform the coordinates of the cable's end attached to the player to the reference system of the dart
-        double x_DP = (double) ((float) (x_P - x_D));
-        double y_DP = (double) ((float) (y_P - y_D)) + deltaY;
-        double z_DP = (double) ((float) (z_P - z_D));
+        float delta_x = (float) (x_P - x_D);
+        float delta_y = (float) (y_P - y_D) + deltaY;
+        float delta_z = (float) (z_P - z_D);
         //draw the wire
-        renderWire(tessellator, x, y, z, x_DP, y_DP, z_DP, getAmplitude(dart));
+        renderWire(transforms, buffer, delta_x, delta_y, delta_z, getAmplitude(dart));
     }
 
-    private void renderWireThirdPerson(EntityDart dart, EntityPlayer player, double x, double y, double z, float partialTicks) {
-        Tessellator tessellator = Tessellator.getInstance();
+    private void renderWireThirdPerson(EntityDart dart, PlayerEntity player, float partialTicks, MatrixStack transforms, IRenderTypeBuffer buffer) {
         boolean left = dart.isLeft();
         //find the player's position, interpolating based on his movement
-        float yaw = (player.prevRenderYawOffset + (player.renderYawOffset - player.prevRenderYawOffset) * partialTicks) * 0.017453292F;
+        float yaw = (player.prevRenderYawOffset + (player.renderYawOffset - player.prevRenderYawOffset) * partialTicks) * ((float) Math.PI / 180F);
         double sinYaw = MathHelper.sin(yaw);
         double cosYaw = MathHelper.cos(yaw);
-        double offsetX = (left ? -1 : 1) * 0.31D;
+        double offsetX = (left ? -1 : 1) * 0.35D;
         double offsetY = 0.525D;
         double offsetZ = 0.125D;
-        double x_P = player.prevPosX + (player.posX - player.prevPosX) * (double)partialTicks - cosYaw*offsetX - sinYaw*offsetZ;
-        double y_P = player.prevPosY + (double)player.getEyeHeight() + (player.posY - player.prevPosY)*partialTicks - offsetY;
-        double z_P = player.prevPosZ + (player.posZ - player.prevPosZ) * (double)partialTicks - sinYaw*offsetX + cosYaw*offsetZ;
-        double deltaY = player.isSneaking() ? -0.1875D : 0.0D;
+        double x_P = player.prevPosX + (player.getPosX() - player.prevPosX) * (double)partialTicks - cosYaw*offsetX - sinYaw*offsetZ;
+        double y_P = player.prevPosY + (double)player.getEyeHeight() + (player.getPosY() - player.prevPosY)*partialTicks - offsetY;
+        double z_P = player.prevPosZ + (player.getPosZ() - player.prevPosZ) * (double)partialTicks - sinYaw*offsetX + cosYaw*offsetZ;
+        float deltaY = player.isSneaking() ? -0.1875F : 0.0F;
         //interpolate the dart's position based on its movement
-        double x_D = dart.prevPosX + (dart.posX - dart.prevPosX) * (double)partialTicks;
-        double y_D = dart.prevPosY + (dart.posY - dart.prevPosY) * (double)partialTicks + 0.25D;
-        double z_D = dart.prevPosZ + (dart.posZ - dart.prevPosZ) * (double)partialTicks;
+        double x_D = MathHelper.lerp(partialTicks, dart.prevPosX, dart.getPosX());
+        double y_D = MathHelper.lerp(partialTicks, dart.prevPosY, dart.getPosY()) + 0.25D;
+        double z_D = MathHelper.lerp(partialTicks, dart.prevPosZ, dart.getPosZ());
         //transform the coordinates of the cable's end attached to the player to the reference system of the dart
-        double x_DP = (double)((float)(x_P - x_D ));
-        double y_DP = (double)((float)(y_P - y_D)) + deltaY;
-        double z_DP = (double)((float)(z_P - z_D));
+        float delta_x = (float) (x_P - x_D);
+        float delta_y = (float) (y_P - y_D) + deltaY;
+        float delta_z = (float) (z_P - z_D);
         //draw the wire
-        renderWire(tessellator, x, y, z, x_DP, y_DP, z_DP, getAmplitude(dart));
+        renderWire(transforms, buffer, delta_x, delta_y, delta_z, getAmplitude(dart));
     }
 
-    private void renderWire(Tessellator tessellator, double x, double y, double z, double X, double Y, double Z, double A) {
-        VertexBuffer buffer = tessellator.getBuffer();
-        GlStateManager.disableTexture2D();
-        GlStateManager.disableLighting();
-        buffer.begin(3, DefaultVertexFormats.POSITION_COLOR);
-        byte n = 16;
-        for (int i = 0; i <= n; ++i) {
-            float t = (float) i / (float) n;
-            buffer.pos(x + X * ((double) t), y + Y * ((double) t) - A * MathHelper.sin((float) Math.PI * i / n), z + Z * ((double) t)).color(0, 0, 0, 255).endVertex();
+    private void renderWire(MatrixStack transforms, IRenderTypeBuffer buffer, float delta_x, float delta_y, float delta_z, float amplitude) {
+        IVertexBuilder builder = buffer.getBuffer(RenderType.getLines());
+        Matrix4f matrix = transforms.getLast().getMatrix();
+        int n = 16;
+        for(int i = 0; i < n; ++i) {
+            this.addLineVertex(delta_x, delta_y, delta_z, builder, matrix, fraction(i, n), amplitude);
+            this.addLineVertex(delta_x, delta_y, delta_z, builder, matrix, fraction(i + 1, n), amplitude);
         }
-        tessellator.draw();
-        GlStateManager.enableLighting();
-        GlStateManager.enableTexture2D();
     }
 
-    private double getAmplitude(EntityDart dart) {
+    private float fraction(int step, int max) {
+        return (float)step / (float)max;
+    }
+
+    private void addQuadVertex(Matrix4f matrix, Matrix3f normals, IVertexBuilder vertexBuilder, int x, int y, int z, float u, float v, int n_x, int n_y, int n_z, int light) {
+        vertexBuilder.pos(matrix, (float)x, (float)y, (float)z).color(255, 255, 255, 255).tex(u, v).overlay(OverlayTexture.NO_OVERLAY).lightmap(light).normal(normals, (float)n_x, (float)n_z, (float)n_y).endVertex();
+    }
+
+    private void addLineVertex(float x, float y, float z, IVertexBuilder builder, Matrix4f matrix, float fraction, float amplitude) {
+        builder.pos(matrix, x * fraction, y * fraction - amplitude * MathHelper.sin((float) Math.PI * fraction), z * fraction)
+                .color(0, 0, 0, 255
+                ).endVertex();
+    }
+
+    private float getAmplitude(EntityDart dart) {
         double l = dart.getCableLength();
         double d = dart.calculateDistanceToPlayer();
         if (d == 0) {
-            return l / 2.0;
+            return (float) (l / 2.0);
         }
         if (d >= l) {
             return 0;
         }
-        return l / 2.0 - d / 2.0;
+        return (float) (l / 2.0 - d / 2.0);
     }
 
     @Override
     @ParametersAreNonnullByDefault
-    protected ResourceLocation getEntityTexture(EntityDart entity) {
+    public ResourceLocation getEntityTexture(EntityDart entity) {
         return TEXTURE;
     }
 }

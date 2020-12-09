@@ -1,45 +1,41 @@
 package com.infinityraider.maneuvergear.network;
 
-import com.infinityraider.maneuvergear.utility.BaublesWrapper;
 import com.infinityraider.infinitylib.network.MessageBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
+import com.infinityraider.maneuvergear.item.ItemManeuverGear;
+import com.infinityraider.maneuvergear.utility.ExtendedInventoryHelper;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraft.util.Hand;
+import net.minecraftforge.fml.network.NetworkDirection;
+import net.minecraftforge.fml.network.NetworkEvent;
 
-public class MessageEquipManeuverGear extends MessageBase<MessageManeuverGearEquipped> {
-    EnumHand hand;
+public class MessageEquipManeuverGear extends MessageBase {
+    Hand hand;
 
     public MessageEquipManeuverGear() {}
 
-    public MessageEquipManeuverGear(EnumHand hand) {
+    public MessageEquipManeuverGear(Hand hand) {
         this();
         this.hand = hand;
     }
 
     @Override
-    public Side getMessageHandlerSide() {
-        return Side.SERVER;
+    public NetworkDirection getMessageDirection() {
+        return NetworkDirection.PLAY_TO_SERVER;
     }
 
     @Override
-    protected void processMessage(MessageContext ctx) {
-        EntityPlayer player = ctx.getServerHandler().playerEntity;
-        ItemStack stack = player.getHeldItem(this.hand);
-        if (stack != null) {
-            IInventory baubles = BaublesWrapper.getInstance().getBaubles(player);
-            ItemStack belt = baubles.getStackInSlot(BaublesWrapper.BELT_SLOT);
-            belt = belt == null ? null : belt.copy();
-            baubles.setInventorySlotContents(BaublesWrapper.BELT_SLOT, stack.copy());
-            player.inventory.setInventorySlotContents(player.inventory.currentItem, belt);
+    protected void processMessage(NetworkEvent.Context ctx) {
+        ServerPlayerEntity player = ctx.getSender();
+        if(player != null) {
+            ItemStack stack = player.getHeldItem(this.hand);
+            if (stack != null && !stack.isEmpty() && stack.getItem() instanceof ItemManeuverGear) {
+                ItemStack currentBelt = ExtendedInventoryHelper.getStackInBeltSlot(player);
+                currentBelt = currentBelt == null ? ItemStack.EMPTY : currentBelt.copy();
+                ExtendedInventoryHelper.setStackInBeltSlot(player, stack.copy());
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, currentBelt);
+            }
         }
-    }
-
-
-    @Override
-    protected MessageManeuverGearEquipped getReply(MessageContext ctx) {
-        return new MessageManeuverGearEquipped();
+        new MessageManeuverGearEquipped().sendTo(player);
     }
 }

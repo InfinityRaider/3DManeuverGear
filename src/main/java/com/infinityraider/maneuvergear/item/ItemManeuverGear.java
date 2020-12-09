@@ -1,63 +1,50 @@
 package com.infinityraider.maneuvergear.item;
 
-import baubles.api.BaubleType;
-import baubles.api.IBauble;
-import baubles.api.render.IRenderBauble;
 import com.infinityraider.maneuvergear.handler.DartHandler;
 import com.infinityraider.maneuvergear.network.MessageEquipManeuverGear;
 import com.infinityraider.maneuvergear.physics.PhysicsEngine;
 import com.infinityraider.maneuvergear.reference.Names;
 import com.infinityraider.maneuvergear.reference.Reference;
-import com.infinityraider.maneuvergear.render.RenderManeuverGear;
-import com.infinityraider.infinitylib.item.IItemWithModel;
 import com.infinityraider.infinitylib.item.ItemBase;
-import com.infinityraider.infinitylib.utility.IRecipeRegister;
-import com.infinityraider.infinitylib.utility.TranslationHelper;
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.Tuple;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @MethodsReturnNonnullByDefault
-public class ItemManeuverGear extends ItemBase implements IBauble, IRecipeRegister, IItemWithModel, IRenderBauble {
+public class ItemManeuverGear extends ItemBase {
     public static int MAX_HOLSTERED_BLADES = 4;
 
     public ItemManeuverGear() {
-        super(Names.Objects.MANEUVER_GEAR);
-        this.setCreativeTab(CreativeTabs.COMBAT);
-        this.setMaxStackSize(1);
-    }
-
-    @Override
-    public List<String> getOreTags() {
-        return Collections.emptyList();
+        super(Names.Items.MANEUVER_GEAR, new Properties()
+                .group(ItemGroup.COMBAT)
+                .maxStackSize(1));
     }
 
     @Override
     @ParametersAreNonnullByDefault
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
         if(world.isRemote) {
             new MessageEquipManeuverGear(hand).sendToServer();
         }
-        return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
+        return new ActionResult<>(ActionResultType.SUCCESS, player.getHeldItem(hand));
     }
 
     /**
@@ -70,11 +57,11 @@ public class ItemManeuverGear extends ItemBase implements IBauble, IRecipeRegist
         if(!isValidManeuverGearStack(stack)) {
             return 0;
         }
-        NBTTagCompound tag = stack.getTagCompound();
+        CompoundNBT tag = stack.getTag();
         if(tag == null) {
             return 0;
         }
-        return left ? tag.getInteger(Names.NBT.LEFT) : tag.getInteger(Names.NBT.RIGHT);
+        return left ? tag.getInt(Names.NBT.LEFT) : tag.getInt(Names.NBT.RIGHT);
     }
 
     /**
@@ -88,28 +75,28 @@ public class ItemManeuverGear extends ItemBase implements IBauble, IRecipeRegist
         if(!isValidManeuverGearStack(stack)) {
             return amount;
         }
-        NBTTagCompound tag = stack.getTagCompound();
+        CompoundNBT tag = stack.getTag();
         if(tag == null) {
-            tag = new NBTTagCompound();
-            stack.setTagCompound(tag);
+            tag = new CompoundNBT();
+            stack.setTag(tag);
         }
         int current = getBladeCount(stack, left);
         if(left) {
             int maxToAdd = getMaxBlades() - current;
             if(amount >= maxToAdd) {
-                tag.setInteger(Names.NBT.LEFT, getMaxBlades());
+                tag.putInt(Names.NBT.LEFT, getMaxBlades());
                 return amount - maxToAdd;
             } else {
-                tag.setInteger(Names.NBT.LEFT, current + amount);
+                tag.putInt(Names.NBT.LEFT, current + amount);
                 return 0;
             }
         } else {
             int maxToAdd = getMaxBlades() - current;
             if(amount >= maxToAdd) {
-                tag.setInteger(Names.NBT.RIGHT, getMaxBlades());
+                tag.putInt(Names.NBT.RIGHT, getMaxBlades());
                 return amount - maxToAdd;
             } else {
-                tag.setInteger(Names.NBT.RIGHT, current + amount);
+                tag.putInt(Names.NBT.RIGHT, current + amount);
                 return 0;
             }
         }
@@ -126,25 +113,25 @@ public class ItemManeuverGear extends ItemBase implements IBauble, IRecipeRegist
         if(!isValidManeuverGearStack(stack)) {
             return 0;
         }
-        NBTTagCompound tag = stack.getTagCompound();
+        CompoundNBT tag = stack.getTag();
         if(tag == null) {
             return 0;
         }
         int current = getBladeCount(stack, left);
         if(left) {
             if(amount >= current) {
-                tag.setInteger(Names.NBT.LEFT, 0);
+                tag.putInt(Names.NBT.LEFT, 0);
                 return current;
             } else {
-                tag.setInteger(Names.NBT.LEFT, current - amount);
+                tag.putInt(Names.NBT.LEFT, current - amount);
                 return amount;
             }
         } else {
             if(amount >= current) {
-                tag.setInteger(Names.NBT.RIGHT, 0);
+                tag.putInt(Names.NBT.RIGHT, 0);
                 return current;
             } else {
-                tag.setInteger(Names.NBT.RIGHT, current - amount);
+                tag.putInt(Names.NBT.RIGHT, current - amount);
                 return amount;
             }
         }
@@ -167,103 +154,68 @@ public class ItemManeuverGear extends ItemBase implements IBauble, IRecipeRegist
         return stack != null && stack.getItem() instanceof ItemManeuverGear;
     }
 
-    @Override
-    public BaubleType getBaubleType(ItemStack stack) {
-        return BaubleType.BELT;
-    }
+    //TODO: port baubles behaviour to curios
 
-    /** This handles the movement of the player */
-    @Override
-    public void onWornTick(ItemStack stack, EntityLivingBase entity) {
-        if(entity==null || !(entity instanceof EntityPlayer)) {
+    public void onWornTick(ItemStack stack, LivingEntity entity) {
+        if(entity==null || !(entity instanceof PlayerEntity)) {
             return;
         }
-        EntityPlayer player = (EntityPlayer) entity;
+        PlayerEntity player = (PlayerEntity) entity;
         boolean remote = player.getEntityWorld().isRemote;
         if(remote && stack!=null && stack.getItem()==this) {
-            boolean b = DartHandler.instance.isWearingGear(player);
-            if(DartHandler.instance.isWearingGear(player) && (DartHandler.instance.getLeftDart(player)!=null || DartHandler.instance.getRightDart(player)!=null)) {
+            if(DartHandler.instance.isWearingGear(player)
+                    && (DartHandler.instance.getLeftDart(player)!=null || DartHandler.instance.getRightDart(player)!=null)) {
+
                 PhysicsEngine engine = DartHandler.instance.getPhysicsEngine(player);
                 engine.updateTick();
             }
         }
     }
 
-    @Override
-    public void onEquipped(ItemStack stack, EntityLivingBase entity) {
-        if(entity==null || !(entity instanceof EntityPlayer)) {
+    public void onEquipped(ItemStack stack, LivingEntity entity) {
+        if(entity==null || !(entity instanceof PlayerEntity)) {
             return;
         }
-        EntityPlayer player = (EntityPlayer) entity;
+        PlayerEntity player = (PlayerEntity) entity;
         if(stack!=null && stack.getItem()==this) {
             DartHandler.instance.equipGear(player);
         }
     }
 
-    @Override
-    public void onUnequipped(ItemStack stack, EntityLivingBase entity) {
-        if(entity==null || !(entity instanceof EntityPlayer)) {
+    public void onUnequipped(ItemStack stack, LivingEntity entity) {
+        if(entity==null || !(entity instanceof PlayerEntity)) {
             return;
         }
-        EntityPlayer player = (EntityPlayer) entity;
+        PlayerEntity player = (PlayerEntity) entity;
         if(stack!=null && stack.getItem()==this) {
             DartHandler.instance.unEquipGear(player);
         }
     }
 
-    @Override
-    public boolean canEquip(ItemStack stack, EntityLivingBase entityL) {
+    public boolean canEquip(ItemStack stack, LivingEntity entity) {
+        return entity instanceof PlayerEntity;
+    }
+
+    public boolean canUnequip(ItemStack stack, LivingEntity entityLivingBase) {
         return true;
     }
 
-    @Override
-    public boolean canUnequip(ItemStack stack, EntityLivingBase entityLivingBase) {
+    public boolean willAutoSync(ItemStack stack, LivingEntity player) {
         return true;
     }
 
-    @Override
-    public boolean willAutoSync(ItemStack stack, EntityLivingBase player) {
-        return true;
+    public void onPlayerBaubleRender(ItemStack stack, PlayerEntity entityPlayer, RenderType renderType, float partialTick) {
+        //RenderManeuverGear.instance.renderManeuverGear(entityPlayer, stack, renderType, partialTick);
     }
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void onPlayerBaubleRender(ItemStack stack, EntityPlayer entityPlayer, RenderType renderType, float partialTick) {
-        RenderManeuverGear.instance.renderBauble(entityPlayer, stack, renderType, partialTick);
-    }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean flag) {
-        if(stack != null) {
-            list.add(TranslationHelper.translateToLocal("3DManeuverGear.ToolTip.belt"));
-            list.add(TranslationHelper.translateToLocal("3DManeuverGear.ToolTip.leftBlades")+": "+this.getBladeCount(stack, true)+"/"+MAX_HOLSTERED_BLADES);
-            list.add(TranslationHelper.translateToLocal("3DManeuverGear.ToolTip.rightBlades")+": "+this.getBladeCount(stack, false)+"/"+MAX_HOLSTERED_BLADES);
-        }
-    }
-
-    @Override
-    public void registerRecipes() {
-        this.getRecipes().forEach(GameRegistry::addRecipe);
-    }
-
-    public List<IRecipe> getRecipes() {
-        List<IRecipe> list = new ArrayList<>();
-        list.add(new ShapedOreRecipe(this, "cnc", "lgl", "hbh",
-                'c', ItemResource.EnumSubItems.CABLE_COIL.getStack(),
-                'n', ItemResource.EnumSubItems.GAS_NOZZLE.getStack(),
-                'l', ItemResource.EnumSubItems.GRAPPLE_LAUNCHER.getStack(),
-                'g', ItemResource.EnumSubItems.GIRDLE.getStack(),
-                'h', ItemResource.EnumSubItems.BLADE_HOLSTER_ASSEMBLY.getStack(),
-                'b', ItemResource.EnumSubItems.BELT.getStack()));
-        return list;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public List<Tuple<Integer, ModelResourceLocation>> getModelDefinitions() {
-        List<Tuple<Integer, ModelResourceLocation>> list = new ArrayList<>();
-        list.add(new Tuple<>(0, new ModelResourceLocation(Reference.MOD_ID.toLowerCase() + ":maneuver_gear", "inventory")));
-        return list;
+    @OnlyIn(Dist.CLIENT)
+    public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag advanced) {
+        tooltip.add(new TranslationTextComponent(Reference.MOD_ID + ".tooltip." + this.getInternalName() + "_1"));
+        tooltip.add(new TranslationTextComponent(Reference.MOD_ID + ".tooltip.left_blades")
+                .append(new StringTextComponent(": " + this.getBladeCount(stack, true) + "/" + MAX_HOLSTERED_BLADES)));
+        tooltip.add(new TranslationTextComponent(Reference.MOD_ID + ".tooltip.right_blades")
+                .append(new StringTextComponent(": " + this.getBladeCount(stack, false) + "/" + MAX_HOLSTERED_BLADES)));
     }
 }

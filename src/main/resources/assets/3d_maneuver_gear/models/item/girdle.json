@@ -1,7 +1,7 @@
 {
   "parent": "builtin/generated",
   "textures": {
-    "layer0": "3d_maneuver_gear:items/item_component.girdle"
+    "layer0": "3d_maneuver_gear:items/girdle"
   },
   "display": {
     "thirdperson": {

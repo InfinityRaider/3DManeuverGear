@@ -1,7 +1,7 @@
 {
   "parent": "builtin/generated",
   "textures": {
-    "layer0": "3d_maneuver_gear:items/item_component.gas_canister"
+    "layer0": "3d_maneuver_gear:items/gas_canister"
   },
   "display": {
     "thirdperson": {

@@ -1,52 +1,48 @@
 package com.infinityraider.maneuvergear.item;
 
+import com.infinityraider.infinitylib.item.IInfinityItem;
 import com.infinityraider.maneuvergear.ManeuverGear;
 import com.infinityraider.maneuvergear.reference.Names;
 import com.infinityraider.maneuvergear.reference.Reference;
-import com.infinityraider.infinitylib.item.IItemWithModel;
+import com.infinityraider.maneuvergear.registry.SoundRegistry;
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.MusicDiscItem;
+import net.minecraft.item.Rarity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.Tuple;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @MethodsReturnNonnullByDefault
-public class ItemRecord extends net.minecraft.item.ItemRecord implements IItemWithModel {
-    public ItemRecord(String name) {
-        super(name, registerSoundAndCreateRecord(name));
+public class ItemRecord extends MusicDiscItem implements IInfinityItem {
+    public ItemRecord() {
+        super(16, ItemRecord::getSoundEvent, new Properties()
+                .maxStackSize(1).group(ItemGroup.MISC).rarity(Rarity.RARE));
     }
 
     @Override
     public String getInternalName() {
-        return Names.Objects.RECORD;
-    }
-
-    @Override
-    public List<String> getOreTags() {
-        return Collections.emptyList();
+        return Names.Items.RECORD;
     }
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return !ManeuverGear.instance.getConfig().disableMusicDisc();
     }
 
-    @Override
-    public ResourceLocation getRecordResource(String name) {
-        return new ResourceLocation(Reference.MOD_ID.toLowerCase(), name);
-    }
-
-    @Override
-    public List<Tuple<Integer, ModelResourceLocation>> getModelDefinitions() {
-        List<Tuple<Integer, ModelResourceLocation>> list = new ArrayList<>();
-        list.add(new Tuple<>(0, new ModelResourceLocation(Reference.MOD_ID.toLowerCase() + ":record", "inventory")));
-        return list;
+    private static SoundEvent getSoundEvent() {
+        return SoundRegistry.getInstance().soundEventRecord;
     }
 
     private static SoundEvent registerSoundAndCreateRecord(String name) {

@@ -2,72 +2,143 @@
 // For those who want the bleeding edge
 buildscript {
     repositories {
+        maven { url = 'https://files.minecraftforge.net/maven' }
         jcenter()
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
+        mavenCentral()
+        flatDir{
+            dirs 'lib'
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
     }
 }
-apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'idea'
+apply plugin: 'maven-publish'
 
 // Load Properties
-Properties mod = new Properties()
-mod.load(new FileInputStream("${project.rootDir}/mod.properties"))
+ext.configFile = file('mod.properties')
+ext.config = parseConfig(configFile)
 
-sourceCompatibility = mod.version_java
-targetCompatibility = mod.version_java
-version = "${mod.version_major}.${mod.version_minor}.${mod.version_patch}"
-mod.version = version
-group = "${mod.group}.${mod.id}"
-archivesBaseName = mod.id
+version = "${config.version_major}.${config.version_minor}.${config.version_patch}"
+group = "${config.package}" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = config.id
+
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = "${config.version_java}"
 
 minecraft {
-    version = "${mod.version_minecraft}-${mod.version_forge}"
-    mappings = mod.version_mappings
-    runDir = "/run/${mod.version_minecraft}"
-    makeObfSourceJar = false
-    
-    // Replace mod information in reference class.
-	replaceIn mod.reference_class
-    mod.each { prop ->
-		replace "\${mod.${prop.key}}", prop.value
-		replace "/*^", "\""
-		replace "^*/", "\"; // Default:"
+ mappings channel: "${config.mapping_channel}", version: "${config.mapping_version}"
+    runs {
+        client {
+            workingDirectory project.file('run')
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+            mods {
+                maneuver_gear {
+                    source sourceSets.main
+                }
+                infinitylib {
+                    //This still grabs the sourceSets from the main project, therefore one must manually correct it in runClient afterwards
+                    source project(":lib/InfinityLib").sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run')
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+            mods {
+                maneuver_gear {
+                    source sourceSets.main
+                }
+                infinitylib {
+                    //This still grabs the sourceSets from the main project, therefore one must manually correct it in runServer afterwards
+                    source project(":lib/InfinityLib").sourceSets.main
+                }
+            }
+        }
+    }
+}
+
+repositories {
+    maven {
+        // for JEI
+        url "https://dvs1.progwml6.com/files/maven"
+    }
+    maven {
+        // for Curios
+        name "curios"
+        url "https://maven.theillusivec4.top/"
     }
 }
 
 dependencies {
-    compile project(':lib/InfinityLib')
+    minecraft "net.minecraftforge:forge:${config.version_minecraft}-${config.version_forge}"
+
+    compile project(":lib/InfinityLib")
+
+    compileOnly fg.deobf("mezz.jei:jei-1.16.4:7.6.0.58:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.16.4:7.6.0.58")
+
+    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.4-4.0.3.0:api")
+    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.4-4.0.3.0")
 }
 
 processResources
 {
-    // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+    // make sure to include mods.toml from the main mod
+    from(sourceSets.main.resources.srcDirs) {
+        include 'META-INF/mods.toml'
 
-    // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-                
         // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+        expand 'version': project.version
     }
-        
-    // copy everything else, thats not the mcmod.info
+
+    // from the main mod, copy everything else, thats not the mods.toml
     from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
+        exclude 'META-INF/mods.toml', '**/psd/**'
+    }
+    /*
+    // make sure to include mods.toml from infinitylib
+    from(sourceSets.infinitylib.resources.srcDirs) {
+        include 'META-INF/mods.toml'
+
+        // replace version and mcversion
+        expand 'version': project.version
+    }
+    */
+
+    // from InfinityLib, copy everything else, thats not the mods.toml
+    //from(sourceSets.infinitylib.resources.srcDirs) {
+        //exclude 'META-INF/mods.toml', '**/psd/**'
+    //}
+}
+
+def parseConfig(File config) {
+    config.withReader {
+        def prop = new Properties()
+        prop.load(it)
+        return (new ConfigSlurper().parse(prop))
     }
 }
 
-// Run Stuff
-runClient {
-	if( project.hasProperty('minecraft_username') && project.hasProperty('minecraft_password') ) {
-		args "--username=${project.minecraft_username}"
-		args "--password=${project.minecraft_password}"
-	}
+jar {
+    archiveName = "${baseName} ${version}.${extension}"
+    manifest {
+        attributes([
+                "Specification-Title": "${config.id}",
+                "Specification-Vendor": "${config.author}",
+                "Specification-Version": "1", // We are version 1 of ourselves
+                "Implementation-Title": "${config.name}",
+                "Implementation-Version": "${config.version_major}.${config.version_minor}.${config.version_patch}",
+                "Implementation-Vendor" :"${config.author}",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
 }
