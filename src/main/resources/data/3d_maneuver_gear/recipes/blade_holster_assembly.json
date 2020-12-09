@@ -2,32 +2,28 @@
   "type": "minecraft:crafting_shaped",
   "pattern":
   [
-    "ww ",
-    "iib",
-    "wwl"
+    " g ",
+    "shs",
+    " s "
   ],
   "key":
   {
-    "w":
+    "g":
     {
-      "tag": "minecraft:wool"
+      "item": "3d_maneuver_gear:gas_canister"
     },
-    "i":
+    "h":
     {
-      "tag": "forge:ingots/iron"
+      "item": "3d_maneuver_gear:blade_holster"
     },
-    "b":
+    "s":
     {
-      "item": "minecraft:iron_bars"
-    },
-    "l":
-    {
-      "item": "minecraft:lever"
+      "item": "minecraft:string"
     }
   },
   "result":
   {
-    "item": "3d_maneuver_gear:3d_maneuver_handle",
+    "item": "3d_maneuver_gear:blade_holster_assembly",
     "count": 1
   }
 }

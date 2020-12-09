@@ -2,16 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "pattern":
   [
-    "ww ",
-    "iib",
-    "wwl"
+    "ibi",
+    "bsb",
+    "ibi"
   ],
   "key":
   {
-    "w":
-    {
-      "tag": "minecraft:wool"
-    },
     "i":
     {
       "tag": "forge:ingots/iron"
@@ -20,14 +16,14 @@
     {
       "item": "minecraft:iron_bars"
     },
-    "l":
+    "s":
     {
-      "item": "minecraft:lever"
+      "item": "minecraft:iron_block"
     }
   },
   "result":
   {
-    "item": "3d_maneuver_gear:3d_maneuver_handle",
+    "item": "3d_maneuver_gear:gas_nozzle",
     "count": 1
   }
 }

@@ -2,32 +2,28 @@
   "type": "minecraft:crafting_shaped",
   "pattern":
   [
-    "ww ",
-    "iib",
-    "wwl"
+    "l l",
+    "sjs",
+    "lsl"
   ],
   "key":
   {
-    "w":
-    {
-      "tag": "minecraft:wool"
-    },
-    "i":
-    {
-      "tag": "forge:ingots/iron"
-    },
-    "b":
-    {
-      "item": "minecraft:iron_bars"
-    },
     "l":
     {
-      "item": "minecraft:lever"
+      "item": "minecraft:leather"
+    },
+    "s":
+    {
+      "item": "minecraft:string"
+    },
+    "j":
+    {
+      "item": "minecraft:leather_chestplate"
     }
   },
   "result":
   {
-    "item": "3d_maneuver_gear:3d_maneuver_handle",
+    "item": "3d_maneuver_gear:girdle",
     "count": 1
   }
 }

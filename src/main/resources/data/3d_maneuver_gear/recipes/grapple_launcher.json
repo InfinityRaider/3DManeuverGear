@@ -2,32 +2,32 @@
   "type": "minecraft:crafting_shaped",
   "pattern":
   [
-    "ww ",
-    "iib",
-    "wwl"
+    "iii",
+    "sda",
+    "iii"
   ],
   "key":
   {
-    "w":
-    {
-      "tag": "minecraft:wool"
-    },
     "i":
     {
       "tag": "forge:ingots/iron"
     },
-    "b":
+    "s":
     {
-      "item": "minecraft:iron_bars"
+      "item": "minecraft:string"
     },
-    "l":
+    "d":
     {
-      "item": "minecraft:lever"
+      "item": "minecraft:dispenser"
+    },
+    "a":
+    {
+      "tag": "minecraft:arrows"
     }
   },
   "result":
   {
-    "item": "3d_maneuver_gear:3d_maneuver_handle",
+    "item": "3d_maneuver_gear:grapple_launcher",
     "count": 1
   }
 }

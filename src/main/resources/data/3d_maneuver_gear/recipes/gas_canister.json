@@ -2,15 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "pattern":
   [
-    "ww ",
-    "iib",
-    "wwl"
+    " l ",
+    "isi",
+    "ibi"
   ],
   "key":
   {
-    "w":
+    "s":
     {
-      "tag": "minecraft:wool"
+      "item": "minecraft:slime_ball"
     },
     "i":
     {
@@ -18,7 +18,7 @@
     },
     "b":
     {
-      "item": "minecraft:iron_bars"
+      "item": "minecraft:bucket"
     },
     "l":
     {
@@ -27,7 +27,7 @@
   },
   "result":
   {
-    "item": "3d_maneuver_gear:3d_maneuver_handle",
+    "item": "3d_maneuver_gear:gas_canister",
     "count": 1
   }
 }

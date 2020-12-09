@@ -2,16 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "pattern":
   [
-    "ww ",
-    "iib",
-    "wwl"
+    "ibi",
+    "i i",
+    "iii"
   ],
   "key":
   {
-    "w":
-    {
-      "tag": "minecraft:wool"
-    },
     "i":
     {
       "tag": "forge:ingots/iron"
@@ -19,15 +15,11 @@
     "b":
     {
       "item": "minecraft:iron_bars"
-    },
-    "l":
-    {
-      "item": "minecraft:lever"
     }
   },
   "result":
   {
-    "item": "3d_maneuver_gear:3d_maneuver_handle",
+    "item": "3d_maneuver_gear:blade_holster",
     "count": 1
   }
 }

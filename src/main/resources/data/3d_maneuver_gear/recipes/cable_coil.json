@@ -2,32 +2,24 @@
   "type": "minecraft:crafting_shaped",
   "pattern":
   [
-    "ww ",
-    "iib",
-    "wwl"
+    "sss",
+    "sis",
+    "sss"
   ],
   "key":
   {
-    "w":
+    "s":
     {
-      "tag": "minecraft:wool"
+      "item": "minecraft:string"
     },
     "i":
     {
       "tag": "forge:ingots/iron"
-    },
-    "b":
-    {
-      "item": "minecraft:iron_bars"
-    },
-    "l":
-    {
-      "item": "minecraft:lever"
     }
   },
   "result":
   {
-    "item": "3d_maneuver_gear:3d_maneuver_handle",
+    "item": "3d_maneuver_gear:cable_coil",
     "count": 1
   }
 }
