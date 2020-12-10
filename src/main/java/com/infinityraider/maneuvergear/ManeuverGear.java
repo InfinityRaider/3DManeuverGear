@@ -10,6 +10,7 @@ import com.infinityraider.maneuvergear.network.*;
 import com.infinityraider.maneuvergear.reference.Reference;
 import com.infinityraider.infinitylib.InfinityMod;
 import com.infinityraider.infinitylib.network.INetworkWrapper;
+import com.infinityraider.maneuvergear.registry.SoundRegistry;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.Mod;
@@ -48,6 +49,10 @@ public class ManeuverGear extends InfinityMod<IProxy, Config> {
     @Override
     public Object getModEntityRegistry() {
         return EntityRegistry.getInstance();
+    }
+    @Override
+    public Object getModSoundRegistry() {
+        return SoundRegistry.getInstance();
     }
 
     @Override

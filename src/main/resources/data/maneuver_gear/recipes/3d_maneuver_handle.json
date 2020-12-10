@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "ww ",
+    "iib",
+    "wwl"
+  ],
+  "key":
+  {
+    "w":
+    {
+      "tag": "minecraft:wool"
+    },
+    "i":
+    {
+      "tag": "forge:ingots/iron"
+    },
+    "b":
+    {
+      "item": "minecraft:iron_bars"
+    },
+    "l":
+    {
+      "item": "minecraft:lever"
+    }
+  },
+  "result":
+  {
+    "item": "maneuver_gear:3d_maneuver_handle",
+    "count": 1
+  }
+}

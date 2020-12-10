@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    " l ",
+    "isi",
+    "ibi"
+  ],
+  "key":
+  {
+    "s":
+    {
+      "item": "minecraft:slime_ball"
+    },
+    "i":
+    {
+      "tag": "forge:ingots/iron"
+    },
+    "b":
+    {
+      "item": "minecraft:bucket"
+    },
+    "l":
+    {
+      "item": "minecraft:lever"
+    }
+  },
+  "result":
+  {
+    "item": "maneuver_gear:gas_canister",
+    "count": 1
+  }
+}

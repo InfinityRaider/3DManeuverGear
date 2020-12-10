@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "ibi",
+    "bsb",
+    "ibi"
+  ],
+  "key":
+  {
+    "i":
+    {
+      "tag": "forge:ingots/iron"
+    },
+    "b":
+    {
+      "item": "minecraft:iron_bars"
+    },
+    "s":
+    {
+      "item": "minecraft:iron_block"
+    }
+  },
+  "result":
+  {
+    "item": "maneuver_gear:gas_nozzle",
+    "count": 1
+  }
+}

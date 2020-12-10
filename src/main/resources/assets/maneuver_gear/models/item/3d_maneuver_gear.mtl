@@ -1,0 +1,5 @@
+newmtl m_0
+map_Kd maneuver_gear:items/3d_maneuver_gear
+newmtl m_1
+map_Kd maneuver_gear:items/3d_maneuver_gear_holster
+newmtl none

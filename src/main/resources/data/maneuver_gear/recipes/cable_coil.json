@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "sss",
+    "sis",
+    "sss"
+  ],
+  "key":
+  {
+    "s":
+    {
+      "item": "minecraft:string"
+    },
+    "i":
+    {
+      "tag": "forge:ingots/iron"
+    }
+  },
+  "result":
+  {
+    "item": "maneuver_gear:cable_coil",
+    "count": 1
+  }
+}

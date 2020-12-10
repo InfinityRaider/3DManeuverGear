@@ -22,7 +22,7 @@ public final class Names {
         public static final String BELT = "belt";
         public static final String GIRDLE = "girdle";
         public static final String GAS_NOZZLE = "gas_nozzle";
-        public static final String CABLE_COIL = "cable_spool";
+        public static final String CABLE_COIL = "cable_coil";
         public static final String GRAPPLE_LAUNCHER = "grapple_launcher";
     }
 

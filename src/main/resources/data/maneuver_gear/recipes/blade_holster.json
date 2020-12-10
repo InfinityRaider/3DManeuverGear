@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "ibi",
+    "i i",
+    "iii"
+  ],
+  "key":
+  {
+    "i":
+    {
+      "tag": "forge:ingots/iron"
+    },
+    "b":
+    {
+      "item": "minecraft:iron_bars"
+    }
+  },
+  "result":
+  {
+    "item": "maneuver_gear:blade_holster",
+    "count": 1
+  }
+}

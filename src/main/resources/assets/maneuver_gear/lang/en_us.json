@@ -1,0 +1,37 @@
+{
+  "item.maneuver_gear.3d_maneuver_gear": "3D Maneuver Gear",
+  "item.maneuver_gear.3d_maneuver_handle": "3D Maneuver Gear Hand Grips",
+  "item.maneuver_gear.sword_blade": "Sword Blade",
+  "item.maneuver_gear.gas_canister": "Gas Canister",
+  "item.maneuver_gear.blade_holster": "Blade Holster",
+  "item.maneuver_gear.blade_holster_assembly": "Blade Holster Assembly",
+  "item.maneuver_gear.girdle": "Girdle",
+  "item.maneuver_gear.belt": "Belt",
+  "item.maneuver_gear.gas_nozzle": "Gas Nozzle",
+  "item.maneuver_gear.cable_coil": "Cable Coil",
+  "item.maneuver_gear.grapple_launcher": "Grapple Launcher",
+  "item.maneuver_gear.fall_boots": "Shock Absorbing Boots",
+  "item.maneuver_gear.record": "Music Disc",
+
+  "maneuver_gear.key.retractleft": "Retract left cable",
+  "maneuver_gear.key.retractright": "Retract right cable",
+
+  "maneuver_gear.tooltip.sword_blade_1": "Shift right click to put this blade in the left holster",
+  "maneuver_gear.tooltip.sword_blade_2": "Regular right click to put this blade in the right holster",
+  "maneuver_gear.tooltip.3d_maneuver_gear_1": "Goes into the belt slot",
+  "maneuver_gear.tooltip.left_blades": "Left holster blade count",
+  "maneuver_gear.tooltip.right_blades": "Right holster blade count",
+  "maneuver_gear.tooltip.3d_maneuver_handle_1": "Used to operate the 3D Maneuver Gear",
+  "maneuver_gear.tooltip.damage": "Blade integrity",
+  "maneuver_gear.tooltip.more_info": "Instructions available in advanced tooltip (F3 + H)",
+  "maneuver_gear.tooltip.handle_left_normal": "Use <LMB> to attack with left sword",
+  "maneuver_gear.tooltip.handle_right_normal": "Use <RMB> to attack with right sword",
+  "maneuver_gear.tooltip.handle_left_sneak": "Use <shift> + <LMB> to fire/retract left dart",
+  "maneuver_gear.tooltip.handle_right_sneak": "Use <shift> + <RMB> to fire/retract right dart",
+  "maneuver_gear.tooltip.handle_left_sprint": "Use <ctrl> + <LMB> to apply a blade to the left handle",
+  "maneuver_gear.tooltip.handle_right_sprint": "Use <ctrl> + <RMB> to apply a blade to the right handle",
+  "maneuver_gear.tooltip.fall_boots_1": "These boots are equipped with shock dampers,",
+  "maneuver_gear.tooltip.fall_boots_2": "making it less painful to hit the ground at higher velocities",
+
+  "item.maneuver_gear.record.desc": "Linked Horizon - Guren No Yumiya"
+}

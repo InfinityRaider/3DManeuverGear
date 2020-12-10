@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "lll",
+    "pbp",
+    "www"
+  ],
+  "key":
+  {
+    "l":
+    {
+      "item": "minecraft:leather"
+    },
+    "p":
+    {
+      "item": "minecraft:sticky_piston"
+    },
+    "b":
+    {
+      "item": "minecraft:leather_boots"
+    },
+    "w":
+    {
+      "tag": "minecraft:wool"
+    }
+  },
+  "result":
+  {
+    "item": "maneuver_gear:fall_boots",
+    "count": 1
+  }
+}

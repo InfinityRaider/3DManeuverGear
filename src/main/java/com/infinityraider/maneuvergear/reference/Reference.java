@@ -2,7 +2,7 @@ package com.infinityraider.maneuvergear.reference;
 
 public final class Reference {
     public static final String MOD_NAME = /*^${mod.name}^*/  "3D Maneuver Gear";
-    public static final String MOD_ID = /*^${mod.id}^*/ "3d_maneuver_gear";
+    public static final String MOD_ID = /*^${mod.id}^*/ "maneuver_gear";
     public static final String AUTHOR = "InfinityRaider";
 
     public static final String VER_MAJOR = /*^${mod.version_major}^*/ "2";

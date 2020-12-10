@@ -21,20 +21,20 @@ import java.util.function.Function;
 
 @OnlyIn(Dist.CLIENT)
 public class ClientProxy implements IClientProxyBase<Config>, IProxy {
-    public static KeyBinding retractLeft = new KeyBinding(
-            Reference.MOD_ID+"."+Names.Objects.KEY+"."+Names.Objects.RETRACT+Names.Objects.LEFT,
+    public static final KeyBinding KEY_RETRACT_LEFT = new KeyBinding(
+            Reference.MOD_ID+"."+Names.Objects.KEY+"."+Names.Objects.RETRACT + "_" + Names.Objects.LEFT,
             GLFW.GLFW_KEY_Z,
             "key.categories.movement");
-    public static KeyBinding retractRight = new KeyBinding(
-            Reference.MOD_ID+"."+Names.Objects.KEY+"."+Names.Objects.RETRACT+Names.Objects.RIGHT,
+    public static final KeyBinding KEY_RETRACT_RIGHT = new KeyBinding(
+            Reference.MOD_ID+"."+Names.Objects.KEY+"."+Names.Objects.RETRACT + "_" + Names.Objects.RIGHT,
             GLFW.GLFW_KEY_X,
             "key.categories.movement");
 
     @Override
     public void onClientSetupEvent(final FMLClientSetupEvent event) {
         // Register key bindings
-        ClientRegistry.registerKeyBinding(retractLeft);
-        ClientRegistry.registerKeyBinding(retractRight);
+        ClientRegistry.registerKeyBinding(KEY_RETRACT_LEFT);
+        ClientRegistry.registerKeyBinding(KEY_RETRACT_RIGHT);
     }
 
     @Override

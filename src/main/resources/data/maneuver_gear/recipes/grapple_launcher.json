@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "iii",
+    "sda",
+    "iii"
+  ],
+  "key":
+  {
+    "i":
+    {
+      "tag": "forge:ingots/iron"
+    },
+    "s":
+    {
+      "item": "minecraft:string"
+    },
+    "d":
+    {
+      "item": "minecraft:dispenser"
+    },
+    "a":
+    {
+      "tag": "minecraft:arrows"
+    }
+  },
+  "result":
+  {
+    "item": "maneuver_gear:grapple_launcher",
+    "count": 1
+  }
+}

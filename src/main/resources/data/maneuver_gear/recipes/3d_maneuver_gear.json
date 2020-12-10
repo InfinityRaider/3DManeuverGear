@@ -1,0 +1,41 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "cnc",
+    "lgl",
+    "hbh"
+  ],
+  "key":
+  {
+    "c":
+    {
+      "item": "maneuver_gear:cable_coil"
+    },
+    "n":
+    {
+      "item": "maneuver_gear:gas_nozzle"
+    },
+    "l":
+    {
+      "item": "maneuver_gear:grapple_launcher"
+    },
+    "g":
+    {
+      "item": "maneuver_gear:girdle"
+    },
+    "h":
+    {
+      "item": "maneuver_gear:blade_holster_assembly"
+    },
+    "b":
+    {
+      "item": "maneuver_gear:belt"
+    }
+  },
+  "result":
+  {
+    "item": "maneuver_gear:3d_maneuver_gear",
+    "count": 1
+  }
+}

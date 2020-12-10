@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "l l",
+    "sjs",
+    "lsl"
+  ],
+  "key":
+  {
+    "l":
+    {
+      "item": "minecraft:leather"
+    },
+    "s":
+    {
+      "item": "minecraft:string"
+    },
+    "j":
+    {
+      "item": "minecraft:leather_chestplate"
+    }
+  },
+  "result":
+  {
+    "item": "maneuver_gear:girdle",
+    "count": 1
+  }
+}

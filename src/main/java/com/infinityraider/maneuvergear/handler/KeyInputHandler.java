@@ -37,8 +37,8 @@ public class KeyInputHandler {
     @SubscribeEvent
     @SuppressWarnings("unused")
     public void onKeyInput(InputEvent.KeyInputEvent event) {
-        boolean left = this.config.useConfigKeyBinds() ? keyboard.isKeyPressed(config.retractLeftKey()) : ClientProxy.retractLeft.isKeyDown();
-        boolean right = this.config.useConfigKeyBinds() ? keyboard.isKeyPressed(config.retractRightKey()) : ClientProxy.retractRight.isKeyDown();
+        boolean left = this.config.useConfigKeyBinds() ? keyboard.isKeyPressed(config.retractLeftKey()) : ClientProxy.KEY_RETRACT_LEFT.isKeyDown();
+        boolean right = this.config.useConfigKeyBinds() ? keyboard.isKeyPressed(config.retractRightKey()) : ClientProxy.KEY_RETRACT_RIGHT.isKeyDown();
         boolean space = Minecraft.getInstance().gameSettings.keyBindJump.isKeyDown();
         boolean sneak = Minecraft.getInstance().gameSettings.keyBindSneak.isKeyDown();
 

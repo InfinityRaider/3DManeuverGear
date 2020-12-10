@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    " g ",
+    "shs",
+    " s "
+  ],
+  "key":
+  {
+    "g":
+    {
+      "item": "maneuver_gear:gas_canister"
+    },
+    "h":
+    {
+      "item": "maneuver_gear:blade_holster"
+    },
+    "s":
+    {
+      "item": "minecraft:string"
+    }
+  },
+  "result":
+  {
+    "item": "maneuver_gear:blade_holster_assembly",
+    "count": 1
+  }
+}
