@@ -6,7 +6,7 @@ import com.infinityraider.maneuvergear.item.ItemManeuverGear;
 import com.infinityraider.maneuvergear.network.MessageDartAnchored;
 import com.infinityraider.maneuvergear.physics.PhysicsEngine;
 import com.infinityraider.maneuvergear.physics.PhysicsEngineDummy;
-import com.infinityraider.maneuvergear.utility.ExtendedInventoryHelper;
+import com.infinityraider.maneuvergear.utility.ManeuverGearHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -146,12 +146,12 @@ public class DartHandler {
     }
 
     public ItemStack getManeuverGear(PlayerEntity player) {
-        return ExtendedInventoryHelper.getStackInBeltSlot(player);
+        return ManeuverGearHelper.findManeuverGear(player);
     }
 
     private boolean checkGear(PlayerEntity player) {
-        ItemStack belt = ExtendedInventoryHelper.getStackInBeltSlot(player);
-        return (belt!=null) && (belt.getItem() instanceof ItemManeuverGear);
+        ItemStack belt = ManeuverGearHelper.findManeuverGear(player);
+        return (belt != null) && (belt.getItem() instanceof ItemManeuverGear);
     }
 
     public void equipGear(PlayerEntity player) {

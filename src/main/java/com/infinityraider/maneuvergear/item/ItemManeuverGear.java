@@ -1,50 +1,41 @@
 package com.infinityraider.maneuvergear.item;
 
 import com.infinityraider.maneuvergear.handler.DartHandler;
-import com.infinityraider.maneuvergear.network.MessageEquipManeuverGear;
 import com.infinityraider.maneuvergear.physics.PhysicsEngine;
 import com.infinityraider.maneuvergear.reference.Names;
 import com.infinityraider.maneuvergear.reference.Reference;
 import com.infinityraider.infinitylib.item.ItemBase;
+import com.infinityraider.maneuvergear.render.RenderManeuverGear;
+import com.infinityraider.maneuvergear.utility.IManeuverGear;
+import com.infinityraider.maneuvergear.utility.ManeuverGearHelper;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 @MethodsReturnNonnullByDefault
-public class ItemManeuverGear extends ItemBase {
+public class ItemManeuverGear extends ItemBase implements IManeuverGear {
     public static int MAX_HOLSTERED_BLADES = 4;
 
     public ItemManeuverGear() {
         super(Names.Items.MANEUVER_GEAR, new Properties()
                 .group(ItemGroup.COMBAT)
                 .maxStackSize(1));
-    }
-
-    @Override
-    @ParametersAreNonnullByDefault
-    public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
-        if(world.isRemote) {
-            new MessageEquipManeuverGear(hand).sendToServer();
-        }
-        return new ActionResult<>(ActionResultType.SUCCESS, player.getHeldItem(hand));
     }
 
     /**
@@ -154,61 +145,6 @@ public class ItemManeuverGear extends ItemBase {
         return stack != null && stack.getItem() instanceof ItemManeuverGear;
     }
 
-    //TODO: port baubles behaviour to curios
-
-    public void onWornTick(ItemStack stack, LivingEntity entity) {
-        if(entity==null || !(entity instanceof PlayerEntity)) {
-            return;
-        }
-        PlayerEntity player = (PlayerEntity) entity;
-        boolean remote = player.getEntityWorld().isRemote;
-        if(remote && stack!=null && stack.getItem()==this) {
-            if(DartHandler.instance.isWearingGear(player)
-                    && (DartHandler.instance.getLeftDart(player)!=null || DartHandler.instance.getRightDart(player)!=null)) {
-
-                PhysicsEngine engine = DartHandler.instance.getPhysicsEngine(player);
-                engine.updateTick();
-            }
-        }
-    }
-
-    public void onEquipped(ItemStack stack, LivingEntity entity) {
-        if(entity==null || !(entity instanceof PlayerEntity)) {
-            return;
-        }
-        PlayerEntity player = (PlayerEntity) entity;
-        if(stack!=null && stack.getItem()==this) {
-            DartHandler.instance.equipGear(player);
-        }
-    }
-
-    public void onUnequipped(ItemStack stack, LivingEntity entity) {
-        if(entity==null || !(entity instanceof PlayerEntity)) {
-            return;
-        }
-        PlayerEntity player = (PlayerEntity) entity;
-        if(stack!=null && stack.getItem()==this) {
-            DartHandler.instance.unEquipGear(player);
-        }
-    }
-
-    public boolean canEquip(ItemStack stack, LivingEntity entity) {
-        return entity instanceof PlayerEntity;
-    }
-
-    public boolean canUnequip(ItemStack stack, LivingEntity entityLivingBase) {
-        return true;
-    }
-
-    public boolean willAutoSync(ItemStack stack, LivingEntity player) {
-        return true;
-    }
-
-    public void onPlayerBaubleRender(ItemStack stack, PlayerEntity entityPlayer, RenderType renderType, float partialTick) {
-        //RenderManeuverGear.instance.renderManeuverGear(entityPlayer, stack, renderType, partialTick);
-    }
-
-
     @Override
     @OnlyIn(Dist.CLIENT)
     public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag advanced) {
@@ -217,5 +153,46 @@ public class ItemManeuverGear extends ItemBase {
                 .append(new StringTextComponent(": " + this.getBladeCount(stack, true) + "/" + MAX_HOLSTERED_BLADES)));
         tooltip.add(new TranslationTextComponent(Reference.MOD_ID + ".tooltip.right_blades")
                 .append(new StringTextComponent(": " + this.getBladeCount(stack, false) + "/" + MAX_HOLSTERED_BLADES)));
+    }
+
+    @Override
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
+        return ManeuverGearHelper.getCapability(stack);
+    }
+
+    @Override
+    public void onWornTick(LivingEntity entity) {
+        if(entity instanceof PlayerEntity) {
+            PlayerEntity player = (PlayerEntity) entity;
+            if(player.getEntityWorld().isRemote) {
+                if(DartHandler.instance.isWearingGear(player)
+                        && (DartHandler.instance.getLeftDart(player)!=null || DartHandler.instance.getRightDart(player)!=null)) {
+
+                    PhysicsEngine engine = DartHandler.instance.getPhysicsEngine(player);
+                    engine.updateTick();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onEquip(LivingEntity entity) {
+        if(entity instanceof PlayerEntity) {
+            DartHandler.instance.equipGear((PlayerEntity) entity);
+        }
+    }
+
+    @Override
+    public void onUnequip(LivingEntity entity) {
+        if(entity instanceof PlayerEntity) {
+            DartHandler.instance.unEquipGear((PlayerEntity) entity);
+        }
+
+    }
+
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public void render(ItemStack stack, LivingEntity entity, MatrixStack transforms, IRenderTypeBuffer buffer, int light, float partialTicks) {
+        RenderManeuverGear.getInstance().render(stack, entity, transforms, buffer, light, partialTicks);
     }
 }

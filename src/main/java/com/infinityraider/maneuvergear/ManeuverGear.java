@@ -59,7 +59,6 @@ public class ManeuverGear extends InfinityMod<IProxy, Config> {
     public void registerMessages(INetworkWrapper wrapper) {
         wrapper.registerMessage(MessageBoostUsed.class);
         wrapper.registerMessage(MessageDartAnchored.class);
-        wrapper.registerMessage(MessageEquipManeuverGear.class);
         wrapper.registerMessage(MessageManeuverGearEquipped.class);
         wrapper.registerMessage(MessageSpawnSteamParticles.class);
     }

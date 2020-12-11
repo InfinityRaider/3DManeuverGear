@@ -137,6 +137,9 @@ public class ItemManeuverGearHandle extends ItemBase implements IDualWieldedWeap
         if(entity instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) entity;
             ItemStack maneuverGearStack = DartHandler.instance.getManeuverGear(player);
+            if(maneuverGearStack == null || !(maneuverGearStack.getItem() instanceof ItemManeuverGear)) {
+                return false;
+            }
             ItemManeuverGear maneuverGear = (ItemManeuverGear) maneuverGearStack.getItem();
             if(maneuverGear.getBladeCount(maneuverGearStack, left) > 0) {
                 maneuverGear.removeBlades(maneuverGearStack, 1, left);

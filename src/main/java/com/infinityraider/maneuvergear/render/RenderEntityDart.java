@@ -1,5 +1,6 @@
 package com.infinityraider.maneuvergear.render;
 
+import com.infinityraider.maneuvergear.ManeuverGear;
 import com.infinityraider.maneuvergear.entity.EntityDart;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -25,7 +26,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @OnlyIn(Dist.CLIENT)
 @MethodsReturnNonnullByDefault
 public class RenderEntityDart extends EntityRenderer<EntityDart> {
-    public static final ResourceLocation TEXTURE = new ResourceLocation("3d_maneuver_gear:textures/entities/dart.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(ManeuverGear.instance.getModId() + ":textures/entities/dart.png");
     private static final RenderType RENDER_TYPE = RenderType.getEntityCutout(TEXTURE);
 
     public RenderEntityDart(EntityRendererManager renderManager) {
@@ -116,9 +117,9 @@ public class RenderEntityDart extends EntityRenderer<EntityDart> {
         float yaw = (player.prevRenderYawOffset + (player.renderYawOffset - player.prevRenderYawOffset) * partialTicks) * ((float) Math.PI / 180F);
         double sinYaw = MathHelper.sin(yaw);
         double cosYaw = MathHelper.cos(yaw);
-        double offsetX = (left ? -1 : 1) * 0.35D;
-        double offsetY = 0.525D;
-        double offsetZ = 0.125D;
+        double offsetX = (left ? -1 : 1) * 0.3D;
+        double offsetY = 0.52D;
+        double offsetZ = 0.D;
         double x_P = player.prevPosX + (player.getPosX() - player.prevPosX) * (double)partialTicks - cosYaw*offsetX - sinYaw*offsetZ;
         double y_P = player.prevPosY + (double)player.getEyeHeight() + (player.getPosY() - player.prevPosY)*partialTicks - offsetY;
         double z_P = player.prevPosZ + (player.getPosZ() - player.prevPosZ) * (double)partialTicks - sinYaw*offsetX + cosYaw*offsetZ;
