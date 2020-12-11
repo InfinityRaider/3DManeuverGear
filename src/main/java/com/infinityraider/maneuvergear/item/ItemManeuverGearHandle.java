@@ -1,6 +1,9 @@
 package com.infinityraider.maneuvergear.item;
 
 import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.ImmutableSet;
+import com.infinityraider.infinitylib.item.property.IInfinityItemWithProperties;
+import com.infinityraider.infinitylib.item.property.InfinityItemProperty;
 import com.infinityraider.maneuvergear.ManeuverGear;
 import com.infinityraider.maneuvergear.handler.DartHandler;
 import com.infinityraider.maneuvergear.reference.Reference;
@@ -14,6 +17,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.Attribute;
@@ -37,10 +41,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 
 @MethodsReturnNonnullByDefault
-public class ItemManeuverGearHandle extends ItemBase implements IDualWieldedWeapon {
+public class ItemManeuverGearHandle extends ItemBase implements IDualWieldedWeapon, IInfinityItemWithProperties {
     public static int getDurability() {
         return ManeuverGear.instance.getConfig().getDurability();
     }
@@ -296,4 +301,21 @@ public class ItemManeuverGearHandle extends ItemBase implements IDualWieldedWeap
             tooltip.add(new TranslationTextComponent(Reference.MOD_ID + ".tooltip.more_info"));
         }
     }
+
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public Set<InfinityItemProperty> getProperties() {
+        return ImmutableSet.of(new InfinityItemProperty(new ResourceLocation(ManeuverGear.instance.getModId(), Names.Objects.BLADE)) {
+            @Override
+            public float getValue(ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) {
+                return (!stack.isEmpty()
+                        && stack.getItem() instanceof ItemManeuverGearHandle
+                        && ((ItemManeuverGearHandle) stack.getItem()).hasSwordBlade(stack))
+                        ? 1
+                        : 0;
+            }
+        });
+    }
+
+
 }

@@ -8,6 +8,7 @@ public final class Names {
         public static final String RETRACT = "retract";
         public static final String LEFT = "left";
         public static final String RIGHT = "right";
+        public static final String BLADE = "blade";
     }
 
     public static final class Items {

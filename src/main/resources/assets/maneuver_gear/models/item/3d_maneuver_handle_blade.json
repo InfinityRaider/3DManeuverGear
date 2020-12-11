@@ -1,0 +1,11 @@
+{
+	"loader": "forge:composite",
+	"parts": {
+		"handle": {
+			"parent": "maneuver_gear:item/3d_maneuver_handle_empty"
+		},
+		"blade": {
+			"parent": "maneuver_gear:item/sword_blade"
+		}
+	}
+}
