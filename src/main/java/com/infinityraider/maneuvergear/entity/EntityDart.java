@@ -27,6 +27,10 @@ public class EntityDart extends EntityThrowableBase {
     //number of blocks to fly per second
     public static final float INITIAL_VELOCITY = 100.0F;
 
+    //render distance
+    @OnlyIn(Dist.CLIENT)
+    private static final int RENDER_DISTANCE_SQ = 64*64;
+
     //length of the cable
     public static int getMaxCableLength()  {
         return ManeuverGear.instance.getConfig().getCableLength();
@@ -155,6 +159,12 @@ public class EntityDart extends EntityThrowableBase {
             engine.onDartRetracted(left);
         }
         super.setDead();
+    }
+
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public boolean isInRangeToRenderDist(double distance) {
+        return distance <= RENDER_DISTANCE_SQ;
     }
 
     @Override
