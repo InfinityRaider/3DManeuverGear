@@ -7,14 +7,14 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent;
 
-public class MessageManeuverGearEquipped extends MessageBase {
-    private boolean equipped;
+public class MessageDartRetracted extends MessageBase {
+    private boolean left;
 
     @SuppressWarnings("unused")
-    public MessageManeuverGearEquipped() {}
+    public MessageDartRetracted() {}
 
-    public MessageManeuverGearEquipped(boolean equipped) {
-        this.equipped = equipped;
+    public MessageDartRetracted(boolean left) {
+        this.left = left;
     }
 
     @Override
@@ -28,10 +28,6 @@ public class MessageManeuverGearEquipped extends MessageBase {
         if(player == null) {
             return;
         }
-        if(this.equipped) {
-            DartHandler.instance.equipGear(player);
-        } else {
-            DartHandler.instance.unEquipGear(player);
-        }
+        DartHandler.instance.retractDart(player, this.left);
     }
 }

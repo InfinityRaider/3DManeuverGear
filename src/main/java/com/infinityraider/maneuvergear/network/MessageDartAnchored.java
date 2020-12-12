@@ -16,10 +16,10 @@ public class MessageDartAnchored extends MessageBase {
 
     public MessageDartAnchored() {}
 
-    public MessageDartAnchored(EntityDart dart, Vector3d pos, float pitch, float yaw) {
+    public MessageDartAnchored(EntityDart dart, Vector3d pos, double cableLength, float pitch, float yaw) {
         this();
         this.dart = dart;
-        this.cableLength = dart.getCableLength();
+        this.cableLength = cableLength;
         this.pos = pos;
         this.pitch = pitch;
         this.yaw = yaw;
@@ -34,7 +34,7 @@ public class MessageDartAnchored extends MessageBase {
     protected void processMessage(NetworkEvent.Context ctx) {
         if(this.dart != null) {
             this.dart.setCableLength(this.cableLength);
-            DartHandler.instance.onDartAnchored(this.dart, this.pos, this.pitch, this.yaw);
+            DartHandler.instance.onDartAnchored(this.dart, this.pos, this.cableLength, this.pitch, this.yaw);
         }
     }
 }

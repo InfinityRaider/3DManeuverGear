@@ -162,16 +162,8 @@ public class ItemManeuverGear extends ItemBase implements IManeuverGear {
 
     @Override
     public void onWornTick(LivingEntity entity) {
-        if(entity instanceof PlayerEntity) {
-            PlayerEntity player = (PlayerEntity) entity;
-            if(player.getEntityWorld().isRemote) {
-                if(DartHandler.instance.isWearingGear(player)
-                        && (DartHandler.instance.getLeftDart(player)!=null || DartHandler.instance.getRightDart(player)!=null)) {
-
-                    PhysicsEngine engine = DartHandler.instance.getPhysicsEngine(player);
-                    engine.updateTick();
-                }
-            }
+        if (entity instanceof PlayerEntity) {
+            DartHandler.instance.getPhysicsEngine((PlayerEntity) entity).updateTick();
         }
     }
 

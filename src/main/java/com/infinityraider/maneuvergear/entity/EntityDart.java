@@ -28,7 +28,7 @@ public class EntityDart extends EntityThrowableBase {
     public static final float INITIAL_VELOCITY = 100.0F;
 
     //length of the cable
-    public static int cableLength()  {
+    public static int getMaxCableLength()  {
         return ManeuverGear.instance.getConfig().getCableLength();
     }
 
@@ -67,7 +67,7 @@ public class EntityDart extends EntityThrowableBase {
         Vector3d velocity = this.getMotion();
         double yaw = -Math.atan2(velocity.getZ(), velocity.getX());
         double pitch = Math.asin(velocity.getY() / Math.sqrt(velocity.getX() * velocity.getX() + velocity.getZ() * velocity.getZ()));
-        DartHandler.instance.onDartAnchored(this, impact.getHitVec(), (float) yaw, (float) pitch);
+        DartHandler.instance.onDartAnchored(this, impact.getHitVec(), this.getCableLength(), (float) yaw, (float) pitch);
     }
 
     @Override
@@ -102,17 +102,17 @@ public class EntityDart extends EntityThrowableBase {
 
     public double calculateDistanceToPlayer() {
         PlayerEntity player = this.getPlayer();
-        return this.getPositionVec().add(new Vector3d(-player.getPosX(), -player.getPosY(), -player.getPosZ())).length();
+        return this.getPositionVec().subtract(player.getPosX(), player.getPosY(), player.getPosZ()).length();
     }
 
     /** sets the length of the cable */
     public void setCableLength(double l) {
-        cableLength = l < 0 ? 0: Math.min(l, getCableLength());
+        cableLength = l < 0 ? 0: Math.min(l, getMaxCableLength());
     }
 
     /** gets the length of the cable */
     public double getCableLength() {
-        return cableLength;
+        return this.cableLength;
     }
 
     @Override
@@ -128,12 +128,15 @@ public class EntityDart extends EntityThrowableBase {
             this.rotationYaw = this.prevRotationYaw;
             this.rotationPitch = this.prevRotationPitch;
             return;
+        } else {
+            this.prevRotationYaw = this.rotationYaw;
+            this.prevRotationPitch = this.rotationPitch;
         }
         //check for collision during movement this tick
-        this.cableLength = this.calculateDistanceToPlayer();
+        this.setCableLength(this.calculateDistanceToPlayer());
         //check if the maximum cable length has been exceeded, and if so retract the dart
-        if(this.cableLength > getCableLength()) {
-            retractDart();
+        if(this.getCableLength() > getMaxCableLength()) {
+            this.retractDart();
             return;
         }
         super.tick();
@@ -158,7 +161,7 @@ public class EntityDart extends EntityThrowableBase {
     public void writeCustomEntityData(CompoundNBT tag) {
         tag.putBoolean(Names.NBT.LEFT, left);
         tag.putBoolean(Names.NBT.HOOKED, hooked);
-        tag.putDouble(Names.NBT.LENGTH, cableLength);
+        tag.putDouble(Names.NBT.LENGTH, this.getCableLength());
         tag.putUniqueId(Names.NBT.PLAYER, player.getUniqueID());
     }
 
@@ -166,7 +169,7 @@ public class EntityDart extends EntityThrowableBase {
     public void readCustomEntityData(CompoundNBT tag) {
         left = tag.getBoolean(Names.NBT.LEFT);
         hooked = tag.getBoolean(Names.NBT.HOOKED);
-        cableLength = tag.getDouble(Names.NBT.LENGTH);
+        this.setCableLength(tag.getDouble(Names.NBT.LENGTH));
         player = this.getEntityWorld().getPlayerByUuid(tag.getUniqueId(Names.NBT.PLAYER));
         if (this.player != null) {
             DartHandler.instance.getPhysicsEngine(this.getPlayer()).setDart(this, left);

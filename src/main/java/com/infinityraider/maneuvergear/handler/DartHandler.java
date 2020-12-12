@@ -4,11 +4,12 @@ import com.infinityraider.maneuvergear.ManeuverGear;
 import com.infinityraider.maneuvergear.entity.EntityDart;
 import com.infinityraider.maneuvergear.item.ItemManeuverGear;
 import com.infinityraider.maneuvergear.network.MessageDartAnchored;
+import com.infinityraider.maneuvergear.network.MessageDartRetracted;
+import com.infinityraider.maneuvergear.network.MessageManeuverGearEquipped;
 import com.infinityraider.maneuvergear.physics.PhysicsEngine;
 import com.infinityraider.maneuvergear.physics.PhysicsEngineDummy;
 import com.infinityraider.maneuvergear.utility.ManeuverGearHelper;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
@@ -24,6 +25,8 @@ import java.util.UUID;
 
 /** Handles all interaction between the player and his two darts */
 public class DartHandler {
+    public static double CABLE_IMPACT_RETRACTION = 0.9;
+
     private static final PhysicsEngine DUMMY = new PhysicsEngineDummy();
     public static final DartHandler instance = new DartHandler();
 
@@ -104,24 +107,26 @@ public class DartHandler {
         }
     }
 
-    public void onDartAnchored(EntityDart dart, Vector3d position, float yaw, float pitch) {
+    public void onDartAnchored(EntityDart dart, Vector3d position, double cableLength, float yaw, float pitch) {
         PhysicsEngine engine = this.getPhysicsEngine(dart.getPlayer());
         dart.setPositionAndRotation(position.getX(), position.getY(), position.getZ(), yaw, pitch);
-        dart.setPosition(position.getX(), position.getY(), position.getZ());
+        dart.setRawPosition(position.getX(), position.getY(), position.getZ());
         dart.rotationYaw = yaw;
         dart.rotationPitch = pitch;
         dart.setVelocity(0, 0, 0);
         dart.setHooked();
-        engine.onDartAnchored(dart);
+        // Reduce the cable length on impact a bit to make the player jerk towards the impacted dart
+        dart.setCableLength(cableLength*CABLE_IMPACT_RETRACTION);
         if(!dart.getEntityWorld().isRemote) {
-            new MessageDartAnchored(dart, position, yaw, pitch).sendTo((ServerPlayerEntity) dart.getPlayer());
+            new MessageDartAnchored(dart, position, cableLength, yaw, pitch).sendTo(dart.getPlayer());
         }
+        engine.onDartAnchored(dart, position);
     }
 
     /** performs needed operations when a dart is retracted */
     public void retractDart(PlayerEntity player, boolean left) {
-        if (player.getEntityWorld().isRemote) {
-            return;
+        if (!player.getEntityWorld().isRemote) {
+            new MessageDartRetracted(left).sendTo(player);
         }
         PhysicsEngine physicsEngine = getPhysicsEngine(player);
         EntityDart dart = physicsEngine.getDart(left);
@@ -160,6 +165,7 @@ public class DartHandler {
                 physicsEnginesClient.put(player.getUniqueID(), ManeuverGear.instance.proxy().createPhysicsEngine(player));
             } else {
                 physicsEnginesServer.put(player.getUniqueID(), ManeuverGear.instance.proxy().createPhysicsEngine(player));
+                new MessageManeuverGearEquipped(true).sendTo(player);
             }
         }
     }
@@ -171,6 +177,7 @@ public class DartHandler {
                 physicsEnginesClient.remove(player.getUniqueID());
             } else {
                 physicsEnginesServer.remove(player.getUniqueID());
+                new MessageManeuverGearEquipped(false).sendTo(player);
             }
         }
     }

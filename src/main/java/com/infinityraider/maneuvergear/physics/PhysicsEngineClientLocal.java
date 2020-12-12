@@ -47,30 +47,62 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
     }
 
     @Override
-    public void updateTick() {
-        decrementCableLength(leftDart);
-        decrementCableLength(rightDart);
-        Vector3d p = calculateOldPosition();
-        Vector3d v_old = calculateVelocity();
-        Vector3d v = v_old.add(0,0,0);
-        Vector3d p_new = calculateNewPosition(p, v);
-        getAnchoredDartPosition(leftDart);
-        getAnchoredDartPosition(rightDart);
-        boolean leftOk = compliesWithConstraint(p_new, leftDart);
-        boolean rightOk = compliesWithConstraint(p_new, rightDart);
-        if (!leftOk && rightOk) {
-            v = calculateVelocityForSingleCondition(leftDart, p, p_new);
-            leftOk = v!=null;
-        } else if (leftOk && !rightOk) {
-            v = calculateVelocityForSingleCondition(rightDart, p, p_new);
-            rightOk = v!=null;
+    public void onUpdateTick() {
+        //load dart positions
+        LoadAnchoredDartPosition(true);
+        LoadAnchoredDartPosition(false);
+        //check if neither of the darts is anchored, in which case nothing needs to be calculated
+        if(this.L == null && this.R == null) {
+            return;
         }
-        /** The new position complies with both constrains: velocity is allowed */
-        if (leftOk && rightOk) {
+        //apply gravity: velocity should increase with 10m/s / s, therefore velocity has to increase with 0.0025m/tick / tick
+        player.setMotion(player.getMotion().add(0, -0.0025D, 0));
+        //decrement cables if necessary
+        this.decrementCableLength(this.getLeftDart());
+        this.decrementCableLength(this.getRightDart());
+        //fetch initial conditions
+        Vector3d p = this.fetchCurrentPosition();
+        Vector3d v_old = this.fetchCurrentVelocity();
+        Vector3d v = v_old.add(0,0,0);
+        Vector3d p_new = this.calculateNewPosition(p, v);
+        //only left dart is active
+        if(this.L != null && this.R == null) {
+            //check if the new position conflicts with the left constraint
+            boolean leftOk = this.compliesWithConstraint(p_new, this.getLeftDart());
+            if (!leftOk) {
+                //calculate velocity respecting the left constraint
+                v = this.calculateVelocityForSingleCondition(this.getLeftDart(), p, p_new);
+            }
+            this.setPlayerVelocity(v);
+        }
+        //only right  dart is active
+        else if(this.L == null && this.R != null) {
+            //check if the new position conflicts with the right constraint
+            boolean rightOk = this.compliesWithConstraint(p_new, this.getRightDart());
+            if (!rightOk) {
+                //calculate velocity respecting the right constraint
+                v = this.calculateVelocityForSingleCondition(this.getRightDart(), p, p_new);
+            }
             setPlayerVelocity(v);
-        /** The new position complies with neither constraints, this implies both darts are not null */
-        } else {
-            setPlayerVelocity(calculateVelocityForDoubleCondition(leftDart, rightDart, p , p_new, v_old));
+        }
+        // both darts are active
+        else {
+            //check if the new position conflicts with either constraints
+            boolean leftOk = this.compliesWithConstraint(p_new, this.getLeftDart());
+            boolean rightOk = this.compliesWithConstraint(p_new, this.getRightDart());
+            if (leftOk && rightOk) {
+                // the new position complies with both constrains: velocity is allowed
+                this.setPlayerVelocity(v);
+            } else if (!leftOk && rightOk) {
+                //Right constraint is already fulfilled, calculate velocity respecting the left constraint
+                this.setPlayerVelocity(this.calculateVelocityForSingleCondition(this.getLeftDart(), p, p_new));
+            } else if (leftOk /*rightOK is certainly false at this point, no need to add it to the if*/) {
+                //Left constraint is already fulfilled, calculate velocity respecting the right constraint
+                this.setPlayerVelocity(this.calculateVelocityForSingleCondition(this.getRightDart(), p, p_new));
+            } else {
+                // the new position does not comply with either of the constraints: math is required
+                this.setPlayerVelocity(this.calculateVelocityForDoubleCondition(this.getLeftDart(), this.getRightDart(), p, p_new, v_old));
+            }
         }
     }
 
@@ -108,17 +140,13 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
     private Vector3d calculateVelocityForDoubleCondition(EntityDart left, EntityDart right, Vector3d p_old, Vector3d p_new, Vector3d v_old) {
         double l = left.getCableLength();
         double r = right.getCableLength();
-        Vector3d L = left.getPositionVec();
-        Vector3d R = right.getPositionVec();
-        //apply gravity: velocity should increase with 10m/s / s, therefore velocity has to increase with 0.0025m/tick / tick
-        player.setMotion(player.getMotion().add(0, -0.0025D, 0));
-        //determine new position
-        Vector3d Pn = calculatePositionForConflictingCableLengths(L, R, l, r);
+        //determine new position in case of conflicting cable lengths, in case this is null, the cable lengths are not in conflict
+        Vector3d Pn = calculatePositionForConflictingCableLengths(this.L, this.R, l, r);
         if(Pn != null) {
             return calculateVelocity(Pn, p_old);
         }
-        Vector3d P_L = calculateNewPositionForDoubleCondition(L, p_old, v_old, l);
-        Vector3d P_R = calculateNewPositionForDoubleCondition(R, p_old, v_old, r);
+        Vector3d P_L = calculateNewPositionForDoubleCondition(this.L, p_old, v_old, l);
+        Vector3d P_R = calculateNewPositionForDoubleCondition(this.R, p_old, v_old, r);
         boolean l_ok = P_L != null && compliesWithConstraint(P_L, right);
         boolean r_ok = P_R != null && compliesWithConstraint(P_R, left);
         if(l_ok && !r_ok) {
@@ -128,7 +156,7 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
             return calculateVelocity(P_R, p_old);
         }
         else {
-            Vector3d P = calculateIntersectionPoint(L, l, R, r, p_new);
+            Vector3d P = calculateIntersectionPoint(this.L, l, this.R, r, p_new);
             if(P != null) {
                 return calculateVelocity(P, p_old);
             }
@@ -138,7 +166,8 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
     }
 
     /**
-     * This method checks if the
+     * This method checks if the two darts are further apart than their combined cable lengths, and if so,
+     * calculates the player's new position by interpolating based on the respective cable lengths
      * @param A position vector of the left dart
      * @param B position vector of the right dart
      * @param a length of the left cable
@@ -166,7 +195,7 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
     /**
      * This method calculates the new position of the player by scaling down the velocity to match the constraint of the dart's cable length
      *
-     * It solves the system given by the following equations ot the vector x:
+     * It solves the system given by the following equations of the vector x:
      *   AP + kV = x  (1)
      *   ||x||^2 = l^2 (2)
      * This system can be easily solved by substituting the 3 scalar equations for equation 1 into equation 2 and solving for k,
@@ -248,7 +277,7 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
             return null;
         }
         double d = calculateHeight(a, c, k);
-        Vector3d M = A.add(AB).mul(k, k, k);
+        Vector3d M = A.add(AB.mul(k, k, k));
         //calculate projection of P on AB
         k = calculateProjectionRatio(AB, A, P);
         Vector3d Pp = A.add(AB.mul(k, k, k));
@@ -270,12 +299,12 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
     }
 
     @Override
-    public void onDartAnchored(EntityDart dart) {
+    public void onDartAnchored(EntityDart dart, Vector3d position) {
         if(dart.isLeft()) {
-            L = dart.getPositionVec();
+            L = position.add(0, 0, 0);
         }
         else {
-            R = dart.getPositionVec();
+            R = position.add(0, 0, 0);
         }
     }
 
@@ -304,11 +333,11 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
     public void applyBoost() {
         Vector3d look = player.getLookVec();
         Vector3d boost = look.mul(BOOST, BOOST, BOOST);
-        Vector3d v = calculateVelocity();
+        Vector3d v = fetchCurrentVelocity();
         setPlayerVelocity(v.add(boost));
     }
 
-    private Vector3d calculateOldPosition() {
+    private Vector3d fetchCurrentPosition() {
         return new Vector3d(player.getPosX(), player.getPosY(), player.getPosZ());
     }
 
@@ -316,7 +345,7 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
         return p.add(v);
     }
 
-    private Vector3d calculateVelocity() {
+    private Vector3d fetchCurrentVelocity() {
         return player.getMotion();
     }
 
@@ -324,20 +353,20 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
         return p_new.subtract(p_old);
     }
 
-    private Vector3d getAnchoredDartPosition(EntityDart dart) {
+    private void LoadAnchoredDartPosition(boolean left) {
+        EntityDart dart = this.getDart(left);
         if(dart == null) {
-            return null;
-        }
-        if(dart.isLeft()) {
-            if(L == null) {
-                L = dart.isHooked()?dart.getPositionVec():null;
+            if(left) {
+                this.L = null;
+            } else {
+                this.R = null;
             }
-            return L;
         } else {
-            if(R == null) {
-                R = dart.isHooked()?dart.getPositionVec():null;
+            if(left) {
+                this.L = dart.isHooked() ? dart.getPositionVec() : null;
+            } else {
+                this.R = dart.isHooked() ? dart.getPositionVec() : null;
             }
-            return R;
         }
     }
 
@@ -363,7 +392,7 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
 
     /** checks if the player's distance to the dart is smaller than the cable length */
     private boolean compliesWithConstraint(Vector3d position, EntityDart dart) {
-        return dart==null || !dart.isHooked() || position.subtract(dart.isLeft() ? L : R).length() <= dart.getCableLength();
+        return dart == null || !dart.isHooked() || position.subtract(dart.isLeft() ? L : R).length() <= dart.getCableLength();
     }
 
     /** Returns a vector pointing from the player to the dart */
@@ -404,7 +433,7 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
     }
 
     /**
-     * This method solves the set of equations to determine the projection of a point p on a line AB
+     * This method solves the set of equations to determine the projection of a point P on a line AB
      * The equations are:
      *   PX.AB = 0 = (X - P).AB (1)
      *   AX = k.AB = (X - A)    (2)
