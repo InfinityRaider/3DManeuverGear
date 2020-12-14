@@ -7,5 +7,45 @@
 		"blade": {
 			"parent": "maneuver_gear:item/sword_blade"
 		}
+	},
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [90, -180, 0],
+			"translation": [0, -1, -2],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [90, -180, 0],
+			"translation": [0, -1, -2],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"firstperson_righthand": {
+			"rotation": [90, -180, 0],
+			"translation": [1, 2, 0],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"firstperson_lefthand": {
+			"rotation": [90, -180, 0],
+			"translation": [1, 2, 0],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"ground": {
+			"rotation": [-90, 0, 0],
+			"translation": [0, 0, 2],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"gui": {
+			"rotation": [-45, 45, 40],
+			"translation": [2, -2.25, 0]
+		},
+		"head": {
+			"rotation": [-135, 0, 0],
+			"translation": [0, 8.5, -5.5],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"fixed": {
+			"rotation": [-90, 0, 90],
+			"translation": [3, 0, 0]
+		}
 	}
 }

@@ -44,7 +44,7 @@ public class RenderManeuverGear {
     private void renderGear(ItemStack stack, MatrixStack transforms, IRenderTypeBuffer buffer, int light) {
         transforms.push();
         float scale = 1.25F;
-        transforms.translate(-scale*0.125, 0.625, scale*0.125);
+        transforms.translate(-scale*0, 1, scale*0.2);
         transforms.rotate(Vector3f.ZP.rotationDegrees(180));
         transforms.scale(scale, scale, scale);
         this.getItemRenderer().renderItem(stack, ItemCameraTransforms.TransformType.GROUND, light, OverlayTexture.NO_OVERLAY, transforms, buffer);
