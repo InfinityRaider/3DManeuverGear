@@ -1,11 +1,18 @@
 {
-	"loader": "forge:composite",
+	"loader": "infinitylib:composite",
 	"parts": {
 		"handle": {
 			"parent": "maneuver_gear:item/3d_maneuver_handle_empty"
 		},
 		"blade": {
 			"parent": "maneuver_gear:item/sword_blade"
+		}
+	},
+	"transformations": {
+		"blade": {
+			"rotation": [0, 90, 45],
+			"translation": [-14, 14, 0],
+			"scale": [1, 1, 1]
 		}
 	},
 	"display": {

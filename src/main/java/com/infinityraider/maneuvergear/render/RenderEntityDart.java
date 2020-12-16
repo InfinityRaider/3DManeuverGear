@@ -1,5 +1,6 @@
 package com.infinityraider.maneuvergear.render;
 
+import com.infinityraider.infinitylib.render.IRenderUtilities;
 import com.infinityraider.maneuvergear.ManeuverGear;
 import com.infinityraider.maneuvergear.entity.EntityDart;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -25,7 +26,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @OnlyIn(Dist.CLIENT)
 @MethodsReturnNonnullByDefault
-public class RenderEntityDart extends EntityRenderer<EntityDart> {
+public class RenderEntityDart extends EntityRenderer<EntityDart> implements IRenderUtilities {
     public static final ResourceLocation TEXTURE = new ResourceLocation(ManeuverGear.instance.getModId() + ":textures/entities/dart.png");
     private static final RenderType RENDER_TYPE = RenderType.getEntityCutout(TEXTURE);
 
@@ -41,7 +42,7 @@ public class RenderEntityDart extends EntityRenderer<EntityDart> {
         if (player == null) {
             return;
         }
-        if (this.renderManager.options.getPointOfView().ordinal() > 0 || player != Minecraft.getInstance().player) {
+        if (this.getPointOfView().ordinal() > 0 || player != Minecraft.getInstance().player) {
             this.renderWireThirdPerson(dart, player, partialTicks, transforms, buffer);
         } else {
             renderWireFirstPerson(dart, player, partialTicks, transforms, buffer);
@@ -176,5 +177,10 @@ public class RenderEntityDart extends EntityRenderer<EntityDart> {
     @ParametersAreNonnullByDefault
     public ResourceLocation getEntityTexture(EntityDart entity) {
         return TEXTURE;
+    }
+
+    @Override
+    public EntityRendererManager getEntityRendererManager() {
+        return this.renderManager;
     }
 }

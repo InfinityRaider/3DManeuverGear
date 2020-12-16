@@ -2,8 +2,7 @@ package com.infinityraider.maneuvergear.item;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
-import com.infinityraider.infinitylib.item.property.IInfinityItemWithProperties;
-import com.infinityraider.infinitylib.item.property.InfinityItemProperty;
+import com.infinityraider.infinitylib.item.InfinityItemProperty;
 import com.infinityraider.maneuvergear.ManeuverGear;
 import com.infinityraider.maneuvergear.handler.DartHandler;
 import com.infinityraider.maneuvergear.reference.Reference;
@@ -45,7 +44,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 @MethodsReturnNonnullByDefault
-public class ItemManeuverGearHandle extends ItemBase implements IDualWieldedWeapon, IInfinityItemWithProperties {
+public class ItemManeuverGearHandle extends ItemBase implements IDualWieldedWeapon {
     public static int getDurability() {
         return ManeuverGear.instance.getConfig().getDurability();
     }
@@ -57,7 +56,8 @@ public class ItemManeuverGearHandle extends ItemBase implements IDualWieldedWeap
         super(Names.Items.MANEUVER_HANDLE, new Properties()
                 .group(ItemGroup.COMBAT)
                 .maxStackSize(1)
-                .maxDamage(getDurability()));
+                .maxDamage(getDurability())
+        );
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         this.attributeModifiersWithBlade = builder
                 .put(Attributes.ATTACK_DAMAGE, new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Bladed Maneuver Handle Attack Damage Modifier",
@@ -307,7 +307,7 @@ public class ItemManeuverGearHandle extends ItemBase implements IDualWieldedWeap
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public Set<InfinityItemProperty> getProperties() {
+    public Set<InfinityItemProperty> getModelProperties() {
         return ImmutableSet.of(new InfinityItemProperty(new ResourceLocation(ManeuverGear.instance.getModId(), Names.Objects.BLADE)) {
             @Override
             public float getValue(ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) {
@@ -319,6 +319,4 @@ public class ItemManeuverGearHandle extends ItemBase implements IDualWieldedWeap
             }
         });
     }
-
-
 }
