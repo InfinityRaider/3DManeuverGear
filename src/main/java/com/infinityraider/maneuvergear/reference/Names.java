@@ -42,6 +42,7 @@ public final class Names {
         public static final String HOOKED = "3DMG_HOOKED";
         public static final String LENGTH = "3DMG_LENGTH";
         public static final String PLAYER = "3DMG_PLAYER";
+        public static final String BOOTS = "3DMG_FALL_BOOTS";
     }
 
     public static class Mods {

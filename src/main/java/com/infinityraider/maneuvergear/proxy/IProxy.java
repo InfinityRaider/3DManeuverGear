@@ -1,10 +1,12 @@
 package com.infinityraider.maneuvergear.proxy;
 
 import com.infinityraider.infinitylib.modules.keyboard.ModuleKeyboard;
+import com.infinityraider.maneuvergear.capability.CapabilityFallBoots;
 import com.infinityraider.maneuvergear.compat.CuriosCompat;
 import com.infinityraider.maneuvergear.config.Config;
+import com.infinityraider.maneuvergear.handler.AnvilHandler;
 import com.infinityraider.maneuvergear.handler.DartHandler;
-import com.infinityraider.maneuvergear.handler.EntityLivingHandler;
+import com.infinityraider.maneuvergear.handler.FallDamageHandler;
 import com.infinityraider.maneuvergear.physics.PhysicsEngine;
 import com.infinityraider.maneuvergear.physics.PhysicsEngineDummy;
 import com.infinityraider.infinitylib.modules.dualwield.ModuleDualWield;
@@ -31,12 +33,15 @@ public interface IProxy extends IProxyBase<Config> {
     }
 
     @Override
-    default void registerCapabilities() {}
+    default void registerCapabilities() {
+        this.registerCapability(CapabilityFallBoots.getInstance());
+    }
 
     @Override
     default void registerEventHandlers() {
         this.registerEventHandler(DartHandler.instance);
-        this.registerEventHandler(EntityLivingHandler.getInstance());
+        this.registerEventHandler(FallDamageHandler.getInstance());
+        this.registerEventHandler(AnvilHandler.getInstance());
     }
 
     @Override

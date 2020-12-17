@@ -30,8 +30,9 @@
   "maneuver_gear.tooltip.handle_right_sneak": "Use <shift> + <RMB> to fire/retract right dart",
   "maneuver_gear.tooltip.handle_left_sprint": "Use <ctrl> + <LMB> to apply a blade to the left handle",
   "maneuver_gear.tooltip.handle_right_sprint": "Use <ctrl> + <RMB> to apply a blade to the right handle",
-  "maneuver_gear.tooltip.fall_boots_1": "These boots are equipped with shock dampers,",
-  "maneuver_gear.tooltip.fall_boots_2": "making it less painful to hit the ground at higher velocities",
+  "maneuver_gear.tooltip.fall_boots_1": "These boots are equipped with shock dampers, connected to the 3d maneuver gear, making it less painful to hit the ground at higher velocities, however, this only works when 3d maneuver gear is equipped as well.",
+  "maneuver_gear.tooltip.fall_boots_2": "(Can be applied to other pairs of boots to integrate the shock absorbers in them)",
+  "maneuver_gear.tooltip.fall_boots_imbued": "3D Maneuver Gear shock dampers have been integrated.",
 
   "item.maneuver_gear.record.desc": "Linked Horizon - Guren No Yumiya"
 }

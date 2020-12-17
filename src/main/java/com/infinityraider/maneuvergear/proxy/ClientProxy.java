@@ -2,6 +2,7 @@ package com.infinityraider.maneuvergear.proxy;
 
 import com.infinityraider.maneuvergear.config.Config;
 import com.infinityraider.maneuvergear.handler.KeyInputHandler;
+import com.infinityraider.maneuvergear.handler.TooltipHandler;
 import com.infinityraider.maneuvergear.physics.PhysicsEngine;
 import com.infinityraider.maneuvergear.physics.PhysicsEngineClientLocal;
 import com.infinityraider.maneuvergear.physics.PhysicsEngineDummy;
@@ -66,5 +67,6 @@ public class ClientProxy implements IClientProxyBase<Config>, IProxy {
     public void registerEventHandlers() {
         IProxy.super.registerEventHandlers();
         this.registerEventHandler(KeyInputHandler.getInstance());
+        this.registerEventHandler(TooltipHandler.getInstance());
     }
 }

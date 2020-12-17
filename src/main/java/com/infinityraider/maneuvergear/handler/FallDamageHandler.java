@@ -1,7 +1,9 @@
 package com.infinityraider.maneuvergear.handler;
 
 import com.infinityraider.maneuvergear.ManeuverGear;
+import com.infinityraider.maneuvergear.capability.CapabilityFallBoots;
 import com.infinityraider.maneuvergear.registry.ItemRegistry;
+import com.infinityraider.maneuvergear.utility.ManeuverGearHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.WitherEntity;
 import net.minecraft.entity.item.ItemEntity;
@@ -14,12 +16,12 @@ import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class EntityLivingHandler {
-    private static final EntityLivingHandler INSTANCE = new EntityLivingHandler();
+public class FallDamageHandler {
+    private static final FallDamageHandler INSTANCE = new FallDamageHandler();
 
-    private EntityLivingHandler() {}
+    private FallDamageHandler() {}
 
-    public static EntityLivingHandler getInstance() {
+    public static FallDamageHandler getInstance() {
         return INSTANCE;
     }
 
@@ -33,9 +35,13 @@ public class EntityLivingHandler {
             return;
         }
         PlayerEntity player = (PlayerEntity) event.getEntity();
-        ItemStack boots = player.getItemStackFromSlot(EquipmentSlotType.FEET);
-        if(boots != null && boots.getItem() == ItemRegistry.getInstance().itemFallBoots) {
-            event.setAmount((1.0F - ManeuverGear.instance.getConfig().getBootFallDmgReduction())*event.getAmount());
+        // check if player is wearing maneuver gear compatible boots
+        if(CapabilityFallBoots.areFallBoots(player.getItemStackFromSlot(EquipmentSlotType.FEET))) {
+            // check if player is wearing maneuver gear
+            ItemStack gear = ManeuverGearHelper.findManeuverGear(player);
+            if(gear != null && gear.getItem() == ItemRegistry.getInstance().itemManeuverGear) {
+                event.setAmount((1.0F - ManeuverGear.instance.getConfig().getBootFallDmgReduction()) * event.getAmount());
+            }
         }
 
     }

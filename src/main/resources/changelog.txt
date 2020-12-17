@@ -3,6 +3,8 @@ Changelog
 2.0.0
 -CHANGE: ported to 1.16.4
 -CHANGE: Now uses Curios instead of Baubles
+-CHANGE: Fall boots's fall damage reduction now only works when 3d maneuver gear is equipped
+-ADDED: Fall boots's fall damage reduction can now be integrated into other boots using an anvil
 
 1.12.0
 -CHANGE: ported to 1.12.2

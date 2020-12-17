@@ -22,8 +22,7 @@ public abstract class Config implements ConfigurationHandler.SidedModConfig {
 
     public abstract boolean disableFallBoots();
 
-    @OnlyIn(Dist.CLIENT)
-    public abstract boolean overridePlayerRenderer();
+    public abstract int getImbueCost();
 
     @OnlyIn(Dist.CLIENT)
     public abstract double getRetractingSpeed();
@@ -49,6 +48,7 @@ public abstract class Config implements ConfigurationHandler.SidedModConfig {
         //content
         public final ForgeConfigSpec.BooleanValue disableMusicDisc;
         public final ForgeConfigSpec.BooleanValue disableFallBoots;
+        public final ForgeConfigSpec.IntValue imbueCost;
 
         //debug
         public final ForgeConfigSpec.BooleanValue debug;
@@ -78,6 +78,9 @@ public abstract class Config implements ConfigurationHandler.SidedModConfig {
             this.disableFallBoots = builder
                     .comment("Set to true to disable the fall boots")
                     .define("Disable fall boots", false);
+            this.imbueCost = builder
+                    .comment("The amount of xp it costs to apply fall boots to another pair of boots in an anvil")
+                    .defineInRange("Fall boots imbue cost", 10, 0, 100);
             builder.pop();
 
             builder.push("debug");
@@ -123,9 +126,8 @@ public abstract class Config implements ConfigurationHandler.SidedModConfig {
         }
 
         @Override
-        @OnlyIn(Dist.CLIENT)
-        public boolean overridePlayerRenderer() {
-            return false;
+        public int getImbueCost() {
+            return this.imbueCost.get();
         }
 
         @Override
@@ -160,7 +162,6 @@ public abstract class Config implements ConfigurationHandler.SidedModConfig {
 
     @OnlyIn(Dist.CLIENT)
     public static class Client extends Common {
-        public final ForgeConfigSpec.BooleanValue overridePlayerRenderer;
         public final ForgeConfigSpec.DoubleValue retractingSpeed;
         public final ForgeConfigSpec.BooleanValue useConfigKeyBinds;
         public final ForgeConfigSpec.IntValue retractLeftKey;
@@ -170,11 +171,6 @@ public abstract class Config implements ConfigurationHandler.SidedModConfig {
             super(builder);
 
             builder.push("client");
-            this.overridePlayerRenderer = builder
-                    .comment("Set to false if you experience issues with player rendering, " +
-                            "disabling this will have the effect of not animating the left arm of players using the maneuver gear sword." +
-                            "(This is a client side only config and does not have to match the server)")
-                    .define("Left arm swing animation", true);
             this.retractingSpeed = builder
                     .comment("The speed at which a grapple is reeled in while holding the hot key." +
                             "(note that this is a client side config and does not need to match the server, can be tweaked to personal preference)")
@@ -203,12 +199,6 @@ public abstract class Config implements ConfigurationHandler.SidedModConfig {
         @Override
         public ModConfig.Type getSide() {
             return ModConfig.Type.CLIENT;
-        }
-
-        @Override
-        @OnlyIn(Dist.CLIENT)
-        public boolean overridePlayerRenderer() {
-            return this.overridePlayerRenderer.get();
         }
 
         @Override
