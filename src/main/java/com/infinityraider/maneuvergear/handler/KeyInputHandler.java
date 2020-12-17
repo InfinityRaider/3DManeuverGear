@@ -37,19 +37,8 @@ public class KeyInputHandler {
     @SubscribeEvent
     @SuppressWarnings("unused")
     public void onKeyInput(InputEvent.KeyInputEvent event) {
-        boolean left = this.config.useConfigKeyBinds() ? keyboard.isKeyPressed(config.retractLeftKey()) : ClientProxy.KEY_RETRACT_LEFT.isKeyDown();
-        boolean right = this.config.useConfigKeyBinds() ? keyboard.isKeyPressed(config.retractRightKey()) : ClientProxy.KEY_RETRACT_RIGHT.isKeyDown();
-        boolean space = Minecraft.getInstance().gameSettings.keyBindJump.isKeyDown();
-        boolean sneak = Minecraft.getInstance().gameSettings.keyBindSneak.isKeyDown();
-
-        if(left != status_left) {
-            toggleRetracting(ManeuverGear.instance.getClientPlayer(), true, left);
-            status_left = left;
-        }
-        if(right != status_right) {
-            toggleRetracting(ManeuverGear.instance.getClientPlayer(), false, right);
-            status_right = right;
-        }
+        boolean space = Minecraft.getInstance().gameSettings.keyBindJump.isPressed();
+        boolean sneak = Minecraft.getInstance().gameSettings.keyBindSneak.isPressed() || Minecraft.getInstance().gameSettings.keyBindSneak.isKeyDown();
         if(space && sneak) {
             applyBoost(ManeuverGear.instance.getClientPlayer());
         }
@@ -58,6 +47,19 @@ public class KeyInputHandler {
     @SubscribeEvent
     @SuppressWarnings("unused")
     public void onClientTick(TickEvent.ClientTickEvent event) {
+        // check keybinds
+        boolean left = this.config.useConfigKeyBinds() ? keyboard.isKeyPressed(config.retractLeftKey()) : ClientProxy.KEY_RETRACT_LEFT.isPressed();
+        boolean right = this.config.useConfigKeyBinds() ? keyboard.isKeyPressed(config.retractRightKey()) : ClientProxy.KEY_RETRACT_RIGHT.isPressed();
+        // update retracting status
+        if(left != status_left) {
+            toggleRetracting(ManeuverGear.instance.getClientPlayer(), true, left);
+            status_left = left;
+        }
+        if(right != status_right) {
+            toggleRetracting(ManeuverGear.instance.getClientPlayer(), false, right);
+            status_right = right;
+        }
+        // decrement boost cooldown
         if(event.phase == TickEvent.Phase.END) {
             boostCoolDown = Math.max(0, boostCoolDown - 1);
         }
