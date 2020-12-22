@@ -13,6 +13,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -113,7 +115,7 @@ public class DartHandler {
         dart.setRawPosition(position.getX(), position.getY(), position.getZ());
         dart.rotationYaw = yaw;
         dart.rotationPitch = pitch;
-        dart.setVelocity(0, 0, 0);
+        dart.setMotion(0, 0, 0);
         dart.setHooked();
         // Reduce the cable length on impact a bit to make the player jerk towards the impacted dart
         dart.setCableLength(cableLength*CABLE_IMPACT_RETRACTION);
@@ -234,6 +236,7 @@ public class DartHandler {
 
     @SubscribeEvent
     @SuppressWarnings("unused")
+    @OnlyIn(Dist.CLIENT)
     public void onClientDisconnectFromServer(ClientPlayerNetworkEvent.LoggedOutEvent event) {
         PlayerEntity player = ManeuverGear.instance.getClientPlayer();
         if(player == null) {
