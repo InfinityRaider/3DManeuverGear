@@ -1,5 +1,8 @@
 Changelog
 ---------
+2.0.1
+-FIXED: Crash when pressing hotkeys in main menu
+
 2.0.0
 -CHANGE: ported to 1.16.4
 -CHANGE: Now uses Curios instead of Baubles

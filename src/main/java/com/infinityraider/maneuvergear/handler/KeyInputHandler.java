@@ -37,6 +37,10 @@ public class KeyInputHandler {
     @SubscribeEvent
     @SuppressWarnings("unused")
     public void onKeyInput(InputEvent.KeyInputEvent event) {
+        if(Minecraft.getInstance().currentScreen != null) {
+            // We do not want to do anything while a GUI is open
+            return;
+        }
         boolean space = Minecraft.getInstance().gameSettings.keyBindJump.isPressed();
         boolean sneak = Minecraft.getInstance().gameSettings.keyBindSneak.isPressed() || Minecraft.getInstance().gameSettings.keyBindSneak.isKeyDown();
         if(space && sneak) {
@@ -47,6 +51,10 @@ public class KeyInputHandler {
     @SubscribeEvent
     @SuppressWarnings("unused")
     public void onClientTick(TickEvent.ClientTickEvent event) {
+        if(Minecraft.getInstance().currentScreen != null) {
+            // We do not want to do anything while a GUI is open
+            return;
+        }
         // check keybinds
         boolean left = this.config.useConfigKeyBinds() ? keyboard.isKeyPressed(config.retractLeftKey()) : ClientProxy.KEY_RETRACT_LEFT.isPressed();
         boolean right = this.config.useConfigKeyBinds() ? keyboard.isKeyPressed(config.retractRightKey()) : ClientProxy.KEY_RETRACT_RIGHT.isPressed();
