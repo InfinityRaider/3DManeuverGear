@@ -2,6 +2,7 @@ Changelog
 ---------
 2.0.1
 -FIXED: Crash when pressing hotkeys in main menu
+-FIXED: Not being able to use the 3DMG after changing dimensions
 
 2.0.0
 -CHANGE: ported to 1.16.4

@@ -250,6 +250,7 @@ public class DartHandler {
     public void onEntityJoinWorldEvent(EntityJoinWorldEvent event) {
         if (event.getEntity() != null && event.getEntity() instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) event.getEntity();
+            this.unEquipGear(player);
             if (checkGear(player)) {
                 equipGear(player);
             }
@@ -264,6 +265,16 @@ public class DartHandler {
             if(isWearingGear(player)) {
                 retractDarts(player);
             }
+        }
+    }
+    @SubscribeEvent
+    @SuppressWarnings("unused")
+    public void onPlayerClone(PlayerEvent.Clone event) {
+        PlayerEntity player = event.getPlayer();
+        if(isWearingGear(player)) {
+            // PlayerEntity instance will change, therefore replace the PhysicsEngine instance as well
+            unEquipGear(player);
+            equipGear(player);
         }
     }
 }
