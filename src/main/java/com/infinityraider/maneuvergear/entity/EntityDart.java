@@ -106,7 +106,7 @@ public class EntityDart extends EntityThrowableBase {
 
     public double calculateDistanceToPlayer() {
         PlayerEntity player = this.getPlayer();
-        return this.getPositionVec().subtract(player.getPosX(), player.getPosY(), player.getPosZ()).length();
+        return player == null ? 0 : this.getPositionVec().subtract(player.getPosX(), player.getPosY(), player.getPosZ()).length();
     }
 
     /** sets the length of the cable */
