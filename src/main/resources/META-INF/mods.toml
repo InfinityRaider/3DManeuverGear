@@ -5,7 +5,7 @@ issueTrackerURL="https://github.com/InfinityRaider/3DManeuverGear/issues/"
 
 [[mods]]
 modId="maneuver_gear"
-version="1.16.4-2.0.1"
+version="1.16.4-2.0.2"
 displayName="3D Maneuver Gear"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/d-maneuver-gear"
 logoFile="logo.png"
@@ -24,7 +24,7 @@ Adds the 3D Maneuver Gear from Attack on Titan to Minecraft
 [[dependencies.maneuver_gear]]
     modId="infinitylib"
     mandatory=true
-    versionRange="[1.16.4-2.0.0,)"
+    versionRange="[1.16.4-2.0.1,)"
     ordering="AFTER"
     side="BOTH"
 

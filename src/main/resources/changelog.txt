@@ -1,5 +1,9 @@
 Changelog
 ---------
+2.0.2
+-FIXED: Client side Null Pointer Exception
+-FIXED: Null Capability crash (InfinityLib)
+
 2.0.1
 -FIXED: Crash when pressing hotkeys in main menu
 -FIXED: Not being able to use the 3DMG after changing dimensions
