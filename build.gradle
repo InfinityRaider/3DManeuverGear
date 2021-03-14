@@ -10,7 +10,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
@@ -27,13 +27,21 @@ archivesBaseName = config.id
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = "${config.version_java}"
 
+def parseConfig(File config) {
+    config.withReader {
+        def prop = new Properties()
+        prop.load(it)
+        return (new ConfigSlurper().parse(prop))
+    }
+}
+
 minecraft {
  mappings channel: "${config.mapping_channel}", version: "${config.mapping_version}"
     runs {
         client {
             workingDirectory project.file('run')
             // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.markers', 'REGISTRIES'
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
             mods {
@@ -42,7 +50,7 @@ minecraft {
                 }
                 infinitylib {
                     //This still grabs the sourceSets from the main project, therefore one must manually correct it in runClient afterwards
-                    source project(":lib/InfinityLib").sourceSets.main
+                    source project("InfinityLib").sourceSets.main
                 }
             }
         }
@@ -50,7 +58,7 @@ minecraft {
         server {
             workingDirectory project.file('run')
             // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.markers', 'REGISTRIES'
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
             mods {
@@ -59,7 +67,7 @@ minecraft {
                 }
                 infinitylib {
                     //This still grabs the sourceSets from the main project, therefore one must manually correct it in runServer afterwards
-                    source project(":lib/InfinityLib").sourceSets.main
+                    source project("InfinityLib").sourceSets.main
                 }
             }
         }
@@ -81,13 +89,13 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${config.version_minecraft}-${config.version_forge}"
 
-    compile project(":lib/InfinityLib")
+    compile project("InfinityLib")
 
-    compileOnly fg.deobf("mezz.jei:jei-1.16.4:7.6.0.58:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-1.16.4:7.6.0.58")
+    compileOnly fg.deobf("mezz.jei:jei-1.16.4:7.6.1.72:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.16.4:7.6.1.72")
 
-    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.4-4.0.3.0:api")
-    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.4-4.0.3.0")
+    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.5-4.0.5.0:api")
+    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.5-4.0.5.0")
 }
 
 processResources
@@ -118,14 +126,6 @@ processResources
     //from(sourceSets.infinitylib.resources.srcDirs) {
         //exclude 'META-INF/mods.toml', '**/psd/**'
     //}
-}
-
-def parseConfig(File config) {
-    config.withReader {
-        def prop = new Properties()
-        prop.load(it)
-        return (new ConfigSlurper().parse(prop))
-    }
 }
 
 jar {

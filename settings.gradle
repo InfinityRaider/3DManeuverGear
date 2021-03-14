@@ -1,2 +1,3 @@
 rootProject.name = '3DManeuverGear'
-include 'lib/InfinityLib'
+include 'InfinityLib'
+project(':InfinityLib').projectDir = file('lib/InfinityLib')
