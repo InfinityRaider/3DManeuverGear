@@ -2,6 +2,10 @@ Changelog
 ---------
 2.0.3
 -CHANGE: ported to 1.16.5
+-FIXED:  tooltips mentioning ctrl / shift while in reality it is sprint / sneak
+-FIXED:  cables will no longer retract if it is not physically possible
+-FIXED:  velocity change on dart impact being extremely high on longer cable lengths
+-CHANGE: tweaked default cable length config setting
 
 2.0.2
 -FIXED: Client side Null Pointer Exception
