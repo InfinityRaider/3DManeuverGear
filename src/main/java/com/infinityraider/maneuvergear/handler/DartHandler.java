@@ -27,7 +27,8 @@ import java.util.UUID;
 
 /** Handles all interaction between the player and his two darts */
 public class DartHandler {
-    public static double CABLE_IMPACT_RETRACTION = 0.9;
+    public static double CABLE_IMPACT_RETRACTION = 0.1;
+    public static double CABLE_IMPACT_RETRACTION_MAX = 2.5;
 
     private static final PhysicsEngine DUMMY = new PhysicsEngineDummy();
     public static final DartHandler instance = new DartHandler();
@@ -118,9 +119,10 @@ public class DartHandler {
         dart.setMotion(0, 0, 0);
         dart.setHooked();
         // Reduce the cable length on impact a bit to make the player jerk towards the impacted dart
-        dart.setCableLength(cableLength*CABLE_IMPACT_RETRACTION);
+        double length = cableLength - Math.min(cableLength*CABLE_IMPACT_RETRACTION, CABLE_IMPACT_RETRACTION_MAX);
+        dart.setCableLength(length);
         if(!dart.getEntityWorld().isRemote) {
-            new MessageDartAnchored(dart, position, cableLength, yaw, pitch).sendTo(dart.getPlayer());
+            new MessageDartAnchored(dart, position, length, yaw, pitch).sendTo(dart.getPlayer());
         }
         engine.onDartAnchored(dart, position);
     }

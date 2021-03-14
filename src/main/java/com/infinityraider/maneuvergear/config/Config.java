@@ -68,7 +68,7 @@ public abstract class Config implements ConfigurationHandler.SidedModConfig {
             this.cableLength = builder
                     .comment("The maximum length of a cable, this defines how far grapples will fly before being automatically retracted if they don't hit anything." +
                             "(must match on client and server)")
-                    .defineInRange("Cable length", 64, 30, 100);
+                    .defineInRange("Cable length", 32, 16, 128);
             builder.pop();
 
             builder.push("content");
