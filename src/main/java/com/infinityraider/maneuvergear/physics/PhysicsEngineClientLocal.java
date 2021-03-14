@@ -41,6 +41,9 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
     private Vector3d R;
     private boolean retractingRight;
 
+    /** Locked state*/
+    private boolean locked;
+
     public PhysicsEngineClientLocal(PlayerEntity player) {
         super();
         this.player = player;
@@ -60,6 +63,7 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
         //decrement cables if necessary
         this.decrementCableLength(this.getLeftDart());
         this.decrementCableLength(this.getRightDart());
+        this.locked = false;
         //fetch initial conditions
         Vector3d p = this.fetchCurrentPosition();
         Vector3d v_old = this.fetchCurrentVelocity();
@@ -186,6 +190,7 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
             else {
                 f = a/ (a + b);
             }
+            this.locked = true;
             return A.add(AB.mul(f, f, f));
         } else {
             return null;
@@ -312,6 +317,9 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
     }
 
     private void decrementCableLength(EntityDart dart) {
+        if(this.locked) {
+            return;
+        }
         if(dart == null) {
             return;
         }
