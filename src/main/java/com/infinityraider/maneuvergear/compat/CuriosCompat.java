@@ -1,6 +1,5 @@
 package com.infinityraider.maneuvergear.compat;
 
-import com.infinityraider.infinitylib.capability.CapabilityProvider;
 import com.infinityraider.infinitylib.capability.ICapabilityImplementation;
 import com.infinityraider.maneuvergear.item.ItemManeuverGear;
 import com.infinityraider.maneuvergear.reference.Names;
@@ -19,8 +18,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.InterModComms;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.CuriosCapability;
