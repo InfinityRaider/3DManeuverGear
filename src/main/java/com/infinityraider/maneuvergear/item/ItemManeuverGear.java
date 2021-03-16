@@ -1,13 +1,11 @@
 package com.infinityraider.maneuvergear.item;
 
 import com.infinityraider.maneuvergear.handler.DartHandler;
-import com.infinityraider.maneuvergear.physics.PhysicsEngine;
 import com.infinityraider.maneuvergear.reference.Names;
 import com.infinityraider.maneuvergear.reference.Reference;
 import com.infinityraider.infinitylib.item.ItemBase;
 import com.infinityraider.maneuvergear.render.RenderManeuverGear;
 import com.infinityraider.maneuvergear.utility.IManeuverGear;
-import com.infinityraider.maneuvergear.utility.ManeuverGearHelper;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -23,8 +21,8 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -147,17 +145,12 @@ public class ItemManeuverGear extends ItemBase implements IManeuverGear {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag advanced) {
+    public void addInformation(@Nonnull ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag advanced) {
         tooltip.add(new TranslationTextComponent(Reference.MOD_ID + ".tooltip." + this.getInternalName() + "_1"));
         tooltip.add(new TranslationTextComponent(Reference.MOD_ID + ".tooltip.left_blades")
                 .append(new StringTextComponent(": " + this.getBladeCount(stack, true) + "/" + MAX_HOLSTERED_BLADES)));
         tooltip.add(new TranslationTextComponent(Reference.MOD_ID + ".tooltip.right_blades")
                 .append(new StringTextComponent(": " + this.getBladeCount(stack, false) + "/" + MAX_HOLSTERED_BLADES)));
-    }
-
-    @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-        return ManeuverGearHelper.getCapability(stack);
     }
 
     @Override
@@ -179,7 +172,6 @@ public class ItemManeuverGear extends ItemBase implements IManeuverGear {
         if(entity instanceof PlayerEntity) {
             DartHandler.instance.unEquipGear((PlayerEntity) entity);
         }
-
     }
 
     @Override

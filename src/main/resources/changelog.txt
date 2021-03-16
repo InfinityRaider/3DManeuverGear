@@ -5,6 +5,7 @@ Changelog
 -FIXED:  tooltips mentioning ctrl / shift while in reality it is sprint / sneak
 -FIXED:  cables will no longer retract if it is not physically possible
 -FIXED:  velocity change on dart impact being extremely high on longer cable lengths
+-FIXED:  crash related to null capabilities
 -CHANGE: tweaked default cable length config setting
 
 2.0.2

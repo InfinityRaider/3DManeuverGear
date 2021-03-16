@@ -35,6 +35,7 @@ public interface IProxy extends IProxyBase<Config> {
     @Override
     default void registerCapabilities() {
         this.registerCapability(CapabilityFallBoots.getInstance());
+        this.registerCapability(CuriosCompat.getCurioCapabilityImplementation());
     }
 
     @Override
