@@ -1,5 +1,8 @@
 Changelog
 ---------
+2.0.4
+-CHANGE: update for Forge 36.1.0 and InfinityLib
+
 2.0.3
 -CHANGE: ported to 1.16.5
 -FIXED:  tooltips mentioning ctrl / shift while in reality it is sprint / sneak

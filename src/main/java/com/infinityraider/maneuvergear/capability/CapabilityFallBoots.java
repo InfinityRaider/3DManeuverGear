@@ -1,6 +1,6 @@
 package com.infinityraider.maneuvergear.capability;
 
-import com.infinityraider.infinitylib.capability.IInfCapabilityImplementation;
+import com.infinityraider.infinitylib.capability.IInfSerializableCapabilityImplementation;
 import com.infinityraider.infinitylib.utility.ISerializable;
 import com.infinityraider.maneuvergear.item.ItemFallBoots;
 import com.infinityraider.maneuvergear.reference.Names;
@@ -13,7 +13,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 
-public class CapabilityFallBoots implements IInfCapabilityImplementation<ItemStack, CapabilityFallBoots.Impl> {
+public class CapabilityFallBoots implements IInfSerializableCapabilityImplementation<ItemStack, CapabilityFallBoots.Impl> {
     private static final CapabilityFallBoots INSTANCE = new CapabilityFallBoots();
 
     public static CapabilityFallBoots getInstance() {
