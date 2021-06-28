@@ -171,7 +171,7 @@ public class ItemManeuverGearHandle extends ItemBase implements IDualWieldedWeap
 
     @Override
     public float getDestroySpeed(ItemStack stack, BlockState state) {
-        if (state.isIn(Blocks.COBWEB)) {
+        if (state.matchesBlock(Blocks.COBWEB)) {
             return 15.0F;
         } else {
             Material material = state.getMaterial();
@@ -291,7 +291,7 @@ public class ItemManeuverGearHandle extends ItemBase implements IDualWieldedWeap
     public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag advanced) {
         tooltip.add(new TranslationTextComponent(Reference.MOD_ID + ".tooltip." + this.getInternalName() + "_1"));
         tooltip.add(new TranslationTextComponent(Reference.MOD_ID + ".tooltip.damage")
-                .append(new StringTextComponent(": " + this.getBladeDamage(stack) + "/" + getDurability())));
+                .appendSibling(new StringTextComponent(": " + this.getBladeDamage(stack) + "/" + getDurability())));
         if(advanced.isAdvanced()) {
             tooltip.add(new StringTextComponent(""));
             tooltip.add(new TranslationTextComponent(Reference.MOD_ID + ".tooltip.handle_left_normal"));

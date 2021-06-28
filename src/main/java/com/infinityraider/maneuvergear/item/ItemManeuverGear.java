@@ -148,9 +148,9 @@ public class ItemManeuverGear extends ItemBase implements IManeuverGear {
     public void addInformation(@Nonnull ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag advanced) {
         tooltip.add(new TranslationTextComponent(Reference.MOD_ID + ".tooltip." + this.getInternalName() + "_1"));
         tooltip.add(new TranslationTextComponent(Reference.MOD_ID + ".tooltip.left_blades")
-                .append(new StringTextComponent(": " + this.getBladeCount(stack, true) + "/" + MAX_HOLSTERED_BLADES)));
+                .appendSibling(new StringTextComponent(": " + this.getBladeCount(stack, true) + "/" + MAX_HOLSTERED_BLADES)));
         tooltip.add(new TranslationTextComponent(Reference.MOD_ID + ".tooltip.right_blades")
-                .append(new StringTextComponent(": " + this.getBladeCount(stack, false) + "/" + MAX_HOLSTERED_BLADES)));
+                .appendSibling(new StringTextComponent(": " + this.getBladeCount(stack, false) + "/" + MAX_HOLSTERED_BLADES)));
     }
 
     @Override
