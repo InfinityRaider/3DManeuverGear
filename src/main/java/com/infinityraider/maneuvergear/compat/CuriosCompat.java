@@ -4,25 +4,19 @@ import com.infinityraider.infinitylib.capability.ICapabilityImplementation;
 import com.infinityraider.maneuvergear.item.ItemManeuverGear;
 import com.infinityraider.maneuvergear.reference.Names;
 import com.infinityraider.maneuvergear.registry.ItemRegistry;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.IEntityRenderer;
-import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.client.renderer.entity.model.EntityModel;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.InterModComms;
-import top.theillusivec4.curios.api.CuriosApi;
-import top.theillusivec4.curios.api.CuriosCapability;
-import top.theillusivec4.curios.api.SlotTypeMessage;
-import top.theillusivec4.curios.api.SlotTypePreset;
+import top.theillusivec4.curios.api.*;
 import top.theillusivec4.curios.api.type.capability.ICurio;
 
 import javax.annotation.Nonnull;
@@ -33,8 +27,15 @@ public class CuriosCompat {
     }
 
     public static ItemStack findManeuverGear(LivingEntity entity) {
-        return CuriosApi.getCuriosHelper().findEquippedCurio(ItemRegistry.getInstance().itemManeuverGear, entity)
-                .map(t -> t.right).orElse(ItemStack.EMPTY);
+        return CuriosApi.getCuriosHelper().getEquippedCurios(entity).map(curios -> {
+            for(int i = 0; i < curios.getSlots(); i++) {
+                ItemStack stack = curios.getStackInSlot(i);
+                if(stack.getItem() == ItemRegistry.itemManeuverGear) {
+                    return stack;
+                }
+            }
+            return ItemStack.EMPTY;
+        }).orElse(ItemStack.EMPTY);
     }
 
     public static CurioCapabilityImplementation getCurioCapabilityImplementation() {
@@ -83,44 +84,54 @@ public class CuriosCompat {
             }
 
             @Override
-            public void curioTick(String identifier, int index, LivingEntity entity) {
-                this.getManeuverGear().onWornTick(entity);
+            public ItemStack getStack() {
+                return this.stack;
             }
 
             @Override
-            public void onEquip(String identifier, int index, LivingEntity entity) {
-                this.getManeuverGear().onEquip(entity);
+            public void curioTick(SlotContext context) {
+                this.getManeuverGear().onWornTick(context.entity());
             }
 
             @Override
-            public void onUnequip(String identifier, int index, LivingEntity entity) {
-                this.getManeuverGear().onUnequip(entity);
+            public void onEquip(SlotContext context, ItemStack pref) {
+                this.getManeuverGear().onEquip(context.entity());
             }
 
             @Override
-            public boolean canEquip(String identifier, LivingEntity entity) {
+            public void onUnequip(SlotContext context, ItemStack newStack) {
+                this.getManeuverGear().onUnequip(context.entity());
+            }
+
+            @Override
+            public boolean canEquip(SlotContext context) {
                 return true;
             }
 
             @Override
-            public boolean canSync(String identifier, int index, LivingEntity livingEntity) {
+            public boolean canUnequip(SlotContext context) {
+                return true;
+            }
+
+            @Override
+            public boolean canSync(SlotContext context) {
                 return true;
             }
 
             @Nonnull
             @Override
-            public CompoundNBT writeSyncData() {
-                CompoundNBT tag = new CompoundNBT();
-                this.stack.write(tag);
+            public CompoundTag writeSyncData(SlotContext context) {
+                CompoundTag tag = new CompoundTag();
+                this.stack.save(tag);
                 return tag;
             }
 
-            public void readSyncData(CompoundNBT tag) {
-                this.stack = ItemStack.read(tag);
+            public void readSyncData(SlotContext context, CompoundTag tag) {
+                this.stack = ItemStack.of(tag);
             }
 
             @Override
-            public boolean canRightClickEquip() {
+            public boolean canEquipFromUse(SlotContext context) {
                 return true;
             }
 
@@ -131,7 +142,7 @@ public class CuriosCompat {
 
             @Override
             @OnlyIn(Dist.CLIENT)
-            public void render(String identifier, int index, MatrixStack transforms, IRenderTypeBuffer buffer, int light, LivingEntity entity,
+            public void render(String identifier, int index, PoseStack transforms, MultiBufferSource buffer, int light, LivingEntity entity,
                                float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
 
                 EntityRenderer<?> renderer = Minecraft.getInstance().getRenderManager().getRenderer(entity);

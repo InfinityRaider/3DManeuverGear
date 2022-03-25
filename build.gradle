@@ -175,6 +175,11 @@ repositories {
         // for JEI
         url "https://dvs1.progwml6.com/files/maven"
     }
+    maven {
+        // for Curios
+        name "curios"
+        url "https://maven.theillusivec4.top/"
+    }
 }
 
 dependencies {
@@ -186,6 +191,10 @@ dependencies {
     //JEI
     compileOnly fg.deobf("mezz.jei:jei-1.18.2:9.5.3.153:api")
     runtimeOnly fg.deobf("mezz.jei:jei-1.18.2:9.5.3.153")
+
+    //Curios
+    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18.2-5.0.6.3:api")
+    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18.2-5.0.6.3")
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..

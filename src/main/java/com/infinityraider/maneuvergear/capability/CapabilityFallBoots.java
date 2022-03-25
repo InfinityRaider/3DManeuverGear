@@ -1,19 +1,20 @@
 package com.infinityraider.maneuvergear.capability;
 
 import com.infinityraider.infinitylib.capability.IInfSerializableCapabilityImplementation;
-import com.infinityraider.infinitylib.utility.ISerializable;
+import com.infinityraider.maneuvergear.capability.CapabilityFallBoots.Impl;
 import com.infinityraider.maneuvergear.item.ItemFallBoots;
 import com.infinityraider.maneuvergear.reference.Names;
 import com.infinityraider.maneuvergear.reference.Reference;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 
-public class CapabilityFallBoots implements IInfSerializableCapabilityImplementation<ItemStack, CapabilityFallBoots.Impl> {
+public class CapabilityFallBoots implements IInfSerializableCapabilityImplementation<ItemStack, Impl> {
     private static final CapabilityFallBoots INSTANCE = new CapabilityFallBoots();
 
     public static CapabilityFallBoots getInstance() {
@@ -27,8 +28,7 @@ public class CapabilityFallBoots implements IInfSerializableCapabilityImplementa
         && stack.getCapability(CapabilityFallBoots.CAPABILITY).map(CapabilityFallBoots.Impl::areFallBoots).orElse(false);
     }
 
-    @CapabilityInject(value = Impl.class)
-    public static Capability<Impl> CAPABILITY = null;
+    public static Capability<Impl> CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
     private CapabilityFallBoots() {}
 
@@ -39,7 +39,7 @@ public class CapabilityFallBoots implements IInfSerializableCapabilityImplementa
 
     @Override
     public boolean shouldApplyCapability(ItemStack stack) {
-        return (stack.getItem() instanceof ArmorItem) && (((ArmorItem) stack.getItem()).getEquipmentSlot() == EquipmentSlotType.FEET);
+        return (stack.getItem() instanceof ArmorItem) && (((ArmorItem) stack.getItem()).getEquipmentSlot(stack) == EquipmentSlot.FEET);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class CapabilityFallBoots implements IInfSerializableCapabilityImplementa
         return Impl.class;
     }
 
-    public static class Impl implements ISerializable {
+    public static class Impl implements Serializable<Impl> {
         private boolean areFallBoots;
 
         private Impl(ItemStack stack) {
@@ -78,15 +78,20 @@ public class CapabilityFallBoots implements IInfSerializableCapabilityImplementa
         }
 
         @Override
-        public void readFromNBT(CompoundNBT tag) {
-            this.areFallBoots = tag.contains(Names.NBT.BOOTS) && tag.getBoolean(Names.NBT.BOOTS);
+        public void copyDataFrom(Impl from) {
+            this.setFallBoots(from.areFallBoots());
         }
 
         @Override
-        public CompoundNBT writeToNBT() {
-            CompoundNBT tag = new CompoundNBT();
+        public CompoundTag serializeNBT() {
+            CompoundTag tag = new CompoundTag();
             tag.putBoolean(Names.NBT.BOOTS, this.areFallBoots);
             return tag;
+        }
+
+        @Override
+        public void deserializeNBT(CompoundTag tag) {
+            this.areFallBoots = tag.contains(Names.NBT.BOOTS) && tag.getBoolean(Names.NBT.BOOTS);
         }
     }
 }

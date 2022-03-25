@@ -6,19 +6,12 @@ import com.infinityraider.maneuvergear.reference.Reference;
 import com.infinityraider.infinitylib.item.ItemBase;
 import com.infinityraider.maneuvergear.render.RenderManeuverGear;
 import com.infinityraider.maneuvergear.utility.IManeuverGear;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -155,28 +148,28 @@ public class ItemManeuverGear extends ItemBase implements IManeuverGear {
 
     @Override
     public void onWornTick(LivingEntity entity) {
-        if (entity instanceof PlayerEntity) {
-            DartHandler.instance.getPhysicsEngine((PlayerEntity) entity).updateTick();
+        if (entity instanceof Player) {
+            DartHandler.instance.getPhysicsEngine((Player) entity).updateTick();
         }
     }
 
     @Override
     public void onEquip(LivingEntity entity) {
-        if(entity instanceof PlayerEntity) {
-            DartHandler.instance.equipGear((PlayerEntity) entity);
+        if(entity instanceof Player) {
+            DartHandler.instance.equipGear((Player) entity);
         }
     }
 
     @Override
     public void onUnequip(LivingEntity entity) {
-        if(entity instanceof PlayerEntity) {
-            DartHandler.instance.unEquipGear((PlayerEntity) entity);
+        if(entity instanceof Player) {
+            DartHandler.instance.unEquipGear((Player) entity);
         }
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void render(ItemStack stack, LivingEntity entity, MatrixStack transforms, IRenderTypeBuffer buffer, int light, float partialTicks) {
+    public void render(ItemStack stack, LivingEntity entity, PoseStack transforms, MultiBufferSource buffer, int light, float partialTicks) {
         RenderManeuverGear.getInstance().render(stack, entity, transforms, buffer, light, partialTicks);
     }
 }
