@@ -4,17 +4,17 @@ import com.infinityraider.infinitylib.item.IInfinityItem;
 import com.infinityraider.maneuvergear.ManeuverGear;
 import com.infinityraider.maneuvergear.reference.Names;
 import com.infinityraider.maneuvergear.registry.SoundRegistry;
-import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.MusicDiscItem;
-import net.minecraft.item.Rarity;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.RecordItem;
 
 @MethodsReturnNonnullByDefault
-public class ItemRecord extends MusicDiscItem implements IInfinityItem {
+public class ItemRecord extends RecordItem implements IInfinityItem {
     public ItemRecord() {
         super(16, ItemRecord::getSoundEvent, new Properties()
-                .maxStackSize(1).group(ItemGroup.MISC).rarity(Rarity.RARE));
+                .stacksTo(1).tab(CreativeModeTab.TAB_MISC).rarity(Rarity.RARE));
     }
 
     @Override
@@ -28,6 +28,6 @@ public class ItemRecord extends MusicDiscItem implements IInfinityItem {
     }
 
     private static SoundEvent getSoundEvent() {
-        return SoundRegistry.getInstance().soundEventRecord;
+        return SoundRegistry.soundEventRecord;
     }
 }

@@ -1,8 +1,15 @@
+// ====================================================================================================================
+// 3D Maneuver Gear Buildscript
+// ====================================================================================================================
 
-// For those who want the bleeding edge
+// --------------------------------------------------------------------------------------------------------------------
+// Buildscript Dependencies
+// --------------------------------------------------------------------------------------------------------------------
+
 buildscript {
     repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
+        maven { url = 'https://maven.minecraftforge.net' }
+		maven { url = 'https://maven.parchmentmc.org' }
         jcenter()
         mavenCentral()
         flatDir{
@@ -10,23 +17,43 @@ buildscript {
         }
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+		classpath 'org.parchmentmc:librarian:1.+'
     }
 }
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'idea'
-apply plugin: 'maven-publish'
 
-// Load Properties
+// --------------------------------------------------------------------------------------------------------------------
+// Buildscript Plugins
+// --------------------------------------------------------------------------------------------------------------------
+plugins {
+    id 'eclipse'
+    id 'maven-publish'
+}
+
+// --------------------------------------------------------------------------------------------------------------------
+// ForgeGradle Plugin
+// --------------------------------------------------------------------------------------------------------------------
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'org.parchmentmc.librarian.forgegradle'
+
+
+// --------------------------------------------------------------------------------------------------------------------
+// Mod Properties
+// --------------------------------------------------------------------------------------------------------------------
+
+// Load Mod Properties
 ext.configFile = file('mod.properties')
 ext.config = parseConfig(configFile)
 
+// Mod Properties Transcription
 version = "${config.version_major}.${config.version_minor}.${config.version_patch}"
 group = "${config.package}" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = config.id
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = "${config.version_java}"
+// Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
+// Mod Properties Loader
 def parseConfig(File config) {
     config.withReader {
         def prop = new Properties()
@@ -35,21 +62,36 @@ def parseConfig(File config) {
     }
 }
 
+// --------------------------------------------------------------------------------------------------------------------
+// Minecraft Task
+// --------------------------------------------------------------------------------------------------------------------
+println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {
- mappings channel: "${config.mapping_channel}", version: "${config.mapping_version}"
+    mappings channel: "${config.mapping_channel}", version: "${config.mapping_version}"
+
+    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
+    // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+
+    // Default run configurations.
     runs {
         client {
             workingDirectory project.file('run')
+
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'REGISTRIES'
+
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
+
+            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
+            property 'forge.enabledGameTestNamespaces', 'maneuver_gear'
+
             mods {
                 maneuver_gear {
                     source sourceSets.main
                 }
                 infinitylib {
-                    //This still grabs the sourceSets from the main project, therefore one must manually correct it in runClient afterwards
+                    //This still grabs the sourceSets from ManeuverGear, therefore one must manually correct it in runClient afterwards
                     source project("InfinityLib").sourceSets.main
                 }
             }
@@ -57,16 +99,67 @@ minecraft {
 
         server {
             workingDirectory project.file('run')
+
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'REGISTRIES'
+
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
+
+            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
+            property 'forge.enabledGameTestNamespaces', 'maneuver_gear'
+
             mods {
                 maneuver_gear {
                     source sourceSets.main
                 }
                 infinitylib {
-                    //This still grabs the sourceSets from the main project, therefore one must manually correct it in runServer afterwards
+                    //This still grabs the sourceSets from ManeuverGear, therefore one must manually correct it in runClient afterwards
+                    source project("InfinityLib").sourceSets.main
+                }
+            }
+        }
+
+        gameTestServer {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'REGISTRIES'
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+
+            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
+            property 'forge.enabledGameTestNamespaces', 'maneuver_gear'
+
+            mods {
+                maneuver_gear {
+                    source sourceSets.main
+                }
+                infinitylib {
+                    //This still grabs the sourceSets from ManeuverGear, therefore one must manually correct it in runClient afterwards
+                    source project("InfinityLib").sourceSets.main
+                }
+            }
+        }
+
+        data {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'REGISTRIES'
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+
+            // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
+            args '--mod', 'maneuver_gear', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+
+            mods {
+                maneuver_gear {
+                    source sourceSets.main
+                }
+                infinitylib {
+                    //This still grabs the sourceSets from ManeuverGear, therefore one must manually correct it in runClient afterwards
                     source project("InfinityLib").sourceSets.main
                 }
             }
@@ -74,62 +167,29 @@ minecraft {
     }
 }
 
+// Include resources generated by data generators.
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
 repositories {
     maven {
         // for JEI
         url "https://dvs1.progwml6.com/files/maven"
     }
-    maven {
-        // for Curios
-        name "curios"
-        url "https://maven.theillusivec4.top/"
-    }
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${config.version_minecraft}-${config.version_forge}"
+    minecraft 'net.minecraftforge:forge:1.18.2-40.0.19'//"net.minecraftforge:forge:${config.version_minecraft}-${config.version_forge}"
 
-    compile project("InfinityLib")
+    compileOnly project(":InfinityLib")
+    runtimeOnly project(":InfinityLib")
 
-    compileOnly fg.deobf("mezz.jei:jei-1.16.5:7.7.0.106:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-1.16.5:7.7.0.106")
-
-    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.5-4.0.5.0:api")
-    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.5-4.0.5.0")
+    //JEI
+    compileOnly fg.deobf("mezz.jei:jei-1.18.2:9.5.3.153:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.18.2:9.5.3.153")
 }
 
-processResources
-{
-    // make sure to include mods.toml from the main mod
-    from(sourceSets.main.resources.srcDirs) {
-        include 'META-INF/mods.toml'
-
-        // replace version and mcversion
-        expand 'version': project.version
-    }
-
-    // from the main mod, copy everything else, thats not the mods.toml
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'META-INF/mods.toml', '**/psd/**'
-    }
-    /*
-    // make sure to include mods.toml from infinitylib
-    from(sourceSets.infinitylib.resources.srcDirs) {
-        include 'META-INF/mods.toml'
-
-        // replace version and mcversion
-        expand 'version': project.version
-    }
-    */
-
-    // from InfinityLib, copy everything else, thats not the mods.toml
-    //from(sourceSets.infinitylib.resources.srcDirs) {
-        //exclude 'META-INF/mods.toml', '**/psd/**'
-    //}
-}
-
+// Example for how to get properties into the manifest for reading by the runtime..
 jar {
-    archiveName = "${baseName} ${version}.${extension}"
     manifest {
         attributes([
                 "Specification-Title": "${config.id}",
@@ -141,4 +201,27 @@ jar {
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
+}
+
+/// Example configuration to allow publishing using the maven-publish task
+// This is the preferred method to reobfuscate your jar file
+//jar.finalizedBy('reobfJar')
+// However if you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing
+publish.dependsOn('reobfJar')
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact jar
+        }
+    }
+    repositories {
+        maven {
+            url "file:///${project.projectDir}/mcmodsrepo"
+        }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }

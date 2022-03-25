@@ -3,54 +3,29 @@ package com.infinityraider.maneuvergear.registry;
 import com.infinityraider.maneuvergear.ManeuverGear;
 import com.infinityraider.maneuvergear.item.*;
 import com.infinityraider.maneuvergear.reference.Names;
-import net.minecraft.item.Item;
+import net.minecraft.world.item.Item;
 
 import javax.annotation.Nullable;
 
 public class ItemRegistry {
-    private static final ItemRegistry INSTANCE = new ItemRegistry();
-
-    public static ItemRegistry getInstance() {
-        return INSTANCE;
-    }
-
     // Functional items
-    public final Item itemManeuverGear;
-    public final Item itemManeuverGearHandle;
-    public final Item itemSwordBlade;
+    public static final Item itemManeuverGear = new ItemManeuverGear();
+    public static final Item itemManeuverGearHandle = new ItemManeuverGearHandle();
+    public static final Item itemSwordBlade = new ItemSwordBlade();
 
     // Crafting resources
-    public final Item itemGasCanister;
-    public final Item itemBladeHolster;
-    public final Item itemBladeHolsterAssembly;
-    public final Item itemBelt;
-    public final Item itemGirdle;
-    public final Item itemGasNozzle;
-    public final Item itemCableCoil;
-    public final Item itemGrappleLauncher;
+    public static final Item itemGasCanister = new ItemResource(Names.Items.GAS_CANISTER);
+    public static final Item itemBladeHolster = new ItemResource(Names.Items.BLADE_HOLSTER);
+    public static final Item itemBladeHolsterAssembly = new ItemResource(Names.Items.BLADE_HOLSTER_ASSEMBLY);
+    public static final Item itemBelt = new ItemResource(Names.Items.BELT);
+    public static final Item itemGirdle = new ItemResource(Names.Items.GIRDLE);
+    public static final Item itemGasNozzle = new ItemResource(Names.Items.GAS_NOZZLE);
+    public static final Item itemCableCoil = new ItemResource(Names.Items.CABLE_COIL);
+    public static final Item itemGrappleLauncher = new ItemResource(Names.Items.GRAPPLE_LAUNCHER);
 
     // Gimmicks
     @Nullable
-    public final Item itemFallBoots;
+    public static final Item itemFallBoots = ManeuverGear.instance.getConfig().disableFallBoots() ? null : new ItemFallBoots();
     @Nullable
-    public final Item itemRecord;
-
-    private ItemRegistry() {
-        this.itemManeuverGear = new ItemManeuverGear();
-        this.itemManeuverGearHandle = new ItemManeuverGearHandle();
-        this.itemSwordBlade = new ItemSwordBlade();
-
-        this.itemGasCanister = new ItemResource(Names.Items.GAS_CANISTER);
-        this.itemBladeHolster = new ItemResource(Names.Items.BLADE_HOLSTER);
-        this.itemBladeHolsterAssembly = new ItemResource(Names.Items.BLADE_HOLSTER_ASSEMBLY);
-        this.itemBelt = new ItemResource(Names.Items.BELT);
-        this.itemGirdle = new ItemResource(Names.Items.GIRDLE);
-        this.itemGasNozzle = new ItemResource(Names.Items.GAS_NOZZLE);
-        this.itemCableCoil = new ItemResource(Names.Items.CABLE_COIL);
-        this.itemGrappleLauncher = new ItemResource(Names.Items.GRAPPLE_LAUNCHER);
-
-        this.itemFallBoots = ManeuverGear.instance.getConfig().disableFallBoots() ? null : new ItemFallBoots();
-        this.itemRecord = ManeuverGear.instance.getConfig().disableFallBoots() ? null : new ItemRecord();
-
-    }
+    public static final Item itemRecord = ManeuverGear.instance.getConfig().disableFallBoots() ? null : new ItemRecord();
 }

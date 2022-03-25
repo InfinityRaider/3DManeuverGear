@@ -1,6 +1,7 @@
 package com.infinityraider.maneuvergear.entity;
 
 import com.infinityraider.infinitylib.entity.EntityThrowableBase;
+import com.infinityraider.infinitylib.entity.IEntityRenderSupplier;
 import com.infinityraider.maneuvergear.ManeuverGear;
 import com.infinityraider.maneuvergear.handler.DartHandler;
 import com.infinityraider.maneuvergear.physics.PhysicsEngine;
@@ -8,18 +9,14 @@ import com.infinityraider.maneuvergear.reference.Names;
 import com.infinityraider.maneuvergear.registry.EntityRegistry;
 import com.infinityraider.maneuvergear.render.RenderEntityDart;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.client.registry.IRenderFactory;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.function.Supplier;
 
 public class EntityDart extends EntityThrowableBase {
     //number of blocks to fall per second due to gravity
@@ -187,7 +184,7 @@ public class EntityDart extends EntityThrowableBase {
 
     }
 
-    public static class SpawnFactory implements EntityType.IFactory<EntityDart> {
+    public static class SpawnFactory implements EntityType.EntityFactory<EntityDart> {
         private static final SpawnFactory INSTANCE = new SpawnFactory();
 
         public static SpawnFactory getInstance() {
@@ -197,13 +194,13 @@ public class EntityDart extends EntityThrowableBase {
         private SpawnFactory() {}
 
         @Override
-        public EntityDart create(EntityType<EntityDart> type, World world) {
+        public EntityDart create(EntityType<EntityDart> type, Level world) {
             return new EntityDart(type, world);
         }
     }
 
 
-    public static class RenderFactory implements IRenderFactory<EntityDart> {
+    public static class RenderFactory implements IEntityRenderSupplier<EntityDart> {
         private static final RenderFactory INSTANCE = new RenderFactory();
 
         public static RenderFactory getInstance() {
@@ -214,8 +211,8 @@ public class EntityDart extends EntityThrowableBase {
 
         @Override
         @OnlyIn(Dist.CLIENT)
-        public EntityRenderer<? super EntityDart> createRenderFor(EntityRendererManager manager) {
-            return new RenderEntityDart(manager);
+        public Supplier<EntityRendererProvider<EntityDart>> supplyRenderer() {
+            return () -> RenderEntityDart::new;
         }
     }
 }

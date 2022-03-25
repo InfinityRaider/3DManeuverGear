@@ -3,22 +3,13 @@ package com.infinityraider.maneuvergear.render;
 import com.infinityraider.infinitylib.render.IRenderUtilities;
 import com.infinityraider.maneuvergear.ManeuverGear;
 import com.infinityraider.maneuvergear.entity.EntityDart;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import mcp.MethodsReturnNonnullByDefault;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Matrix3f;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -30,7 +21,7 @@ public class RenderEntityDart extends EntityRenderer<EntityDart> implements IRen
     public static final ResourceLocation TEXTURE = new ResourceLocation(ManeuverGear.instance.getModId() + ":textures/entities/dart.png");
     private static final RenderType RENDER_TYPE = RenderType.getEntityCutout(TEXTURE);
 
-    public RenderEntityDart(EntityRendererManager renderManager) {
+    public RenderEntityDart(EntityRendererProvider.Context renderManager) {
         super(renderManager);
     }
 
