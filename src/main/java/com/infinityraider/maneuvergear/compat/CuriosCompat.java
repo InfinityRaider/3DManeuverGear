@@ -4,16 +4,10 @@ import com.infinityraider.infinitylib.capability.ICapabilityImplementation;
 import com.infinityraider.maneuvergear.item.ItemManeuverGear;
 import com.infinityraider.maneuvergear.reference.Names;
 import com.infinityraider.maneuvergear.registry.ItemRegistry;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.InterModComms;
 import top.theillusivec4.curios.api.*;
@@ -134,28 +128,6 @@ public class CuriosCompat {
             public boolean canEquipFromUse(SlotContext context) {
                 return true;
             }
-
-            @Override
-            public boolean canRender(String identifier, int index, LivingEntity entity) {
-                return true;
-            }
-
-            @Override
-            @OnlyIn(Dist.CLIENT)
-            public void render(String identifier, int index, PoseStack transforms, MultiBufferSource buffer, int light, LivingEntity entity,
-                               float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-
-                EntityRenderer<?> renderer = Minecraft.getInstance().getRenderManager().getRenderer(entity);
-                if (!(renderer instanceof IEntityRenderer<?, ?>)) {
-                    return;
-                }
-                EntityModel<?> model = ((IEntityRenderer<?, ?>) renderer).getEntityModel();
-                if (!(model instanceof BipedModel<?>)) {
-                    return;
-                }
-                this.getManeuverGear().render(this.stack, entity, transforms, buffer, light, partialTicks);
-            }
-
         }
     }
 }

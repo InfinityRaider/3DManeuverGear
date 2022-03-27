@@ -6,7 +6,7 @@ import com.infinityraider.maneuvergear.config.Config;
 import com.infinityraider.maneuvergear.network.MessageBoostUsed;
 import com.infinityraider.maneuvergear.proxy.ClientProxy;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.InputEvent;
@@ -37,12 +37,12 @@ public class KeyInputHandler {
     @SubscribeEvent
     @SuppressWarnings("unused")
     public void onKeyInput(InputEvent.KeyInputEvent event) {
-        if(Minecraft.getInstance().currentScreen != null) {
+        if(Minecraft.getInstance().screen != null) {
             // We do not want to do anything while a GUI is open
             return;
         }
-        boolean space = Minecraft.getInstance().gameSettings.keyBindJump.isPressed();
-        boolean sneak = Minecraft.getInstance().gameSettings.keyBindSneak.isPressed() || Minecraft.getInstance().gameSettings.keyBindSneak.isKeyDown();
+        boolean space = Minecraft.getInstance().options.keyJump.isDown();
+        boolean sneak = Minecraft.getInstance().options.keyShift.isDown();
         if(space && sneak) {
             applyBoost(ManeuverGear.instance.getClientPlayer());
         }
@@ -51,13 +51,13 @@ public class KeyInputHandler {
     @SubscribeEvent
     @SuppressWarnings("unused")
     public void onClientTick(TickEvent.ClientTickEvent event) {
-        if(Minecraft.getInstance().currentScreen != null) {
+        if(Minecraft.getInstance().screen != null) {
             // We do not want to do anything while a GUI is open
             return;
         }
         // check keybinds
-        boolean left = this.config.useConfigKeyBinds() ? keyboard.isKeyPressed(config.retractLeftKey()) : ClientProxy.KEY_RETRACT_LEFT.isPressed();
-        boolean right = this.config.useConfigKeyBinds() ? keyboard.isKeyPressed(config.retractRightKey()) : ClientProxy.KEY_RETRACT_RIGHT.isPressed();
+        boolean left = this.config.useConfigKeyBinds() ? keyboard.isKeyPressed(config.retractLeftKey()) : ClientProxy.KEY_RETRACT_LEFT.isDown();
+        boolean right = this.config.useConfigKeyBinds() ? keyboard.isKeyPressed(config.retractRightKey()) : ClientProxy.KEY_RETRACT_RIGHT.isDown();
         // update retracting status
         if(left != status_left) {
             toggleRetracting(ManeuverGear.instance.getClientPlayer(), true, left);
@@ -73,13 +73,13 @@ public class KeyInputHandler {
         }
     }
 
-    private void toggleRetracting(PlayerEntity player, boolean left, boolean status) {
+    private void toggleRetracting(Player player, boolean left, boolean status) {
         if(DartHandler.instance.isWearingGear(player)) {
            DartHandler.instance.getPhysicsEngine(player).toggleRetracting(left, status);
         }
     }
 
-    private void applyBoost(PlayerEntity player) {
+    private void applyBoost(Player player) {
         if(boostCoolDown <= 0 && DartHandler.instance.isWearingGear(player)) {
             new MessageBoostUsed().sendToServer();
             DartHandler.instance.getPhysicsEngine(player).applyBoost();

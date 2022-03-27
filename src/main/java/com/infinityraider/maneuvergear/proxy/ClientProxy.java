@@ -1,5 +1,6 @@
 package com.infinityraider.maneuvergear.proxy;
 
+import com.infinityraider.maneuvergear.compat.CuriosCompatClient;
 import com.infinityraider.maneuvergear.config.Config;
 import com.infinityraider.maneuvergear.handler.KeyInputHandler;
 import com.infinityraider.maneuvergear.handler.TooltipHandler;
@@ -9,6 +10,7 @@ import com.infinityraider.maneuvergear.physics.PhysicsEngineDummy;
 import com.infinityraider.maneuvergear.reference.Names;
 import com.infinityraider.maneuvergear.reference.Reference;
 import com.infinityraider.infinitylib.proxy.base.IClientProxyBase;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.api.distmarker.Dist;
@@ -22,11 +24,11 @@ import java.util.function.Function;
 
 @OnlyIn(Dist.CLIENT)
 public class ClientProxy implements IClientProxyBase<Config>, IProxy {
-    public static final KeyBinding KEY_RETRACT_LEFT = new KeyBinding(
+    public static final KeyMapping KEY_RETRACT_LEFT = new KeyMapping(
             Reference.MOD_ID+"."+Names.Objects.KEY+"."+Names.Objects.RETRACT + "_" + Names.Objects.LEFT,
             GLFW.GLFW_KEY_Z,
             "key.categories.movement");
-    public static final KeyBinding KEY_RETRACT_RIGHT = new KeyBinding(
+    public static final KeyMapping KEY_RETRACT_RIGHT = new KeyMapping(
             Reference.MOD_ID+"."+Names.Objects.KEY+"."+Names.Objects.RETRACT + "_" + Names.Objects.RIGHT,
             GLFW.GLFW_KEY_X,
             "key.categories.movement");
@@ -36,6 +38,8 @@ public class ClientProxy implements IClientProxyBase<Config>, IProxy {
         // Register key bindings
         ClientRegistry.registerKeyBinding(KEY_RETRACT_LEFT);
         ClientRegistry.registerKeyBinding(KEY_RETRACT_RIGHT);
+        // Register Curios renderer
+        CuriosCompatClient.init();
     }
 
     @Override

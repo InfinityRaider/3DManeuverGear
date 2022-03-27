@@ -3,9 +3,9 @@ package com.infinityraider.maneuvergear.handler;
 import com.infinityraider.maneuvergear.ManeuverGear;
 import com.infinityraider.maneuvergear.capability.CapabilityFallBoots;
 import com.infinityraider.maneuvergear.item.ItemFallBoots;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -46,7 +46,7 @@ public class AnvilHandler {
             // Do nothing if neither slot contains fall boots
             return;
         }
-        if(((ArmorItem) left.getItem()).getEquipmentSlot() != ((ArmorItem) right.getItem()).getEquipmentSlot()) {
+        if(((ArmorItem) left.getItem()).getEquipmentSlot(left) != ((ArmorItem) right.getItem()).getEquipmentSlot(right)) {
             // Do nothing if the slots contain armor pieces for different body parts
             return;
         }
@@ -64,9 +64,9 @@ public class AnvilHandler {
         // Set the name
         String inputName = event.getName();
         if(inputName == null || inputName.isEmpty()) {
-            output.clearCustomName();
+            output.resetHoverName();
         } else {
-            output.setDisplayName(new StringTextComponent(inputName));
+            output.setHoverName(new TextComponent(inputName));
         }
         // Set the output
         event.setOutput(output);

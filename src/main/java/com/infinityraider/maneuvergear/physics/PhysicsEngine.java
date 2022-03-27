@@ -1,7 +1,7 @@
 package com.infinityraider.maneuvergear.physics;
 
 import com.infinityraider.maneuvergear.entity.EntityDart;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.phys.Vec3;
 
 public abstract class PhysicsEngine {
     /** Left dart */
@@ -54,7 +54,7 @@ public abstract class PhysicsEngine {
         }
     }
 
-    public abstract void onDartAnchored(EntityDart dart, Vector3d position);
+    public abstract void onDartAnchored(EntityDart dart, Vec3 position);
 
     public abstract void onDartRetracted(boolean left);
 

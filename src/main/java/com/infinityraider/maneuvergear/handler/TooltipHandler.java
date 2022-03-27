@@ -3,8 +3,8 @@ package com.infinityraider.maneuvergear.handler;
 import com.infinityraider.maneuvergear.capability.CapabilityFallBoots;
 import com.infinityraider.maneuvergear.item.ItemFallBoots;
 import com.infinityraider.maneuvergear.reference.Reference;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -29,7 +29,7 @@ public class TooltipHandler {
             return;
         }
         if (CapabilityFallBoots.areFallBoots(stack) && !(stack.getItem() instanceof ItemFallBoots)) {
-            event.getToolTip().add(new TranslationTextComponent(Reference.MOD_ID + ".tooltip.fall_boots_imbued"));
+            event.getToolTip().add(new TranslatableComponent(Reference.MOD_ID + ".tooltip.fall_boots_imbued"));
         }
     }
 }

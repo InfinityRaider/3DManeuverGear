@@ -4,19 +4,20 @@ import com.infinityraider.maneuvergear.entity.EntityDart;
 import com.infinityraider.maneuvergear.handler.DartHandler;
 import com.infinityraider.infinitylib.network.MessageBase;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 public class MessageDartAnchored extends MessageBase {
     private EntityDart dart;
     private double cableLength;
-    private Vector3d pos;
+    private Vec3 pos;
     private float pitch;
     private float yaw;
 
     public MessageDartAnchored() {}
 
-    public MessageDartAnchored(EntityDart dart, Vector3d pos, double cableLength, float pitch, float yaw) {
+    public MessageDartAnchored(EntityDart dart, Vec3 pos, double cableLength, float pitch, float yaw) {
         this();
         this.dart = dart;
         this.cableLength = cableLength;

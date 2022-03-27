@@ -4,7 +4,13 @@ import com.infinityraider.infinitylib.item.IInfinityItem;
 import com.infinityraider.maneuvergear.ManeuverGear;
 import com.infinityraider.maneuvergear.reference.Names;
 import com.infinityraider.maneuvergear.reference.Reference;
-import net.minecraft.world.item.ArmorItem;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.*;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -16,7 +22,7 @@ public class ItemFallBoots extends ArmorItem implements IInfinityItem {
     private final String internalName;
 
     public ItemFallBoots() {
-        super(ArmorMaterial.LEATHER, EquipmentSlotType.FEET, new Properties().group(ItemGroup.COMBAT));
+        super(ArmorMaterials.LEATHER, EquipmentSlot.FEET, new Properties().tab(CreativeModeTab.TAB_COMBAT));
         this.internalName = Names.Items.BOOTS;
     }
 
@@ -31,15 +37,15 @@ public class ItemFallBoots extends ArmorItem implements IInfinityItem {
     }
 
     @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
+    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
         return Reference.MOD_ID +":textures/models/armor/fall_boots.png";
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag advanced) {
-        tooltip.add(new TranslationTextComponent(Reference.MOD_ID + ".tooltip." + this.getInternalName() + "_1"));
-        tooltip.add(new StringTextComponent(""));
-        tooltip.add(new TranslationTextComponent(Reference.MOD_ID + ".tooltip." + this.getInternalName() + "_2"));
+    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag advanced) {
+        tooltip.add(new TranslatableComponent(Reference.MOD_ID + ".tooltip." + this.getInternalName() + "_1"));
+        tooltip.add(new TextComponent(""));
+        tooltip.add(new TranslatableComponent(Reference.MOD_ID + ".tooltip." + this.getInternalName() + "_2"));
     }
 }

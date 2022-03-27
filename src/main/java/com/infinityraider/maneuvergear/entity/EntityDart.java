@@ -8,16 +8,22 @@ import com.infinityraider.maneuvergear.physics.PhysicsEngine;
 import com.infinityraider.maneuvergear.reference.Names;
 import com.infinityraider.maneuvergear.registry.EntityRegistry;
 import com.infinityraider.maneuvergear.render.RenderEntityDart;
-import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.Supplier;
 
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class EntityDart extends EntityThrowableBase {
     //number of blocks to fall per second due to gravity
     public static final float GRAVITY_VELOCITY = 0.5F;
@@ -36,54 +42,44 @@ public class EntityDart extends EntityThrowableBase {
     private boolean left;
     private boolean hooked = false;
     private double cableLength;
-    private PlayerEntity player;
 
     //For client side spawning
-    private EntityDart(EntityType<EntityDart> type, World world) {
+    private EntityDart(EntityType<EntityDart> type, Level world) {
         super(type, world);
-        if(this.player!=null) {
-            DartHandler.instance.getPhysicsEngine(this.getPlayer()).setDart(this, left);
-        }
         //render the entity even if off screen
-        this.ignoreFrustumCheck = true;
+        this.noCulling = true;
+        // TODO: set player
     }
 
-    public EntityDart(PlayerEntity player, boolean left) {
-        super(EntityRegistry.getInstance().entityDartEntry, player, player.getEntityWorld());
-        this.player = player;
+    public EntityDart(Player player, boolean left) {
+        super(EntityRegistry.entityDartEntry, player);
         this.left = left;
         //render the entity even if off screen
-        this.ignoreFrustumCheck = true;
-        Vector3d direction = player.getLookVec();
-        double v_X = direction.getX()*INITIAL_VELOCITY/20.0F;
-        double v_Y = direction.getY()*INITIAL_VELOCITY/20.0F;
-        double v_Z = direction.getZ()*INITIAL_VELOCITY/20.0F;
-        this.setMotion(v_X, v_Y, v_Z);
+        this.noCulling = true;
+        Vec3 direction = player.getLookAngle();
+        double v_X = direction.x()*INITIAL_VELOCITY/20.0F;
+        double v_Y = direction.y()*INITIAL_VELOCITY/20.0F;
+        double v_Z = direction.z()*INITIAL_VELOCITY/20.0F;
+        this.setDeltaMovement(v_X, v_Y, v_Z);
     }
 
     @Override
-    @ParametersAreNonnullByDefault
-    protected void onImpact(RayTraceResult impact) {
-        ManeuverGear.instance.getLogger().debug("impact " + (this.getEntityWorld().isRemote ? "client side" : "server side"));
-        Vector3d velocity = this.getMotion();
-        double yaw = -Math.atan2(velocity.getZ(), velocity.getX());
-        double pitch = Math.asin(velocity.getY() / Math.sqrt(velocity.getX() * velocity.getX() + velocity.getZ() * velocity.getZ()));
-        DartHandler.instance.onDartAnchored(this, impact.getHitVec(), this.getCableLength(), (float) yaw, (float) pitch);
+    public Player getOwner() {
+        return (Player) super.getOwner();
     }
 
     @Override
-    protected void registerData() {
-
+    protected void onHit(HitResult impact) {
+        ManeuverGear.instance.getLogger().debug("impact " + (this.getLevel().isClientSide() ? "client side" : "server side"));
+        Vec3 velocity = this.getDeltaMovement();
+        double yaw = -Math.atan2(velocity.z(), velocity.x());
+        double pitch = Math.asin(velocity.y() / Math.sqrt(velocity.x() * velocity.x() + velocity.z() * velocity.z()));
+        DartHandler.instance.onDartAnchored(this, impact.getLocation(), this.getCableLength(), (float) yaw, (float) pitch);
     }
 
     @Override
-    protected float getGravityVelocity() {
+    protected float getGravity() {
         return hooked ? 0 : GRAVITY_VELOCITY/20;
-    }
-
-    /** returns the player that fired this dart */
-    public PlayerEntity getPlayer() {
-        return player;
     }
 
     /** check if this is the left or the right dart */
@@ -102,8 +98,8 @@ public class EntityDart extends EntityThrowableBase {
     }
 
     public double calculateDistanceToPlayer() {
-        PlayerEntity player = this.getPlayer();
-        return player == null ? 0 : this.getPositionVec().subtract(player.getPosX(), player.getPosY(), player.getPosZ()).length();
+        Player player = this.getOwner();
+        return player == null ? 0 : this.position().subtract(player.getX(), player.getY(), player.getZ()).length();
     }
 
     /** sets the length of the cable */
@@ -119,19 +115,19 @@ public class EntityDart extends EntityThrowableBase {
     @Override
     public void tick() {
         //serverside, if this dart is not connected to a player, get rid of it
-        if(!this.getEntityWorld().isRemote && this.getPlayer() == null) {
-            this.setDead();
+        if(!this.getLevel().isClientSide() && this.getOwner() == null) {
+            this.kill();
             return;
         }
         //if the dart is hooked somewhere, it shouldn't do anything anymore
         if(this.hooked) {
-            this.setRawPosition(this.prevPosX, this.prevPosY, this.prevPosZ);
-            this.rotationYaw = this.prevRotationYaw;
-            this.rotationPitch = this.prevRotationPitch;
+            this.setPosRaw(this.xOld, this.yOld, this.zOld);
+            this.setXRot(this.xRotO);
+            this.setYRot(this.yRotO);
             return;
         } else {
-            this.prevRotationYaw = this.rotationYaw;
-            this.prevRotationPitch = this.rotationPitch;
+            this.xRotO = this.getXRot();
+            this.yRotO = this.getYRot();
         }
         //check for collision during movement this tick
         this.setCableLength(this.calculateDistanceToPlayer());
@@ -144,44 +140,43 @@ public class EntityDart extends EntityThrowableBase {
     }
 
     public void retractDart() {
-        DartHandler.instance.retractDart(this.getPlayer(), this.left);
-        this.setDead();
+        DartHandler.instance.retractDart(this.getOwner(), this.left);
+        this.kill();
     }
 
     @Override
-    public void setDead() {
-        if(this.getEntityWorld().isRemote) {
-            PhysicsEngine engine = DartHandler.instance.getPhysicsEngine(player);
+    public void kill() {
+        if(this.getLevel().isClientSide()) {
+            PhysicsEngine engine = DartHandler.instance.getPhysicsEngine(this.getOwner());
             engine.setDart(null, left);
             engine.onDartRetracted(left);
         }
-        super.setDead();
+        super.kill();
+    }
+
+    @Override
+    protected void defineSynchedData() {
+
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public boolean isInRangeToRenderDist(double distance) {
+    public boolean shouldRenderAtSqrDistance(double distance) {
         return distance <= RENDER_DISTANCE_SQ;
     }
 
     @Override
-    public void writeCustomEntityData(CompoundNBT tag) {
+    public void writeCustomEntityData(CompoundTag tag) {
         tag.putBoolean(Names.NBT.LEFT, left);
         tag.putBoolean(Names.NBT.HOOKED, hooked);
         tag.putDouble(Names.NBT.LENGTH, this.getCableLength());
-        tag.putUniqueId(Names.NBT.PLAYER, player.getUniqueID());
     }
 
     @Override
-    public void readCustomEntityData(CompoundNBT tag) {
+    public void readCustomEntityData(CompoundTag tag) {
         left = tag.getBoolean(Names.NBT.LEFT);
         hooked = tag.getBoolean(Names.NBT.HOOKED);
         this.setCableLength(tag.getDouble(Names.NBT.LENGTH));
-        player = this.getEntityWorld().getPlayerByUuid(tag.getUniqueId(Names.NBT.PLAYER));
-        if (this.player != null) {
-            DartHandler.instance.getPhysicsEngine(this.getPlayer()).setDart(this, left);
-        }
-
     }
 
     public static class SpawnFactory implements EntityType.EntityFactory<EntityDart> {

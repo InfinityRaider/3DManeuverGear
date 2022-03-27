@@ -9,7 +9,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 
 public class EntityRegistry {
-    public final EntityType<EntityDart> entityDartEntry = EntityTypeBase.entityTypeBuilder(
+    public static final EntityType<EntityDart> entityDartEntry = EntityTypeBase.entityTypeBuilder(
             Names.Entities.DART, EntityDart.class, EntityDart.SpawnFactory.getInstance(),
             MobCategory.MISC, EntityDimensions.fixed(Constants.UNIT, Constants.UNIT))
                 .setTrackingRange(32)
