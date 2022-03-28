@@ -4,18 +4,18 @@ import com.infinityraider.infinitylib.item.ItemBase;
 import com.infinityraider.maneuvergear.handler.DartHandler;
 import com.infinityraider.maneuvergear.reference.Names;
 import com.infinityraider.maneuvergear.reference.Reference;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -25,41 +25,41 @@ import java.util.List;
 public class ItemSwordBlade extends ItemBase {
     public ItemSwordBlade() {
         super(Names.Items.SWORD_BLADE, new Properties()
-                .group(ItemGroup.MISC)
-                .maxStackSize(16));
+                .tab(CreativeModeTab.TAB_MISC)
+                .stacksTo(16));
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
-        ItemStack stack = player.getHeldItem(hand);
-        if (world.isRemote) {
-            return new ActionResult<>(ActionResultType.PASS, stack);
+    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (world.isClientSide()) {
+            return new InteractionResultHolder<>(InteractionResult.PASS, stack);
         }
-        if (stack == null || stack.getItem() != this) {
-            return new ActionResult<>(ActionResultType.PASS, stack);
+        if (stack.getItem() != this) {
+            return new InteractionResultHolder<>(InteractionResult.PASS, stack);
         }
         ItemStack maneuverGear = DartHandler.instance.getManeuverGear(player);
         if (maneuverGear == null || !(maneuverGear.getItem() instanceof ItemManeuverGear)) {
-            return new ActionResult<>(ActionResultType.PASS, stack);
+            return new InteractionResultHolder<>(InteractionResult.PASS, stack);
         }
         ItemManeuverGear item  = (ItemManeuverGear) maneuverGear.getItem();
-        stack.setCount(item.addBlades(maneuverGear, stack.getCount(), player.isSneaking()));
-        return new ActionResult<>(ActionResultType.SUCCESS, stack);
+        stack.setCount(item.addBlades(maneuverGear, stack.getCount(), player.isDiscrete()));
+        return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
     }
 
     @Override
-    public boolean hitEntity(ItemStack stack, LivingEntity attacker, LivingEntity attacked) {
-        if(!attacker.getEntityWorld().isRemote && attacker instanceof PlayerEntity)  {
-            DamageSource source = DamageSource.causePlayerDamage((PlayerEntity) attacker);
-            attacker.attackEntityFrom(source, 2.5F);
+    public boolean hurtEnemy(ItemStack stack, LivingEntity attacker, LivingEntity attacked) {
+        if(!attacker.getLevel().isClientSide() && attacker instanceof Player)  {
+            DamageSource source = DamageSource.playerAttack((Player) attacker);
+            attacker.hurt(source, 2.5F);
         }
         return false;
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag advanced) {
-        tooltip.add(new TranslationTextComponent(Reference.MOD_ID + ".tooltip." + this.getInternalName() + "_1"));
-        tooltip.add(new TranslationTextComponent(Reference.MOD_ID + ".tooltip." + this.getInternalName() + "_2"));
+    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag advanced) {
+        tooltip.add(new TranslatableComponent(Reference.MOD_ID + ".tooltip." + this.getInternalName() + "_1"));
+        tooltip.add(new TranslatableComponent(Reference.MOD_ID + ".tooltip." + this.getInternalName() + "_2"));
     }
 }

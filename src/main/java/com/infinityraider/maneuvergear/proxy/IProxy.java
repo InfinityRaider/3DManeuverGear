@@ -53,4 +53,8 @@ public interface IProxy extends IProxyBase<Config> {
         ModuleKeyboard.getInstance().activate();
     }
 
+     default boolean isShiftPressed() {
+        return false;
+     }
+
 }

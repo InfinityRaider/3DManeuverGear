@@ -4,14 +4,18 @@ import com.infinityraider.maneuvergear.handler.DartHandler;
 import com.infinityraider.maneuvergear.reference.Names;
 import com.infinityraider.maneuvergear.reference.Reference;
 import com.infinityraider.infinitylib.item.ItemBase;
-import com.infinityraider.maneuvergear.render.RenderManeuverGear;
 import com.infinityraider.maneuvergear.utility.IManeuverGear;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.MethodsReturnNonnullByDefault;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -25,8 +29,8 @@ public class ItemManeuverGear extends ItemBase implements IManeuverGear {
 
     public ItemManeuverGear() {
         super(Names.Items.MANEUVER_GEAR, new Properties()
-                .group(ItemGroup.COMBAT)
-                .maxStackSize(1));
+                .tab(CreativeModeTab.TAB_COMBAT)
+                .stacksTo(1));
     }
 
     /**
@@ -39,7 +43,7 @@ public class ItemManeuverGear extends ItemBase implements IManeuverGear {
         if(!isValidManeuverGearStack(stack)) {
             return 0;
         }
-        CompoundNBT tag = stack.getTag();
+        CompoundTag tag = stack.getTag();
         if(tag == null) {
             return 0;
         }
@@ -57,9 +61,9 @@ public class ItemManeuverGear extends ItemBase implements IManeuverGear {
         if(!isValidManeuverGearStack(stack)) {
             return amount;
         }
-        CompoundNBT tag = stack.getTag();
+        CompoundTag tag = stack.getTag();
         if(tag == null) {
-            tag = new CompoundNBT();
+            tag = new CompoundTag();
             stack.setTag(tag);
         }
         int current = getBladeCount(stack, left);
@@ -95,7 +99,7 @@ public class ItemManeuverGear extends ItemBase implements IManeuverGear {
         if(!isValidManeuverGearStack(stack)) {
             return 0;
         }
-        CompoundNBT tag = stack.getTag();
+        CompoundTag tag = stack.getTag();
         if(tag == null) {
             return 0;
         }
@@ -138,12 +142,12 @@ public class ItemManeuverGear extends ItemBase implements IManeuverGear {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void addInformation(@Nonnull ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag advanced) {
-        tooltip.add(new TranslationTextComponent(Reference.MOD_ID + ".tooltip." + this.getInternalName() + "_1"));
-        tooltip.add(new TranslationTextComponent(Reference.MOD_ID + ".tooltip.left_blades")
-                .appendSibling(new StringTextComponent(": " + this.getBladeCount(stack, true) + "/" + MAX_HOLSTERED_BLADES)));
-        tooltip.add(new TranslationTextComponent(Reference.MOD_ID + ".tooltip.right_blades")
-                .appendSibling(new StringTextComponent(": " + this.getBladeCount(stack, false) + "/" + MAX_HOLSTERED_BLADES)));
+    public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag advanced) {
+        tooltip.add(new TranslatableComponent(Reference.MOD_ID + ".tooltip." + this.getInternalName() + "_1"));
+        tooltip.add(new TranslatableComponent(Reference.MOD_ID + ".tooltip.left_blades")
+                .append(new TextComponent(": " + this.getBladeCount(stack, true) + "/" + MAX_HOLSTERED_BLADES)));
+        tooltip.add(new TranslatableComponent(Reference.MOD_ID + ".tooltip.right_blades")
+                .append(new TextComponent(": " + this.getBladeCount(stack, false) + "/" + MAX_HOLSTERED_BLADES)));
     }
 
     @Override
@@ -165,11 +169,5 @@ public class ItemManeuverGear extends ItemBase implements IManeuverGear {
         if(entity instanceof Player) {
             DartHandler.instance.unEquipGear((Player) entity);
         }
-    }
-
-    @Override
-    @OnlyIn(Dist.CLIENT)
-    public void render(ItemStack stack, LivingEntity entity, PoseStack transforms, MultiBufferSource buffer, int light, float partialTicks) {
-        RenderManeuverGear.getInstance().render(stack, entity, transforms, buffer, light, partialTicks);
     }
 }

@@ -11,6 +11,7 @@ import com.infinityraider.maneuvergear.reference.Names;
 import com.infinityraider.maneuvergear.reference.Reference;
 import com.infinityraider.infinitylib.proxy.base.IClientProxyBase;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.api.distmarker.Dist;
@@ -72,5 +73,10 @@ public class ClientProxy implements IClientProxyBase<Config>, IProxy {
         IProxy.super.registerEventHandlers();
         this.registerEventHandler(KeyInputHandler.getInstance());
         this.registerEventHandler(TooltipHandler.getInstance());
+    }
+
+    @Override
+    public boolean isShiftPressed() {
+        return Minecraft.getInstance().options.keyShift.isDown();
     }
 }

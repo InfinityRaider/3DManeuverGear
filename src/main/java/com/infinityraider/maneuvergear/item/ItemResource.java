@@ -1,21 +1,23 @@
 package com.infinityraider.maneuvergear.item;
 
 import com.infinityraider.infinitylib.item.ItemBase;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.*;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 public class ItemResource extends ItemBase {
     public ItemResource(String name) {
         super(name, new Properties()
-                .group(ItemGroup.MISC)
-                .maxStackSize(16));
+                .tab(CreativeModeTab.TAB_MISC)
+                .stacksTo(16));
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
-        return new ActionResult<>(ActionResultType.SUCCESS, player.getHeldItem(hand));
+    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+        return new InteractionResultHolder<>(InteractionResult.SUCCESS, player.getItemInHand(hand));
     }
 }
