@@ -1,18 +1,18 @@
 package com.infinityraider.maneuvergear.network;
 
 import com.infinityraider.infinitylib.network.MessageBase;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraftforge.fml.network.NetworkDirection;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.network.NetworkEvent;
 
 public class MessageSpawnSteamParticles extends MessageBase {
-    private PlayerEntity player;
+    private Player player;
 
     public MessageSpawnSteamParticles() {}
 
-    public MessageSpawnSteamParticles(PlayerEntity player) {
+    public MessageSpawnSteamParticles(Player player) {
         this();
         this.player = player;
     }
@@ -25,17 +25,17 @@ public class MessageSpawnSteamParticles extends MessageBase {
     @Override
     protected void processMessage(NetworkEvent.Context ctx) {
         if(this.player != null) {
-            double x = player.getPosX();
-            double y = player.getPosY();
-            double z = player.getPosZ();
-            Vector3d lookVec = player.getLookVec();
+            double x = player.getX();
+            double y = player.getY();
+            double z = player.getZ();
+            Vec3 lookVec = player.getLookAngle();
             int nr = 10;
             for(int i=0;i<nr;i++) {
-                player.getEntityWorld().addParticle(
+                player.getLevel().addParticle(
                         ParticleTypes.CLOUD, x, y, z,
-                        -(lookVec.getX() * i) / (0.0F + nr),
-                        -(lookVec.getY() * i) / (0.0F + nr),
-                        -(lookVec.getZ() * i) / (0.0F + nr));
+                        -(lookVec.x() * i) / (0.0F + nr),
+                        -(lookVec.y() * i) / (0.0F + nr),
+                        -(lookVec.z() * i) / (0.0F + nr));
             }
         }
     }

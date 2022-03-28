@@ -11,11 +11,9 @@ import com.infinityraider.maneuvergear.physics.PhysicsEngine;
 import com.infinityraider.maneuvergear.physics.PhysicsEngineDummy;
 import com.infinityraider.infinitylib.modules.dualwield.ModuleDualWield;
 import com.infinityraider.infinitylib.proxy.base.IProxyBase;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 
 public interface IProxy extends IProxyBase<Config> {
 

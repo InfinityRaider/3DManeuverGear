@@ -12,12 +12,11 @@ import com.infinityraider.maneuvergear.reference.Reference;
 import com.infinityraider.infinitylib.proxy.base.IClientProxyBase;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.lwjgl.glfw.GLFW;
 
@@ -44,16 +43,16 @@ public class ClientProxy implements IClientProxyBase<Config>, IProxy {
     }
 
     @Override
-    public PhysicsEngine createPhysicsEngine(PlayerEntity player) {
-        if(player == null || !player.getEntityWorld().isRemote) {
+    public PhysicsEngine createPhysicsEngine(Player player) {
+        if(player == null || !player.getLevel().isClientSide()) {
             return new PhysicsEngineDummy();
         }
-        PlayerEntity local = getClientPlayer();
+        Player local = getClientPlayer();
         if(local == null) {
             //This only happens during first startup of an SSP world
             return new PhysicsEngineClientLocal(player);
         }
-        if(local.getUniqueID().equals(player.getUniqueID())) {
+        if(local.getUUID().equals(player.getUUID())) {
             //Happens during equipping of maneuver gear in an SSP or SMP world, a second SSP world startup or when a LAN player joins a host
             return new PhysicsEngineClientLocal(player);
         }

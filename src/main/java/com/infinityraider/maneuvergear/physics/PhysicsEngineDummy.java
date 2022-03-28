@@ -1,7 +1,7 @@
 package com.infinityraider.maneuvergear.physics;
 
 import com.infinityraider.maneuvergear.entity.EntityDart;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.phys.Vec3;
 
 public class PhysicsEngineDummy extends PhysicsEngine {
     public PhysicsEngineDummy() {
@@ -12,7 +12,7 @@ public class PhysicsEngineDummy extends PhysicsEngine {
     public void onUpdateTick() {}
 
     @Override
-    public void onDartAnchored(EntityDart dart, Vector3d position) {}
+    public void onDartAnchored(EntityDart dart, Vec3 position) {}
 
     @Override
     public void onDartRetracted(boolean left) {}

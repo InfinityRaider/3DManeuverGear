@@ -1,9 +1,9 @@
 package com.infinityraider.maneuvergear.network;
 
 import com.infinityraider.infinitylib.network.MessageBase;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraftforge.fml.network.NetworkDirection;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.network.NetworkEvent;
 
 public class MessageBoostUsed extends MessageBase {
     public MessageBoostUsed() {}
@@ -15,10 +15,10 @@ public class MessageBoostUsed extends MessageBase {
 
     @Override
     protected void processMessage(NetworkEvent.Context ctx) {
-        PlayerEntity player = ctx.getSender();
+        Player player = ctx.getSender();
         if (player != null) {
             new MessageSpawnSteamParticles(player).sendToAllAround(
-                    player.getEntityWorld().getDimensionKey(), player.getPosX(), player.getPosY(), player.getPosZ(), 64);
+                    player.getLevel().dimension(), player.getX(), player.getY(), player.getZ(), 64);
         }
     }
 }

@@ -3,10 +3,9 @@ package com.infinityraider.maneuvergear.network;
 import com.infinityraider.maneuvergear.entity.EntityDart;
 import com.infinityraider.maneuvergear.handler.DartHandler;
 import com.infinityraider.infinitylib.network.MessageBase;
-import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fml.network.NetworkDirection;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.network.NetworkEvent;
 
 public class MessageDartAnchored extends MessageBase {
     private EntityDart dart;
