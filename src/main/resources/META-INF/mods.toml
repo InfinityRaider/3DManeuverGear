@@ -17,14 +17,14 @@ Adds the 3D Maneuver Gear from Attack on Titan to Minecraft
 [[dependencies.maneuver_gear]]
     modId="forge"
     mandatory=true
-    versionRange="[36,)"
+    versionRange="[40,)"
     ordering="AFTER"
     side="BOTH"
 
 [[dependencies.maneuver_gear]]
     modId="infinitylib"
     mandatory=true
-    versionRange="[1.16.5-2.0.5,)"
+    versionRange="[1.18.2-2.1.0,)"
     ordering="AFTER"
     side="BOTH"
 
@@ -32,5 +32,5 @@ Adds the 3D Maneuver Gear from Attack on Titan to Minecraft
     modId="curios"
     mandatory=true
     ordering="AFTER"
-    versionRange="[1.16.5-4.0.5.0,)"
+    versionRange="[1.18.2-5.0.6.0,)"
     side="BOTH"
