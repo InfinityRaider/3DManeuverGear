@@ -3,7 +3,7 @@ package com.infinityraider.maneuvergear.physics;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 
-public class PhysicsEngineNewton extends PhysicsEngineClientBase {
+public class PhysicsEngineClientNewtonian extends PhysicsEngineClientBase {
     /** Tick time  */
     private static final double DT = 1.0/20;
 
@@ -16,7 +16,7 @@ public class PhysicsEngineNewton extends PhysicsEngineClientBase {
     /** Cable stiffness constant */
     private static final double K = 5;  // TODO: tweak
 
-    public PhysicsEngineNewton(Player player) {
+    public PhysicsEngineClientNewtonian(Player player) {
         super(player);
     }
 
