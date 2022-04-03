@@ -1,6 +1,7 @@
 package com.infinityraider.maneuvergear.config;
 
 import com.infinityraider.infinitylib.config.ConfigurationHandler;
+import com.infinityraider.maneuvergear.physics.PhysicsEngineClientBase;
 import com.infinityraider.maneuvergear.reference.Constants;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -9,6 +10,8 @@ import net.minecraftforge.fml.config.ModConfig;
 
 public abstract class Config implements ConfigurationHandler.SidedModConfig {
     private Config() {}
+
+    public abstract PhysicsEngineClientBase.Type getPhysicsModel();
 
     public abstract int getDurability();
 
@@ -39,6 +42,9 @@ public abstract class Config implements ConfigurationHandler.SidedModConfig {
     public abstract boolean debug();
 
     public static class Common extends Config {
+        //physics
+        public final ForgeConfigSpec.EnumValue<PhysicsEngineClientBase.Type> physicsModel;
+
         //numbers
         public final ForgeConfigSpec.IntValue durability;
         public final ForgeConfigSpec.DoubleValue damage;
@@ -55,6 +61,12 @@ public abstract class Config implements ConfigurationHandler.SidedModConfig {
 
 
         public Common(ForgeConfigSpec.Builder builder) {
+            builder.push("physics");
+            this.physicsModel = builder
+                    .comment("The physics model to use")
+                    .defineEnum("Physics Model", PhysicsEngineClientBase.Type.NEWTONIAN);
+            builder.pop();
+
             builder.push("numbers");
             this.durability = builder
                     .comment("The number of attacks after which a sword blade breaks")
@@ -93,6 +105,11 @@ public abstract class Config implements ConfigurationHandler.SidedModConfig {
         @Override
         public ModConfig.Type getSide() {
             return ModConfig.Type.COMMON;
+        }
+
+        @Override
+        public PhysicsEngineClientBase.Type getPhysicsModel() {
+            return this.physicsModel.get();
         }
 
         @Override

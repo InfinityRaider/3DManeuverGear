@@ -7,14 +7,11 @@ public class PhysicsEngineClientNewtonian extends PhysicsEngineClientBase {
     /** Tick time  */
     private static final double DT = 1.0/20;
 
-    /** Gravitational acceleration, calculated from gravity change */
-    private static final double G = 0.0025/ DT;
+    /** Gravitational acceleration */
+    private static final double G = 0.0025;
 
-    /** Player mass constant */
-    private static final double M = 70;  // TODO: tweak
-
-    /** Cable stiffness constant */
-    private static final double K = 5;  // TODO: tweak
+    /** Cable stiffness constant divided by player mass */
+    private static final double K_M = 4;
 
     public PhysicsEngineClientNewtonian(Player player) {
         super(player);
@@ -24,19 +21,19 @@ public class PhysicsEngineClientNewtonian extends PhysicsEngineClientBase {
     protected void doUpdateLogic() {
         // Get previous velocity
         Vec3 V0 = this.player().getDeltaMovement();
-        // Get force vectors
-        Vec3 l = this.getCableForce(true);
-        Vec3 r = this.getCableForce(false);
-        Vec3 g = new Vec3(0, -M*G, 0);
-        // Sum force vectors
-        Vec3 F = l.add(r).add(g);
+        // Get acceleration vectors
+        Vec3 l = this.getCableDeltaVector(true).scale(K_M); // Left cable
+        Vec3 r = this.getCableDeltaVector(false).scale(K_M); // Right cable
+        Vec3 g = new Vec3(0, -G, 0); // Gravity
+        // Sum acceleration vectors
+        Vec3 a = l.add(r).add(g);
         // Calculate velocity increment
-        Vec3 dV = F.scale(DT/M);
+        Vec3 dV = a.scale(DT);
         // Set new velocity
         this.setPlayerVelocity(V0.add(dV));
     }
 
-    private Vec3 getCableForce(boolean left) {
+    private Vec3 getCableDeltaVector(boolean left) {
         Vec3 A = left ? this.L() : this.R();
         // If there is no left anchor point, there is no force
         if (A == null) {
@@ -53,6 +50,6 @@ public class PhysicsEngineClientNewtonian extends PhysicsEngineClientBase {
             return Vec3.ZERO;
         }
         // Normalize the direction vector and scale it
-        return PA.normalize().scale(K*(d-l));
+        return PA.normalize().scale(d-l);
     }
 }

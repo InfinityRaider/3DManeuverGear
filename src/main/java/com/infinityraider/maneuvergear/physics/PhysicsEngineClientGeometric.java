@@ -1,6 +1,5 @@
 package com.infinityraider.maneuvergear.physics;
 
-import com.infinityraider.maneuvergear.ManeuverGear;
 import com.infinityraider.maneuvergear.entity.EntityDart;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
@@ -24,12 +23,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  */
 @OnlyIn(Dist.CLIENT)
 public final class PhysicsEngineClientGeometric extends PhysicsEngineClientBase {
-    /** Velocity at which the cable is retracted (blocks per second) */
-    public static final double retractingVelocity = ManeuverGear.instance.getConfig().getRetractingSpeed()/20.0D;
-
-    /** Locked state*/
-    private boolean locked;
-
     public PhysicsEngineClientGeometric(Player player) {
         super(player);
     }
@@ -38,10 +31,6 @@ public final class PhysicsEngineClientGeometric extends PhysicsEngineClientBase 
     protected void doUpdateLogic() {
         //apply gravity: velocity should increase with 10m/s / s, therefore velocity has to increase with 0.0025m/tick / tick
         this.player().setDeltaMovement(this.player().getDeltaMovement().add(0, -0.0025D, 0));
-        //decrement cables if necessary
-        this.decrementCableLength(this.getLeftDart());
-        this.decrementCableLength(this.getRightDart());
-        this.locked = false;
         //fetch initial conditions
         Vec3 p = this.playerPosition();
         Vec3 v_old = this.fetchCurrentVelocity();
@@ -168,7 +157,6 @@ public final class PhysicsEngineClientGeometric extends PhysicsEngineClientBase 
             else {
                 f = a/ (a + b);
             }
-            this.locked = true;
             return A.add(AB.multiply(f, f, f));
         } else {
             return null;
@@ -279,18 +267,6 @@ public final class PhysicsEngineClientGeometric extends PhysicsEngineClientBase 
     private Vec3 findInterSectPointWithSphere(Vec3 A, double a, Vec3 P) {
         Vec3 AP = P.subtract(A);
         return A.add(AP.normalize().multiply(a, a, a));
-    }
-
-    private void decrementCableLength(EntityDart dart) {
-        if(this.locked) {
-            return;
-        }
-        if(dart == null) {
-            return;
-        }
-        if((dart.isLeft() && isRetractingLeft()) || (!dart.isLeft() && isRetractingRight())) {
-            dart.setCableLength(dart.getCableLength() - retractingVelocity);
-        }
     }
 
     private Vec3 calculateNewPosition(Vec3 p, Vec3 v) {

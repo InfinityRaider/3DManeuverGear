@@ -4,10 +4,35 @@ import com.infinityraider.maneuvergear.ManeuverGear;
 import com.infinityraider.maneuvergear.entity.EntityDart;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.IExtensibleEnum;
 
 import javax.annotation.Nullable;
+import java.util.function.Function;
 
 public abstract class PhysicsEngineClientBase extends PhysicsEngine {
+    public enum Type implements IExtensibleEnum {
+        GEOMETRIC(PhysicsEngineClientGeometric::new),
+        NEWTONIAN(PhysicsEngineClientNewtonian::new);
+
+        private final Function<Player, PhysicsEngine> factory;
+
+        Type(Function<Player, PhysicsEngine> factory) {
+            this.factory = factory;
+        }
+
+        public final PhysicsEngine newEngine(Player player) {
+            return this.factory.apply(player);
+        }
+
+        @SuppressWarnings("unused")
+        public static PhysicsEngineClientBase.Type create(String name, Function<Player, PhysicsEngine> factory) {
+            throw new IllegalStateException("Enum not extended");
+        }
+    }
+
+    /** Velocity at which the cable is retracted (blocks per second) */
+    public static final double retractingVelocity = ManeuverGear.instance.getConfig().getRetractingSpeed()/20.0D;
+
     /** Boost intensity */
     public static final int BOOST = 2;
 
@@ -23,6 +48,9 @@ public abstract class PhysicsEngineClientBase extends PhysicsEngine {
     @Nullable
     private Vec3 R;
     private boolean retractingRight;
+
+    /** Locked state (no cables can be retracted anymore */
+    private boolean locked;
 
     public PhysicsEngineClientBase(Player player) {
         super();
@@ -56,6 +84,10 @@ public abstract class PhysicsEngineClientBase extends PhysicsEngine {
         //load dart positions
         LoadAnchoredDartPosition(true);
         LoadAnchoredDartPosition(false);
+        //decrement cables if necessary
+        this.decrementCableLength(this.getLeftDart());
+        this.decrementCableLength(this.getRightDart());
+        this.locked = this.checkLocked();
         //check if neither of the darts is anchored, in which case nothing needs to be calculated
         if(this.L == null && this.R == null) {
             return;
@@ -125,8 +157,6 @@ public abstract class PhysicsEngineClientBase extends PhysicsEngine {
         player.setDeltaMovement(vX, vY, vZ);
     }
 
-
-
     private void LoadAnchoredDartPosition(boolean left) {
         EntityDart dart = this.getDart(left);
         if(dart == null) {
@@ -142,5 +172,27 @@ public abstract class PhysicsEngineClientBase extends PhysicsEngine {
                 this.R = dart.isHooked() ? dart.position() : null;
             }
         }
+    }
+
+    private void decrementCableLength(EntityDart dart) {
+        if(this.locked) {
+            return;
+        }
+        if(dart == null) {
+            return;
+        }
+        if((dart.isLeft() && isRetractingLeft()) || (!dart.isLeft() && isRetractingRight())) {
+            dart.setCableLength(dart.getCableLength() - retractingVelocity);
+        }
+    }
+
+    private boolean checkLocked() {
+        if(this.L == null || this.R == null) {
+            return false;
+        }
+        double LR = this.L.subtract(this.R).length();
+        double l = this.getLeftDart().getCableLength();
+        double r = this.getRightDart().getCableLength();
+        return LR >= l + r;
     }
 }
