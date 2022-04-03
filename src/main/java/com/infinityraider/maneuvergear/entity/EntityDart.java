@@ -50,6 +50,9 @@ public class EntityDart extends EntityThrowableBase {
     //For client side spawning
     private EntityDart(EntityType<EntityDart> type, Level world) {
         super(type, world);
+        if(this.player!=null) {
+            DartHandler.instance.getPhysicsEngine(this.getOwner()).setDart(this, left);
+        }
         //render the entity even if off screen
         this.noCulling = true;
     }
@@ -193,7 +196,9 @@ public class EntityDart extends EntityThrowableBase {
         this.setCableLength(tag.getDouble(Names.NBT.LENGTH));
         if(tag.contains(Names.NBT.FLAG) && tag.getBoolean(Names.NBT.FLAG)) {
             this.player = this.getLevel().getPlayerByUUID(tag.getUUID(Names.NBT.PLAYER));
-            boolean bp = true;
+            if (this.player != null) {
+                DartHandler.instance.getPhysicsEngine(this.getOwner()).setDart(this, left);
+            }
         }
     }
 
