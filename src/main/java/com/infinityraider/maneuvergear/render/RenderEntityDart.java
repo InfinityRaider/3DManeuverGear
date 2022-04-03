@@ -87,8 +87,8 @@ public class RenderEntityDart extends EntityRenderer<EntityDart> implements IRen
 
     private void renderWireFirstPerson(EntityDart dart, Player player, float partialTicks, PoseStack transforms, MultiBufferSource buffer) {
         boolean left = dart.isLeft();
-        float yaw = -(player.xRotO + (player.getXRot() - player.xRotO) * partialTicks) * ((float) Math.PI / 180F);
-        float pitch = -(player.yRotO + (player.getYRot() - player.yRotO) * partialTicks) * ((float) Math.PI / 180F);
+        float pitch = -(player.xRotO + (player.getXRot() - player.xRotO) * partialTicks) * ((float) Math.PI / 180F);
+        float yaw = -(player.yRotO + (player.getYRot() - player.yRotO) * partialTicks) * ((float) Math.PI / 180F);
         //this vector defines the location of the points on the screen in first person
         double c1 = (left ? 0.8D : -0.8D);
         double c2 = -0.8D;
@@ -139,12 +139,11 @@ public class RenderEntityDart extends EntityRenderer<EntityDart> implements IRen
     }
 
     private void renderWire(PoseStack transforms, MultiBufferSource buffer, float delta_x, float delta_y, float delta_z, float amplitude) {
-        VertexConsumer builder = buffer.getBuffer(RenderType.lines());
+        VertexConsumer builder = buffer.getBuffer(RenderType.lineStrip());
         Matrix4f matrix = transforms.last().pose();
         int n = 16;
         for(int i = 0; i < n; ++i) {
-            this.addLineVertex(delta_x, delta_y, delta_z, builder, matrix, fraction(i, n), amplitude);
-            this.addLineVertex(delta_x, delta_y, delta_z, builder, matrix, fraction(i + 1, n), amplitude);
+            this.addLineVertex(delta_x, delta_y, delta_z, builder, matrix, fraction(i, n), fraction(i + 1, n), amplitude);
         }
     }
 
@@ -156,10 +155,11 @@ public class RenderEntityDart extends EntityRenderer<EntityDart> implements IRen
         vertexBuilder.vertex(matrix, (float)x, (float)y, (float)z).color(255, 255, 255, 255).uv(u, v).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(normals, (float)n_x, (float)n_z, (float)n_y).endVertex();
     }
 
-    private void addLineVertex(float x, float y, float z, VertexConsumer builder, Matrix4f matrix, float fraction, float amplitude) {
-        builder.vertex(matrix, x * fraction, y * fraction - amplitude * Mth.sin((float) Math.PI * fraction), z * fraction)
-                .color(0, 0, 0, 255
-                ).endVertex();
+    private void addLineVertex(float x, float y, float z, VertexConsumer builder, Matrix4f matrix, float f1, float f2, float amplitude) {
+        builder.vertex(matrix, x * f1, y * f1 - amplitude * Mth.sin((float) Math.PI * f1), z * f1)
+                .color(0, 0, 0, 255)
+                .normal(x * f2, y * f2 - amplitude * Mth.sin((float) Math.PI * f2), z * f2)
+                .endVertex();
     }
 
     private float getAmplitude(EntityDart dart) {
