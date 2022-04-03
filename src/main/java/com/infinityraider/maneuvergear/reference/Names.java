@@ -43,6 +43,7 @@ public final class Names {
         public static final String LENGTH = "3DMG_LENGTH";
         public static final String PLAYER = "3DMG_PLAYER";
         public static final String BOOTS = "3DMG_FALL_BOOTS";
+        public static final String FLAG = "3DMG_FLAG";
     }
 
     public static class Mods {

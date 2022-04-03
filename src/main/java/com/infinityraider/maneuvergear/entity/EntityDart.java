@@ -19,6 +19,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.Supplier;
 
@@ -43,12 +44,14 @@ public class EntityDart extends EntityThrowableBase {
     private boolean hooked = false;
     private double cableLength;
 
+    // This is needed to track the owner client side, since Vanilla doesn't do it
+    private Player player;
+
     //For client side spawning
     private EntityDart(EntityType<EntityDart> type, Level world) {
         super(type, world);
         //render the entity even if off screen
         this.noCulling = true;
-        // TODO: set player
     }
 
     public EntityDart(Player player, boolean left) {
@@ -61,11 +64,14 @@ public class EntityDart extends EntityThrowableBase {
         double v_Y = direction.y()*INITIAL_VELOCITY/20.0F;
         double v_Z = direction.z()*INITIAL_VELOCITY/20.0F;
         this.setDeltaMovement(v_X, v_Y, v_Z);
+        this.player = player;
     }
 
+    @Nullable
     @Override
     public Player getOwner() {
-        return (Player) super.getOwner();
+        Player player = (Player) super.getOwner();
+        return player == null ? this.player : player;
     }
 
     @Override
@@ -170,6 +176,14 @@ public class EntityDart extends EntityThrowableBase {
         tag.putBoolean(Names.NBT.LEFT, left);
         tag.putBoolean(Names.NBT.HOOKED, hooked);
         tag.putDouble(Names.NBT.LENGTH, this.getCableLength());
+        // This is necessary since client side, the owner is not known in the vanilla superclass
+        Player player = this.getOwner();
+        if(player == null) {
+            tag.putBoolean(Names.NBT.FLAG, false);
+        } else {
+            tag.putBoolean(Names.NBT.FLAG, true);
+            tag.putUUID(Names.NBT.PLAYER, player.getUUID());
+        }
     }
 
     @Override
@@ -177,6 +191,10 @@ public class EntityDart extends EntityThrowableBase {
         left = tag.getBoolean(Names.NBT.LEFT);
         hooked = tag.getBoolean(Names.NBT.HOOKED);
         this.setCableLength(tag.getDouble(Names.NBT.LENGTH));
+        if(tag.contains(Names.NBT.FLAG) && tag.getBoolean(Names.NBT.FLAG)) {
+            this.player = this.getLevel().getPlayerByUUID(tag.getUUID(Names.NBT.PLAYER));
+            boolean bp = true;
+        }
     }
 
     public static class SpawnFactory implements EntityType.EntityFactory<EntityDart> {
