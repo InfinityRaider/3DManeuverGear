@@ -5,7 +5,7 @@ import com.infinityraider.maneuvergear.config.Config;
 import com.infinityraider.maneuvergear.handler.KeyInputHandler;
 import com.infinityraider.maneuvergear.handler.TooltipHandler;
 import com.infinityraider.maneuvergear.physics.PhysicsEngine;
-import com.infinityraider.maneuvergear.physics.PhysicsEngineClientLocal;
+import com.infinityraider.maneuvergear.physics.PhysicsEngineClientGeometric;
 import com.infinityraider.maneuvergear.physics.PhysicsEngineDummy;
 import com.infinityraider.maneuvergear.reference.Names;
 import com.infinityraider.maneuvergear.reference.Reference;
@@ -50,11 +50,11 @@ public class ClientProxy implements IClientProxyBase<Config>, IProxy {
         Player local = getClientPlayer();
         if(local == null) {
             //This only happens during first startup of an SSP world
-            return new PhysicsEngineClientLocal(player);
+            return new PhysicsEngineClientGeometric(player);
         }
         if(local.getUUID().equals(player.getUUID())) {
             //Happens during equipping of maneuver gear in an SSP or SMP world, a second SSP world startup or when a LAN player joins a host
-            return new PhysicsEngineClientLocal(player);
+            return new PhysicsEngineClientGeometric(player);
         }
         else {
             //Happens when a LAN player joins an SSP world

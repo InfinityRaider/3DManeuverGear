@@ -23,54 +23,32 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  *
  */
 @OnlyIn(Dist.CLIENT)
-public final class PhysicsEngineClientLocal extends PhysicsEngine {
+public final class PhysicsEngineClientGeometric extends PhysicsEngineClientBase {
     /** Velocity at which the cable is retracted (blocks per second) */
     public static final double retractingVelocity = ManeuverGear.instance.getConfig().getRetractingSpeed()/20.0D;
-
-    /** Boost intensity */
-    public static final int BOOST = 2;
-
-    /** Player */
-    private final Player player;
-
-    /** Left dart */
-    private Vec3 L;
-    private boolean retractingLeft;
-
-    /**  Right Dart */
-    private Vec3 R;
-    private boolean retractingRight;
 
     /** Locked state*/
     private boolean locked;
 
-    public PhysicsEngineClientLocal(Player player) {
-        super();
-        this.player = player;
+    public PhysicsEngineClientGeometric(Player player) {
+        super(player);
     }
 
     @Override
-    public void onUpdateTick() {
-        //load dart positions
-        LoadAnchoredDartPosition(true);
-        LoadAnchoredDartPosition(false);
-        //check if neither of the darts is anchored, in which case nothing needs to be calculated
-        if(this.L == null && this.R == null) {
-            return;
-        }
+    protected void doUpdateLogic() {
         //apply gravity: velocity should increase with 10m/s / s, therefore velocity has to increase with 0.0025m/tick / tick
-        player.setDeltaMovement(player.getDeltaMovement().add(0, -0.0025D, 0));
+        this.player().setDeltaMovement(this.player().getDeltaMovement().add(0, -0.0025D, 0));
         //decrement cables if necessary
         this.decrementCableLength(this.getLeftDart());
         this.decrementCableLength(this.getRightDart());
         this.locked = false;
         //fetch initial conditions
-        Vec3 p = this.fetchCurrentPosition();
+        Vec3 p = this.playerPosition();
         Vec3 v_old = this.fetchCurrentVelocity();
         Vec3 v = v_old.add(0,0,0);
         Vec3 p_new = this.calculateNewPosition(p, v);
         //only left dart is active
-        if(this.L != null && this.R == null) {
+        if(this.L() != null && this.R() == null) {
             //check if the new position conflicts with the left constraint
             boolean leftOk = this.compliesWithConstraint(p_new, this.getLeftDart());
             if (!leftOk) {
@@ -80,7 +58,7 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
             this.setPlayerVelocity(v);
         }
         //only right  dart is active
-        else if(this.L == null && this.R != null) {
+        else if(this.L() == null && this.R() != null) {
             //check if the new position conflicts with the right constraint
             boolean rightOk = this.compliesWithConstraint(p_new, this.getRightDart());
             if (!rightOk) {
@@ -119,7 +97,7 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
      *  3) Check if the new position also complies with the other dart, if it does calculate the velocity for the new position and accept the solution
      */
     private Vec3 calculateVelocityForSingleCondition(EntityDart conflicting, Vec3 p_old, Vec3 P_new) {
-        Vec3 D = conflicting.isLeft() ? L : R;
+        Vec3 D = conflicting.isLeft() ? this.L() : this.R();
         Vec3 DPnew = getCableVector(P_new, D);
         double norm = DPnew.length();
         double factor = conflicting.getCableLength() / norm;
@@ -145,12 +123,12 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
         double l = left.getCableLength();
         double r = right.getCableLength();
         //determine new position in case of conflicting cable lengths, in case this is null, the cable lengths are not in conflict
-        Vec3 Pn = calculatePositionForConflictingCableLengths(this.L, this.R, l, r);
+        Vec3 Pn = calculatePositionForConflictingCableLengths(this.L(), this.R(), l, r);
         if(Pn != null) {
             return calculateVelocity(Pn, p_old);
         }
-        Vec3 P_L = calculateNewPositionForDoubleCondition(this.L, p_old, v_old, l);
-        Vec3 P_R = calculateNewPositionForDoubleCondition(this.R, p_old, v_old, r);
+        Vec3 P_L = calculateNewPositionForDoubleCondition(this.L(), p_old, v_old, l);
+        Vec3 P_R = calculateNewPositionForDoubleCondition(this.R(), p_old, v_old, r);
         boolean l_ok = P_L != null && compliesWithConstraint(P_L, right);
         boolean r_ok = P_R != null && compliesWithConstraint(P_R, left);
         if(l_ok && !r_ok) {
@@ -160,12 +138,12 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
             return calculateVelocity(P_R, p_old);
         }
         else {
-            Vec3 P = calculateIntersectionPoint(this.L, l, this.R, r, p_new);
+            Vec3 P = calculateIntersectionPoint(this.L(), l, this.R(), r, p_new);
             if(P != null) {
                 return calculateVelocity(P, p_old);
             }
             //one sphere is fully inside the other: only the one with the smallest radius matters
-            return calculateVelocity(findInterSectPointWithSphere(l < r ? L : R, Math.min(l, r), p_new), p_old);
+            return calculateVelocity(findInterSectPointWithSphere(l < r ? this.L() : this.R(), Math.min(l, r), p_new), p_old);
         }
     }
 
@@ -303,19 +281,6 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
         return A.add(AP.normalize().multiply(a, a, a));
     }
 
-    @Override
-    public void onDartAnchored(EntityDart dart, Vec3 position) {
-        if(dart.isLeft()) {
-            L = position.add(0, 0, 0);
-        }
-        else {
-            R = position.add(0, 0, 0);
-        }
-    }
-
-    public void onDartRetracted(boolean left) {
-    }
-
     private void decrementCableLength(EntityDart dart) {
         if(this.locked) {
             return;
@@ -323,84 +288,22 @@ public final class PhysicsEngineClientLocal extends PhysicsEngine {
         if(dart == null) {
             return;
         }
-        if((dart.isLeft() && retractingLeft) || (!dart.isLeft() && retractingRight)) {
+        if((dart.isLeft() && isRetractingLeft()) || (!dart.isLeft() && isRetractingRight())) {
             dart.setCableLength(dart.getCableLength() - retractingVelocity);
         }
-    }
-
-    public void toggleRetracting(boolean left, boolean status) {
-        if(left) {
-            retractingLeft = status;
-        }
-        else {
-            retractingRight = status;
-        }
-    }
-
-    @Override
-    public void applyBoost() {
-        Vec3 look = player.getLookAngle();
-        Vec3 boost = look.multiply(BOOST, BOOST, BOOST);
-        Vec3 v = fetchCurrentVelocity();
-        setPlayerVelocity(v.add(boost));
-    }
-
-    private Vec3 fetchCurrentPosition() {
-        return new Vec3(player.getX(), player.getY(), player.getZ());
     }
 
     private Vec3 calculateNewPosition(Vec3 p, Vec3 v) {
         return p.add(v);
     }
 
-    private Vec3 fetchCurrentVelocity() {
-        return player.getDeltaMovement();
-    }
-
     private Vec3 calculateVelocity(Vec3 p_new, Vec3 p_old) {
         return p_new.subtract(p_old);
     }
 
-    private void LoadAnchoredDartPosition(boolean left) {
-        EntityDart dart = this.getDart(left);
-        if(dart == null) {
-            if(left) {
-                this.L = null;
-            } else {
-                this.R = null;
-            }
-        } else {
-            if(left) {
-                this.L = dart.isHooked() ? dart.position() : null;
-            } else {
-                this.R = dart.isHooked() ? dart.position() : null;
-            }
-        }
-    }
-
-    /** Sets the player's velocity to correspond to a certain velocity given by vector V */
-    private void setPlayerVelocity(Vec3 V) {
-        double vX = V.x();
-        double vY = V.y();
-        double vZ = V.z();
-        if(Double.isNaN(vX)) {
-            ManeuverGear.instance.getLogger().debug("vX is Nan");
-            vX = 0;
-        }
-        if(Double.isNaN(vY)) {
-            ManeuverGear.instance.getLogger().debug("vY is Nan");
-            vY = 0;
-        }
-        if(Double.isNaN(vZ)) {
-            ManeuverGear.instance.getLogger().debug("vZ is Nan");
-            vZ = 0;
-        }
-        player.setDeltaMovement(vX, vY, vZ);
-    }
-
     /** checks if the player's distance to the dart is smaller than the cable length */
     private boolean compliesWithConstraint(Vec3 position, EntityDart dart) {
-        return dart == null || !dart.isHooked() || position.subtract(dart.isLeft() ? L : R).length() <= dart.getCableLength();
+        return dart == null || !dart.isHooked() || position.subtract(dart.isLeft() ? this.L() : this.R()).length() <= dart.getCableLength();
     }
 
     /** Returns a vector pointing from the player to the dart */
