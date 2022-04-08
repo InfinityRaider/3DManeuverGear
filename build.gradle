@@ -183,7 +183,7 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.18.2-40.0.19'//"net.minecraftforge:forge:${config.version_minecraft}-${config.version_forge}"
+    minecraft 'net.minecraftforge:forge:1.18.2-40.0.42'//"net.minecraftforge:forge:${config.version_minecraft}-${config.version_forge}"
 
     compileOnly project(":InfinityLib")
     runtimeOnly project(":InfinityLib")
