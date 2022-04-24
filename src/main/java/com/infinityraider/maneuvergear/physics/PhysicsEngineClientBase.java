@@ -2,6 +2,7 @@ package com.infinityraider.maneuvergear.physics;
 
 import com.infinityraider.maneuvergear.ManeuverGear;
 import com.infinityraider.maneuvergear.entity.EntityDart;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.IExtensibleEnum;
@@ -153,6 +154,16 @@ public abstract class PhysicsEngineClientBase extends PhysicsEngine {
         if(Double.isNaN(vZ)) {
             ManeuverGear.instance.getLogger().debug("vZ is Nan");
             vZ = 0;
+        }
+        double cap = ManeuverGear.instance.getConfig().getVelocityCap();
+        if(cap > 0) {
+            double v_sq = vX*vX + vY*vY + vZ*vZ;
+            double f = Mth.fastInvSqrt(v_sq);
+            if(v_sq > cap*cap) {
+                vX *= cap*f;
+                vY *= cap*f;
+                vZ *= cap*f;
+            }
         }
         player.setDeltaMovement(vX, vY, vZ);
     }

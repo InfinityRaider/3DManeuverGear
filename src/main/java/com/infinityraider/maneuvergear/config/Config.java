@@ -21,6 +21,8 @@ public abstract class Config implements ConfigurationHandler.SidedModConfig {
 
     public abstract int getCableLength();
 
+    public abstract double getVelocityCap();
+
     public abstract boolean disableMusicDisc();
 
     public abstract boolean disableFallBoots();
@@ -50,6 +52,7 @@ public abstract class Config implements ConfigurationHandler.SidedModConfig {
         public final ForgeConfigSpec.DoubleValue damage;
         public final ForgeConfigSpec.DoubleValue bootFallDamageReduction;
         public final ForgeConfigSpec.IntValue cableLength;
+        public final ForgeConfigSpec.DoubleValue velocityCap;
 
         //content
         public final ForgeConfigSpec.BooleanValue disableMusicDisc;
@@ -81,6 +84,9 @@ public abstract class Config implements ConfigurationHandler.SidedModConfig {
                     .comment("The maximum length of a cable, this defines how far grapples will fly before being automatically retracted if they don't hit anything." +
                             "(must match on client and server)")
                     .defineInRange("Cable length", 32, 16, 128);
+            this.velocityCap = builder
+                    .comment("The cap for velocity attainable (in blocks/tick) using 3d maneuver gear, when set to zero, there is no cap")
+                    .defineInRange("Velocity Cap", 4.0, 0.0, 20.0);
             builder.pop();
 
             builder.push("content");
@@ -130,6 +136,11 @@ public abstract class Config implements ConfigurationHandler.SidedModConfig {
         @Override
         public int getCableLength() {
             return this.cableLength.get();
+        }
+
+        @Override
+        public double getVelocityCap() {
+            return this.velocityCap.get();
         }
 
         @Override

@@ -3,6 +3,7 @@ Changelog
 2.1.0
 -CHANGE: Ported to 1.18.2
 -ADDED:  Newtonian physics model (the old geometric one can still be used via the config if desired)
+-ADDED:  Configurable velocity cap
 
 2.0.4
 -CHANGE: update for Forge 36.1.0 and InfinityLib
