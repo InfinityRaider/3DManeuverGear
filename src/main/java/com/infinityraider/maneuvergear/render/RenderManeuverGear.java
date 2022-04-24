@@ -85,7 +85,7 @@ public class RenderManeuverGear {
 
     private ItemStack getBlade() {
         if(this.blade == null) {
-            this.blade = new ItemStack(ItemRegistry.itemSwordBlade);
+            this.blade = new ItemStack(ItemRegistry.getInstance().getSwordBladeItem());
         }
         return this.blade;
     }

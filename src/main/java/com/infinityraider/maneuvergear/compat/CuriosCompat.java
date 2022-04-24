@@ -24,7 +24,7 @@ public class CuriosCompat {
         return CuriosApi.getCuriosHelper().getEquippedCurios(entity).map(curios -> {
             for(int i = 0; i < curios.getSlots(); i++) {
                 ItemStack stack = curios.getStackInSlot(i);
-                if(stack.getItem() == ItemRegistry.itemManeuverGear) {
+                if(stack.getItem() == ItemRegistry.getInstance().getManeuverGearItem()) {
                     return stack;
                 }
             }

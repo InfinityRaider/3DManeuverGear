@@ -42,17 +42,17 @@ public class ManeuverGear extends InfinityMod<IProxy, Config> {
     }
 
     @Override
-    public Class<?> getModItemRegistry() {
-        return ItemRegistry.class;
+    public ItemRegistry getModItemRegistry() {
+        return ItemRegistry.getInstance();
     }
 
     @Override
-    public Class<?> getModEntityRegistry() {
-        return EntityRegistry.class;
+    public EntityRegistry getModEntityRegistry() {
+        return EntityRegistry.getInstance();
     }
     @Override
-    public Class<?> getModSoundRegistry() {
-        return SoundRegistry.class;
+    public SoundRegistry getModSoundRegistry() {
+        return SoundRegistry.getInstance();
     }
 
     @Override

@@ -28,6 +28,6 @@ public class ItemRecord extends RecordItem implements IInfinityItem {
     }
 
     private static SoundEvent getSoundEvent() {
-        return SoundRegistry.soundEventRecord;
+        return SoundRegistry.getInstance().getMusicDiskSound();
     }
 }

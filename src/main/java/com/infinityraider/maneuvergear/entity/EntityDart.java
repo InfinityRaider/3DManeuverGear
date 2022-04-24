@@ -58,7 +58,7 @@ public class EntityDart extends EntityThrowableBase {
     }
 
     public EntityDart(Player player, boolean left) {
-        super(EntityRegistry.entityDartEntry, player);
+        super(EntityRegistry.getInstance().getDartEntityType(), player);
         this.left = left;
         //render the entity even if off screen
         this.noCulling = true;

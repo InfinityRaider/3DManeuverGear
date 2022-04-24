@@ -11,6 +11,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -39,7 +40,7 @@ public class FallDamageHandler {
         if(CapabilityFallBoots.areFallBoots(player.getItemBySlot(EquipmentSlot.FEET))) {
             // check if player is wearing maneuver gear
             ItemStack gear = ManeuverGearHelper.findManeuverGear(player);
-            if(gear != null && gear.getItem() == ItemRegistry.itemManeuverGear) {
+            if(gear != null && gear.getItem() == ItemRegistry.getInstance().getManeuverGearItem()) {
                 event.setAmount((1.0F - ManeuverGear.instance.getConfig().getBootFallDmgReduction()) * event.getAmount());
             }
         }
@@ -49,7 +50,8 @@ public class FallDamageHandler {
     @SubscribeEvent
     @SuppressWarnings("unused")
     public void onWitherDeath(LivingDropsEvent event) {
-        if(ItemRegistry.itemRecord == null) {
+        Item musicDisk = ItemRegistry.getInstance().getMusicDiskItem();
+        if(musicDisk == null) {
             return;
         }
         if(!(event.getEntity() instanceof WitherBoss)) {
@@ -63,13 +65,13 @@ public class FallDamageHandler {
             if(isValidStack(left) && isValidStack(right)) {
                 ItemEntity drop = new ItemEntity(
                         event.getEntity().getLevel(), event.getEntity().getX(), event.getEntity().getY()+0.5D, event.getEntity().getZ(),
-                        new ItemStack(ItemRegistry.itemRecord));
+                        new ItemStack(musicDisk));
                 event.getDrops().add(drop);
             }
         }
     }
 
     private boolean isValidStack(ItemStack stack) {
-        return stack != null && stack.getItem() == ItemRegistry.itemManeuverGearHandle;
+        return stack != null && stack.getItem() == ItemRegistry.getInstance().getManeuverGearHandle();
     }
 }

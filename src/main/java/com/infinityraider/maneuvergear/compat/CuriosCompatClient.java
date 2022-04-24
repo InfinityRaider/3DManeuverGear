@@ -17,7 +17,7 @@ import top.theillusivec4.curios.api.client.ICurioRenderer;
 @OnlyIn(Dist.CLIENT)
 public class CuriosCompatClient {
     public static void init() {
-        CuriosRendererRegistry.register(ItemRegistry.itemManeuverGear, Renderer::new);
+        CuriosRendererRegistry.register(ItemRegistry.getInstance().getManeuverGearItem(), Renderer::new);
     }
 
     public static class Renderer implements ICurioRenderer {
